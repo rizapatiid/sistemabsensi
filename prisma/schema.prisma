@@ -1,0 +1,82 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model User {
+  id           String       @id // ID Karyawan
+  nama         String
+  role         String       // ADMIN or KARYAWAN
+  password     String
+  status       String       @default("AKTIF") // AKTIF / BLOKIR
+  jabatan      String?
+  phone        String?
+  email        String?
+  alamat       String?
+  rekeningBank String?
+  noRekening   String?
+  namaRekening String?
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+
+  attendances  Attendance[]
+  payrolls     Payroll[]
+}
+
+model Attendance {
+  id         String   @id @default(cuid())
+  idKaryawan String
+  tanggal    DateTime
+  waktuMasuk DateTime
+  status     String   // HADIR / IZIN
+  foto       String?  // Base64 string dari foto selfie
+  buktiApp   String?  // Base64 string dari bukti screenshot aplikasi
+  alasan     String?  // Alasan jika status IZIN
+  user       User     @relation(fields: [idKaryawan], references: [id], onDelete: Cascade)
+
+  @@unique([idKaryawan, tanggal])
+}
+
+model Payroll {
+  id                   String   @id @default(cuid())
+  idKaryawan           String
+  bulan                Int
+  tahun                Int
+  tipeGaji             String   @default("BULANAN") // BULANAN / HARIAN
+  jumlahAbsen          Int      @default(0)         // Digunakan jika tipeGaji HARIAN
+  gajiPokok            Float                        // Nominal per hari atau per bulan
+  tunjangan            Float    @default(0)
+  keteranganTunjangan  String?
+  totalGaji            Float
+  
+  // Snapshot rekening saat payroll dibuat
+  bankSnapshot         String?
+  noRekeningSnapshot   String?
+  namaRekeningSnapshot String?
+
+  createdAt            DateTime @default(now())
+  statusPembayaran     String   @default("BELUM_LUNAS") // LUNAS / BELUM_LUNAS
+  user                 User     @relation(fields: [idKaryawan], references: [id], onDelete: Cascade)
+
+  @@unique([idKaryawan, bulan, tahun])
+}
+
+model Calendar {
+  id         String   @id @default(cuid())
+  tanggal    DateTime @unique
+  keterangan String
+  isHoliday  Boolean  @default(false)
+}
+
+model Announcement {
+  id           String   @id @default(cuid())
+  judul        String
+  konten       String
+  image        String?  // Base64 string dari gambar pengumuman (opsional)
+  scheduleDate DateTime? // Tanggal jadwal pengumuman (jika null, langsung tampil)
+  tanggal      DateTime @default(now())
+}

@@ -1,0 +1,211 @@
+.container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #ffffff;
+  font-family: 'Inter', system-ui, sans-serif;
+  padding: 20px;
+}
+
+.card {
+  display: flex;
+  width: 100%;
+  max-width: 1050px;
+  min-height: 580px;
+  border-radius: 0;
+  overflow: visible;
+}
+
+.illustrationSection {
+  flex: 1.1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+  position: relative;
+}
+
+.illustration {
+  width: 100%;
+  max-width: 480px;
+  height: auto;
+  filter: drop-shadow(0 20px 30px rgba(0,0,0,0.03));
+}
+
+.loginSection {
+  flex: 1;
+  padding: 60px 50px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.logoContainer {
+  margin-bottom: 30px;
+  text-align: center;
+}
+
+.logoTitle {
+  font-size: 2.2rem;
+  font-weight: 800;
+  color: #0f172a;
+  letter-spacing: -1.5px;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+}
+
+.logoSubtitle {
+  font-size: 0.9rem;
+  color: #64748b;
+  margin-top: 8px;
+  font-weight: 600;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  opacity: 0.8;
+}
+
+.divider {
+  height: 1px;
+  background-color: #f1f5f9;
+  width: 100%;
+  margin: 20px 0;
+}
+
+.halamanTitle {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #1e293b;
+  margin-bottom: 25px;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.inputField {
+  width: 100%;
+  padding: 16px 20px;
+  background-color: #f8fafc;
+  border: 2px solid #f1f5f9;
+  border-radius: 12px;
+  font-size: 1rem;
+  color: #0f172a;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.inputField:focus {
+  outline: none;
+  border-color: #3b82f6;
+  background-color: #fff;
+  box-shadow: 0 10px 15px -3px rgba(59, 130, 246, 0.1);
+  transform: translateY(-2px);
+}
+
+.submitBtn {
+  width: 100%;
+  padding: 16px;
+  background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 10px 15px -3px rgba(37, 99, 235, 0.3);
+  transition: all 0.3s;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-top: 15px;
+}
+
+.submitBtn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 20px 25px -5px rgba(37, 99, 235, 0.4);
+}
+
+.submitBtn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.footer {
+  margin-top: 25px;
+  text-align: right;
+  font-size: 0.85rem;
+  color: #64748b;
+}
+
+.link {
+  color: #1e293b;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.error {
+  background-color: #fee2e2;
+  color: #991b1b;
+  padding: 10px;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: 16px;
+    background-color: #ffffff;
+  }
+
+  .card {
+    flex-direction: column;
+    min-height: auto;
+    width: 100%;
+    max-width: 400px;
+    background: white;
+    padding: 30px 20px;
+    border-radius: 20px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.05); /* Kembalikan shadow tipis di mobile agar terlihat rapi */
+  }
+
+  .illustrationSection {
+    display: none; /* Sembunyikan gambar di mobile agar tidak kocar-kacir */
+  }
+
+  .loginSection {
+    padding: 0;
+    width: 100%;
+  }
+
+  .logoTitle {
+    font-size: 1.8rem;
+    gap: 8px;
+  }
+
+  .logoSubtitle {
+    font-size: 0.75rem;
+    letter-spacing: 1px;
+  }
+
+  .halamanTitle {
+    font-size: 1rem;
+    text-align: center;
+    margin-bottom: 20px;
+  }
+
+  .inputField {
+    padding: 14px 16px;
+    font-size: 0.95rem;
+  }
+
+  .submitBtn {
+    padding: 14px;
+    font-size: 0.95rem;
+  }
+}
