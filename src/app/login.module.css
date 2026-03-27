@@ -1,211 +1,219 @@
 .container {
   min-height: 100vh;
   display: flex;
-  align-items: center;
-  justify-content: center;
   background-color: #ffffff;
   font-family: 'Inter', system-ui, sans-serif;
-  padding: 20px;
+  overflow-x: hidden;
 }
 
 .card {
   display: flex;
   width: 100%;
-  max-width: 1050px;
-  min-height: 580px;
-  border-radius: 0;
-  overflow: visible;
+  border: none;
+  min-height: 100vh;
 }
 
+/* SISI KIRI: ILUSTRASI */
 .illustrationSection {
-  flex: 1.1;
+  flex: 1.2;
+  background-color: #f8fafc;
+  padding: 40px;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 40px;
-  position: relative;
+  border-right: 1px solid #e2e8f0;
 }
 
 .illustration {
   width: 100%;
-  max-width: 480px;
+  max-width: 520px;
   height: auto;
-  filter: drop-shadow(0 20px 30px rgba(0,0,0,0.03));
+  filter: drop-shadow(0 30px 60px rgba(0, 0, 0, 0.05));
 }
 
+/* SISI KANAN: LOGIN SECTION */
 .loginSection {
   flex: 1;
-  padding: 60px 50px;
+  padding: 170px 40px 60px 40px;
   display: flex;
   flex-direction: column;
   justify-content: center;
+  align-items: center;
+  background: white;
 }
 
 .logoContainer {
-  margin-bottom: 30px;
-  text-align: center;
-}
-
-.logoTitle {
-  font-size: 2.2rem;
-  font-weight: 800;
-  color: #0f172a;
-  letter-spacing: -1.5px;
-  margin: 0;
+  margin-bottom: 24px;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 12px;
+  gap: 16px;
+  width: 100%;
+}
+
+.logoIconBox {
+  background: #1e3a8a;
+  color: white;
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 6px rgba(30, 58, 138, 0.15);
+}
+
+.logoVerticalDivider {
+  width: 1px;
+  height: 32px;
+  background-color: #e2e8f0;
+}
+
+.logoTitle {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: #0f172a;
+  letter-spacing: -0.04em;
+  margin: 0;
+  display: flex;
+  align-items: center;
 }
 
 .logoSubtitle {
-  font-size: 0.9rem;
-  color: #64748b;
-  margin-top: 8px;
-  font-weight: 600;
-  letter-spacing: 2px;
+  font-size: 0.65rem;
+  color: #94a3b8;
+  margin-top: 2px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
-  opacity: 0.8;
+  line-height: 1;
 }
 
 .divider {
   height: 1px;
   background-color: #f1f5f9;
-  width: 100%;
-  margin: 20px 0;
+  width: 60px;
+  margin: 12px 0;
 }
 
 .halamanTitle {
-  font-size: 1.1rem;
-  font-weight: 600;
+  font-size: 1.15rem;
+  font-weight: 800;
   color: #1e293b;
-  margin-bottom: 25px;
+  margin-bottom: 16px;
+  text-align: center;
+  letter-spacing: -0.02em;
 }
 
 .form {
   display: flex;
   flex-direction: column;
   gap: 16px;
+  max-width: 360px;
+  width: 100%;
+}
+
+.inputLabel {
+  font-size: 0.65rem;
+  font-weight: 800;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 6px;
+  display: block;
 }
 
 .inputField {
   width: 100%;
-  padding: 16px 20px;
+  padding: 14px 16px;
   background-color: #f8fafc;
-  border: 2px solid #f1f5f9;
+  border: 1px solid #e2e8f0;
   border-radius: 12px;
-  font-size: 1rem;
+  font-size: 0.95rem;
   color: #0f172a;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  font-weight: 600;
+  transition: all 0.2s ease;
+  box-sizing: border-box;
 }
 
 .inputField:focus {
   outline: none;
-  border-color: #3b82f6;
+  border-color: #1a567e;
   background-color: #fff;
-  box-shadow: 0 10px 15px -3px rgba(59, 130, 246, 0.1);
-  transform: translateY(-2px);
+  box-shadow: 0 0 0 4px rgba(26, 86, 126, 0.05);
 }
 
 .submitBtn {
   width: 100%;
   padding: 16px;
-  background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+  background: #1a567e;
   color: white;
   border: none;
   border-radius: 12px;
-  font-size: 1rem;
-  font-weight: 700;
+  font-size: 0.9rem;
+  font-weight: 800;
   cursor: pointer;
-  box-shadow: 0 10px 15px -3px rgba(37, 99, 235, 0.3);
-  transition: all 0.3s;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  margin-top: 15px;
+  transition: all 0.2s ease;
+  margin-top: 12px;
+  box-shadow: 0 10px 20px -5px rgba(26, 86, 126, 0.2);
 }
 
-.submitBtn:hover {
+.submitBtn:hover:not(:disabled) {
+  background: #1e3a8a;
   transform: translateY(-2px);
-  box-shadow: 0 20px 25px -5px rgba(37, 99, 235, 0.4);
 }
 
 .submitBtn:disabled {
-  opacity: 0.7;
+  background: #94a3b8;
   cursor: not-allowed;
 }
 
-.footer {
-  margin-top: 25px;
-  text-align: right;
-  font-size: 0.85rem;
-  color: #64748b;
-}
-
-.link {
-  color: #1e293b;
-  text-decoration: none;
-  font-weight: 500;
-}
-
 .error {
-  background-color: #fee2e2;
-  color: #991b1b;
-  padding: 10px;
-  border-radius: 6px;
+  background-color: #fff1f2;
+  color: #be123c;
+  padding: 14px;
+  border-radius: 12px;
+  border: 1px solid #ffe4e6;
   font-size: 0.85rem;
-  margin-bottom: 20px;
+  margin-bottom: 24px;
+  width: 100%;
+  max-width: 360px;
+  box-sizing: border-box;
   text-align: center;
+  font-weight: 700;
 }
 
-@media (max-width: 768px) {
-  .container {
-    padding: 16px;
-    background-color: #ffffff;
-  }
+.footer {
+  margin-top: auto;
+  padding-top: 40px;
+  font-size: 0.7rem;
+  color: #cbd5e1;
+  text-align: center;
+  font-weight: 600;
+}
 
-  .card {
-    flex-direction: column;
-    min-height: auto;
-    width: 100%;
-    max-width: 400px;
-    background: white;
-    padding: 30px 20px;
-    border-radius: 20px;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.05); /* Kembalikan shadow tipis di mobile agar terlihat rapi */
-  }
-
+/* RESPONSIVE */
+@media (max-width: 1024px) {
   .illustrationSection {
-    display: none; /* Sembunyikan gambar di mobile agar tidak kocar-kacir */
+    padding: 32px;
   }
+}
 
+@media (max-width: 900px) {
+  .illustrationSection {
+    display: none;
+  }
+  
   .loginSection {
-    padding: 0;
-    width: 100%;
+    padding: 60px 24px;
+    height: 100vh;
+  }
+  
+  .form, .error {
+    max-width: 100%;
   }
 
   .logoTitle {
-    font-size: 1.8rem;
-    gap: 8px;
-  }
-
-  .logoSubtitle {
-    font-size: 0.75rem;
-    letter-spacing: 1px;
-  }
-
-  .halamanTitle {
-    font-size: 1rem;
-    text-align: center;
-    margin-bottom: 20px;
-  }
-
-  .inputField {
-    padding: 14px 16px;
-    font-size: 0.95rem;
-  }
-
-  .submitBtn {
-    padding: 14px;
-    font-size: 0.95rem;
+    font-size: 1.4rem;
   }
 }

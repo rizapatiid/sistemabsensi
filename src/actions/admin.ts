@@ -15,16 +15,33 @@ export async function createHolidayAction(formData: FormData) {
     return { error: "Data tidak valid" }
   }
 
-  await prisma.calendar.create({
-    data: {
-      tanggal,
-      keterangan,
-      isHoliday: true
-    }
+  // Check if holiday already exists for this date
+  const existing = await prisma.calendar.findFirst({
+    where: { tanggal }
   })
 
-  revalidatePath("/admin/kalender")
-  revalidatePath("/employee/absensi")
+  if (existing) {
+    return { error: "Hari libur untuk tanggal tersebut sudah terdaftar!" }
+  }
+
+  try {
+    await prisma.calendar.create({
+      data: {
+        tanggal,
+        keterangan,
+        isHoliday: true
+      }
+    })
+
+    revalidatePath("/admin/kalender")
+    revalidatePath("/employee/absensi")
+    // redirect inside try-catch with Server Actions can be tricky, 
+    // but in Next.js 14/15 it works if it's the last statement.
+  } catch (error) {
+    console.error("Create Holiday Error:", error)
+    return { error: "Gagal menyimpan data hari libur ke database" }
+  }
+
   redirect("/admin/kalender")
 }
 

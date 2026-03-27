@@ -14,12 +14,7 @@ export default async function AdminAbsensiPage() {
 
   return (
     <div className={styles.pageContainer}>
-      <h1 className={styles.pageTitle}>Detail Absensi Karyawan</h1>
-      
-      <div className={`${styles.section} glass`}>
-        <h2>Riwayat Kehadiran Global</h2>
-        <AbsensiAdminClient absensi={absensi} />
-      </div>
+      <AbsensiAdminClient absensi={absensi} />
     </div>
   )
 }

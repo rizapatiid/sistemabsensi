@@ -2,11 +2,14 @@ import prisma from "@/lib/prisma"
 import { notFound } from "next/navigation"
 import EditAnnouncementForm from "./EditAnnouncementForm"
 
-export default async function AdminEditAnnouncementPage(props: { params: Promise<{ id: string }> }) {
-  const { id } = await props.params
-  const announcement = await prisma.announcement.findUnique({ where: { id } })
+export default async function AdminEditPengumumanPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params
 
-  if (!announcement) notFound()
+  const ann = await prisma.announcement.findUnique({
+    where: { id }
+  })
 
-  return <EditAnnouncementForm announcement={announcement} />
+  if (!ann) notFound()
+
+  return <EditAnnouncementForm ann={ann} />
 }

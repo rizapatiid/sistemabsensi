@@ -127,17 +127,41 @@ export async function updateProfileAdminAction(formData: FormData) {
   if (!session || session.role !== "ADMIN") return { error: "Unauthorized" }
 
   const nama = formData.get("nama") as string
+  const email = formData.get("email") as string
+  const phone = formData.get("phone") as string
+  const alamat = formData.get("alamat") as string
   const password = formData.get("password") as string
 
   if (!nama || !password) return { error: "Nama dan Password wajib diisi" }
 
   await prisma.user.update({
     where: { id: session.id },
-    data: { nama, password }
+    data: { 
+      nama, 
+      email: email || null, 
+      phone: phone || null, 
+      alamat: alamat || null, 
+      password 
+    }
   })
 
   revalidatePath("/admin/profil")
   return { success: true }
 }
 
+export async function updateAdminAction(formData: FormData) {
+  const idOriginal = formData.get("idOriginal") as string
+  const id = formData.get("id") as string
+  const nama = formData.get("nama") as string
+  const password = formData.get("password") as string
 
+  if (!idOriginal || !id || !nama || !password) return { error: "Semua data wajib diisi" }
+
+  await prisma.user.update({
+    where: { id: idOriginal },
+    data: { id, nama, password }
+  })
+  
+  revalidatePath("/admin/kelola-admin")
+  return { success: true }
+}

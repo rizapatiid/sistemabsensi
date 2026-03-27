@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import PreventZoom from "@/components/PreventZoom";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -25,39 +26,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="id">
-      <head>
-        <script dangerouslySetInnerHTML={{ __html: `
-          // Prevent Desktop Zoom via Keyboard and Mouse
-          window.addEventListener('keydown', function(event) {
-            if (event.ctrlKey === true && (event.keyCode === 61 || event.keyCode === 107 || event.keyCode === 173 || event.keyCode === 109 || event.keyCode === 187 || event.keyCode === 189)) {
-              event.preventDefault();
-            }
-          });
-          window.addEventListener('wheel', function(event) {
-            if (event.ctrlKey === true) {
-              event.preventDefault();
-            }
-          }, { passive: false });
-
-          // Prevent Mobile Pinch-to-Zoom (Multi-touch)
-          window.addEventListener('touchstart', function(event) {
-            if (event.touches.length > 1) {
-              event.preventDefault();
-            }
-          }, { passive: false });
-
-          // Prevent Mobile Double-Tap to Zoom
-          let lastTouchEnd = 0;
-          window.addEventListener('touchend', function(event) {
-            const now = (new Date()).getTime();
-            if (now - lastTouchEnd <= 300) {
-              event.preventDefault();
-            }
-            lastTouchEnd = now;
-          }, false);
-        `}} />
-      </head>
-      <body>{children}</body>
+      <body>
+        <PreventZoom />
+        {children}
+      </body>
     </html>
   );
 }

@@ -11,7 +11,7 @@ interface PayrollDetail {
   jumlahAbsen: number
   gajiPokok: number
   tunjangan: number
-  ketTunjangan: string | null
+  keteranganTunjangan: string | null
   totalGaji: number
   statusPembayaran: string
   nama: string
@@ -124,7 +124,7 @@ export default function PayrollDetailModal({ p }: { p: PayrollDetail }) {
               <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "0.75rem", color: "#374151" }}>
                 <span>
                   Tunjangan
-                  {p.ketTunjangan && <div style={{ fontSize: "0.75rem", color: "#6b7280" }}>({p.ketTunjangan})</div>}
+                  {p.keteranganTunjangan && <div style={{ fontSize: "0.75rem", color: "#6b7280" }}>({p.keteranganTunjangan})</div>}
                 </span>
                 <span style={{ fontWeight: "600" }}>Rp. {p.tunjangan.toLocaleString("id-ID")}</span>
               </div>

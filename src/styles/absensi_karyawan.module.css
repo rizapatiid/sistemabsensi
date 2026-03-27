@@ -1,0 +1,347 @@
+.pageContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+/* 1. CLEAN HEADER SECTION */
+.headerSection {
+  background: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 24px;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+}
+
+.headerContent h1 {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: #0f172a;
+  margin: 0;
+  letter-spacing: -0.02em;
+}
+
+.headerContent p {
+  color: #64748b;
+  margin-top: 6px;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+/* 2. MAIN STATUS CARD */
+.statusCard {
+  background: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 24px;
+  padding: 32px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.card {
+  background: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 24px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+}
+
+.policyItem {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+}
+
+.policyNumber {
+  background: #f1f5f9;
+  color: #1a567e;
+  width: 32px;
+  height: 32px;
+  min-width: 32px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  font-weight: 800;
+}
+
+.policyTitle {
+  font-size: 0.9rem;
+  font-weight: 800;
+  color: #0f172a;
+  margin: 0 0 4px 0;
+}
+
+.policyText {
+  font-size: 0.8rem;
+  color: #64748b;
+  line-height: 1.5;
+  margin: 0;
+  font-weight: 500;
+  text-align: justify;
+}
+
+.successIcon {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: #f0fdf4;
+  color: #16a34a;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 24px;
+  border: 4px solid #dcfce7;
+}
+
+/* CAPTURE GRID */
+.captureGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 20px;
+  width: 100%;
+  margin: 32px 0;
+}
+
+.stepCircle {
+  width: 24px;
+  height: 24px;
+  background: #1e3a8a;
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  font-weight: 800;
+}
+
+.stepLabel {
+  font-size: 0.7rem;
+  font-weight: 800;
+  color: #64748b;
+  letter-spacing: 0.05em;
+}
+
+.actionIcon {
+  background: #f1f5f9;
+  padding: 18px;
+  border-radius: 50%;
+  color: #1e3a8a;
+  transition: all 0.2s;
+}
+
+.captureBox:hover .actionIcon {
+  background: #1e3a8a;
+  color: white;
+  transform: scale(1.1);
+}
+
+.stepTitle {
+  font-size: 0.75rem;
+  font-weight: 800;
+  color: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 12px;
+}
+
+.captureBox {
+  width: 100%;
+  aspect-ratio: 4/3;
+  background: #f8fafc;
+  border: 2px dashed #e2e8f0;
+  border-radius: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.2s;
+  cursor: pointer;
+}
+
+.captureBox:hover {
+  border-color: #cbd5e1;
+  background: #f1f5f9;
+}
+
+.activeCaptureBox {
+  border: 2px solid #1e3a8a;
+  background: #eff6ff;
+}
+
+.videoElement {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.previewImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.snapBtn {
+  position: absolute;
+  bottom: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #1e3a8a;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 10px;
+  font-size: 0.75rem;
+  font-weight: 800;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(30, 58, 138, 0.3);
+}
+
+.reCaptureBtn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: rgba(255, 255, 255, 0.9);
+  color: #ef4444;
+  border: none;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  font-size: 1rem;
+  font-weight: 800;
+  cursor: pointer;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* BUTTONS */
+.actionArea {
+  display: flex;
+  gap: 12px;
+  width: 100%;
+  max-width: 480px;
+  margin: 0 auto;
+}
+
+.primaryBtn {
+  flex: 1;
+  background: #1e3a8a;
+  color: white;
+  border: none;
+  padding: 12px 20px;
+  border-radius: 10px;
+  font-size: 0.8rem;
+  font-weight: 800;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.primaryBtn:hover:not(:disabled) {
+  background: #1e40af;
+  transform: translateY(-2px);
+}
+
+.primaryBtn:disabled {
+  background: #94a3b8;
+  cursor: not-allowed;
+}
+
+.secondaryBtn {
+  flex: 1;
+  background: white;
+  color: #64748b;
+  border: 1px solid #e2e8f0;
+  padding: 12px 20px;
+  border-radius: 10px;
+  font-size: 0.8rem;
+  font-weight: 800;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.secondaryBtn:hover:not(:disabled) {
+  background: #f8fafc;
+  color: #0f172a;
+  border-color: #cbd5e1;
+}
+
+/* ALERTS */
+.alertBox {
+  padding: 16px;
+  border-radius: 12px;
+  font-size: 0.9rem;
+  font-weight: 700;
+  text-align: center;
+  border: 1px solid;
+}
+
+.successAlert { background: #f0fdf4; color: #166534; border-color: #dcfce7; }
+.errorAlert { background: #fef2f2; color: #991b1b; border-color: #fee2e2; }
+
+/* MODAL */
+.modalOverlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-color: rgba(15, 23, 42, 0.85);
+  backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10000;
+  padding: 24px;
+}
+
+.modal {
+  background: white;
+  width: 100%;
+  max-width: 480px;
+  border-radius: 24px;
+  padding: 32px;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+}
+
+.textArea {
+  width: 100%;
+  padding: 16px;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+  background: #f8fafc;
+  font-size: 0.95rem;
+  color: #0f172a;
+  font-weight: 600;
+  margin-top: 12px;
+  margin-bottom: 24px;
+  outline: none;
+  resize: none;
+}
+
+.textArea:focus {
+  border-color: #1e3a8a;
+  background: white;
+}
+
+/* RESPONSIVE */
+@media (min-width: 769px) {
+  .headerSection { flex-direction: row; padding: 32px; align-items: center; }
+  .headerContent { flex: 1; }
+  .captureGrid { grid-template-columns: 1fr 1fr; }
+  .headerContent h1 { font-size: 1.75rem; }
+}

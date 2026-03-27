@@ -36,5 +36,10 @@ export default async function EmployeeAbsensiPage() {
     message = `Portal absensi ditutup. Hari libur: ${isHoliday.keterangan}`
   }
 
-  return <AbsensiClient isClosed={isClosed} message={message} hasAttendance={!!existing} />
+  return <AbsensiClient 
+    isClosed={isClosed} 
+    message={message} 
+    hasAttendance={!!existing} 
+    existingStatus={existing?.status}
+  />
 }

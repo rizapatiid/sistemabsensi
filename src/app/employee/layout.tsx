@@ -1,16 +1,20 @@
 import prisma from "@/lib/prisma"
 import { getSession, logoutAction } from "@/actions/auth"
 import { redirect } from "next/navigation"
-import styles from "@/styles/dashboard.module.css"
-import EmployeeNav from "./EmployeeNav"
+import EmployeeLayoutClient from "./EmployeeLayoutClient"
 
 export default async function EmployeeLayout({ children }: { children: React.ReactNode }) {
   const session = await getSession()
   if (!session) redirect("/")
 
-  const user = await prisma.user.findUnique({ where: { id: session.id } })
+  const user = await prisma.user.findUnique({ 
+    where: { id: session.id },
+    select: { nama: true, role: true, status: true }
+  })
 
-  if (user?.status === "BLOKIR") {
+  if (!user) redirect("/")
+
+  if (user.status === "BLOKIR") {
     return (
       <div style={{ 
         height: "100vh", 
@@ -51,19 +55,8 @@ export default async function EmployeeLayout({ children }: { children: React.Rea
   }
 
   return (
-    <div className={styles.layoutContainer}>
-      <aside className={`${styles.sidebar} glass`}>
-        <div className={styles.logo}>Portal Karyawan</div>
-        <EmployeeNav />
-        <div className={styles.sidebarFooter}>
-          <form action={logoutAction}>
-            <button type="submit" className={styles.logoutBtn}>Logout</button>
-          </form>
-        </div>
-      </aside>
-      <main className={styles.mainContent}>
-        {children}
-      </main>
-    </div>
+    <EmployeeLayoutClient user={{ name: user.nama, role: user.role }} >
+      {children}
+    </EmployeeLayoutClient>
   )
 }

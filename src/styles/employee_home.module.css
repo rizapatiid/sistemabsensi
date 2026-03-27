@@ -1,0 +1,467 @@
+.pageContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* 1. Header Hero Section - Blue Banner Style */
+.heroSection {
+  background: linear-gradient(135deg, #1a567e 0%, #0f172a 100%);
+  border-radius: 20px;
+  padding: 44px;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+}
+
+.heroGreeting p {
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 0.9rem;
+  font-weight: 500;
+  margin: 0;
+}
+
+.heroGreeting h1 {
+  font-size: 2.8rem;
+  font-weight: 800;
+  color: white;
+  letter-spacing: -0.02em;
+  line-height: 1;
+  margin: 4px 0 12px;
+}
+
+@media (max-width: 640px) {
+  .heroGreeting h1 { font-size: 1.75rem; }
+  .heroSection { padding: 32px 24px; }
+}
+
+.heroInfoStack {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  margin-top: 0;
+  font-size: 1rem;
+}
+
+.heroMeta {
+  color: rgba(255, 255, 255, 0.7);
+  font-weight: 500;
+}
+
+.heroMainStat {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: white;
+  margin-top: 8px;
+}
+
+.heroSubInfo {
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.6);
+  margin-top: 4px;
+}
+
+/* 2. Key Metrics - Professional, Minimalist */
+.metricsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 24px;
+}
+
+.metricCard {
+  background: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 20px;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  box-shadow: 0 4px 6px -1px rgba(0,0,0,0.02);
+}
+
+@media (max-width: 640px) {
+  .metricCard { padding: 20px; }
+  .metricValue { font-size: 1.5rem; }
+}
+
+.metricHead {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.metricLabel {
+  font-size: 0.8rem;
+  color: #94a3b8;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.metricIcon {
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f8fafc;
+  color: #1e293b;
+}
+
+.metricValue {
+  font-size: 1.75rem;
+  font-weight: 800;
+  color: #0f172a;
+  letter-spacing: -0.03em;
+}
+
+.attendanceStatus {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 16px;
+  border-radius: 16px;
+  font-size: 0.9rem;
+}
+
+.statusHadir {
+  background: #f0fdf4;
+  color: #166534;
+  border: 1px solid #dcfce7;
+}
+.statusHadir h4 { font-size: 0.75rem; font-weight: 800; opacity: 0.8; margin: 0; }
+.statusHadir span { font-size: 1.25rem; font-weight: 900; letter-spacing: -0.5px; }
+
+.statusAbsen {
+  background: #fffbeb;
+  color: #92400e;
+  border: 1px solid #fef3c7;
+}
+.statusAbsen h4 { font-size: 0.75rem; font-weight: 800; opacity: 0.8; margin: 0; }
+.statusAbsen a { 
+  display: inline-block;
+  margin-top: 4px;
+  color: #c2410c; 
+  font-weight: 900; 
+  text-decoration: underline; 
+  font-size: 1rem;
+}
+
+.statusLibur { 
+  background: #f8fafc; 
+  color: #475569; 
+  border: 1px solid #e2e8f0;
+}
+.statusLibur h4 { font-size: 0.75rem; font-weight: 800; opacity: 0.8; margin: 0; }
+.statusLibur p { font-size: 1rem; font-weight: 900; margin: 0; }
+
+.statusIzin {
+  background: #eff6ff;
+  color: #1d4ed8;
+  border: 1px solid #dbeafe;
+}
+.statusIzin h4 { font-size: 0.75rem; font-weight: 800; opacity: 0.9; margin: 0; color: #1d4ed8; }
+.statusIzin p { font-size: 0.9rem; font-weight: 900; margin: 0; color: #1d4ed8; }
+
+/* 3. Main Split Layout */
+.mainContent {
+  display: grid;
+  grid-template-columns: 1fr 380px;
+  gap: 32px;
+}
+
+@media (max-width: 1100px) {
+  .mainContent { grid-template-columns: 1fr; }
+}
+
+.sectionTitle {
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: #0f172a;
+  margin-bottom: 24px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* Announcements - New Clickable Feed Style */
+.announceWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.clickableAnnounce {
+  background: white;
+  border: 1px solid #f1f5f9;
+  border-radius: 16px;
+  padding: 12px;
+  display: flex;
+  gap: 16px;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@media (max-width: 640px) {
+  .clickableAnnounce { padding: 10px; gap: 12px; }
+  .announceThumb { width: 80px; height: 80px; }
+}
+
+.clickableAnnounce:hover {
+  border-color: #1a567e;
+  transform: translateX(4px);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.04);
+}
+
+.announceThumb {
+  width: 100px;
+  height: 100px;
+  border-radius: 12px;
+  overflow: hidden;
+  background: #f8fafc;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.announceThumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.thumbPlaceholder {
+  color: #94a3b8;
+}
+
+.announceInfo {
+  flex: 1;
+}
+
+.announceDateBadge {
+  font-size: 0.65rem;
+  font-weight: 800;
+  color: #1a567e;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.announceMiniTitle {
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: #1e293b;
+  margin: 4px 0;
+}
+
+.announceExcerpt {
+  font-size: 0.85rem;
+  color: #64748b;
+  line-height: 1.5;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.readMoreHint {
+  display: inline-block;
+  margin-top: 8px;
+  font-size: 0.75rem;
+  font-weight: 800;
+  color: #1a567e;
+}
+
+/* Modal System */
+.modalOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.4);
+  backdrop-filter: blur(8px);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  animation: fadeIn 0.3s ease-out;
+}
+
+.modalContent {
+  background: white;
+  width: 100%;
+  max-width: 650px;
+  max-height: 90vh;
+  border-radius: 24px;
+  position: relative;
+  overflow-y: auto;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.closeBtn {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #f1f5f9;
+  border: none;
+  color: #475569;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 10;
+  transition: all 0.2s;
+}
+
+.closeBtn:hover {
+  background: #ef4444;
+  color: white;
+  transform: rotate(90deg);
+}
+
+.modalBody {
+  padding: 40px;
+}
+
+.modalDate {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.modalTitle {
+  font-size: 1.75rem;
+  font-weight: 900;
+  color: #1e293b;
+  margin: 12px 0 24px;
+  line-height: 1.25;
+}
+
+.modalImageWrapper {
+  border-radius: 20px;
+  overflow: hidden;
+  margin-bottom: 24px;
+  border: 1px solid #f1f5f9;
+}
+
+.modalImageWrapper img {
+  width: 100%;
+  max-height: 350px;
+  object-fit: cover;
+}
+
+.modalText {
+  color: #475569;
+  font-size: 1rem;
+  line-height: 1.7;
+  white-space: pre-wrap;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* Sidebar Sections */
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.sidebarCard {
+  background: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 24px;
+  padding: 32px;
+}
+
+.holidayList {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.holidayItem {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+}
+
+.holidayDate {
+  width: 56px;
+  height: 56px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.holidayMonth { font-size: 0.6rem; font-weight: 900; color: #64748b; text-transform: uppercase; }
+.holidayDay { font-size: 1.25rem; font-weight: 900; color: #0f172a; }
+
+/* Payroll Bank Display */
+.bankCard {
+  background: #0f172a;
+  color: white;
+  border-radius: 24px;
+  padding: 40px;
+  position: relative;
+  overflow: hidden;
+}
+
+.bankCard label {
+  font-size: 0.75rem;
+  opacity: 0.6;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.bankNumber {
+  font-size: 1.5rem;
+  font-weight: 800;
+  margin: 16px 0;
+  letter-spacing: 0.1em;
+}
+
+.bankOwner { font-size: 0.875rem; opacity: 0.9; font-weight: 600; }
+
+.actionBtn {
+  display: block;
+  margin-top: 32px;
+  text-align: center;
+  border: 1px solid rgba(255,255,255,0.2);
+  padding: 12px;
+  border-radius: 12px;
+  color: white;
+  font-size: 0.875rem;
+  font-weight: 700;
+  text-decoration: none;
+  transition: all 0.2s;
+}
+
+.actionBtn:hover {
+  background: white;
+  color: #0f172a;
+}
