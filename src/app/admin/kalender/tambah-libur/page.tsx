@@ -48,7 +48,7 @@ export default function CreateHolidayPage() {
                    <IconInfo /> Pada tanggal libur, Karyawan tidak dapat absen di portal.
                 </div>
 
-                <form action={createHolidayAction} style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+                <form action={(formData) => { createHolidayAction(formData); }} style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
                     <div className={styles.formGroup}>
                         <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '10px' }}>
                             <div style={{ color: '#1e3a8a' }}><IconCalendar /></div>
