@@ -1,8 +1,9 @@
 "use server"
 
 import prisma from "@/lib/prisma"
-import { cookies } from "next/headers"
+import { cookies, headers } from "next/headers"
 import { redirect } from "next/navigation"
+import { sendLoginNotificationEmail } from "@/lib/email"
 
 export async function loginAction(formData: FormData) {
   const idKaryawan = formData.get("idKaryawan") as string
@@ -44,6 +45,20 @@ export async function loginAction(formData: FormData) {
     path: "/",
     maxAge: 60 * 60 * 24 * 7 // 1 week
   })
+
+  // -- NOTIFIKASI LOGIN KEAMANAN (FAIL-SAFE) --
+  if (user.email) {
+    const head = await headers()
+    const ip = head.get("x-forwarded-for") || head.get("x-real-ip") || "Unknown IP"
+    const ua = head.get("user-agent") || "Perangkat Tidak Dikenal"
+    
+    // Kirim secara async tanpa menunggu (agar login tetap cepat)
+    try {
+      sendLoginNotificationEmail(user.email, user.nama, ip, ua)
+    } catch (e) {
+      console.error("Gagal mengirim notifikasi login:", e)
+    }
+  }
 
   if (user.role === "ADMIN") {
     redirect("/admin/home")
