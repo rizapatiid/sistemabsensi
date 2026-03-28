@@ -35,13 +35,13 @@ export default function LoginPage() {
         {/* SISI KANAN: LOGIN SECTION */}
         <div className={styles.loginSection}>
             <div className={styles.logoContainer}>
-                {/* ICON DENGAN BOX MODERN */}
-                <div className={styles.logoIconBox}>
-                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                        <rect x="2" y="3" width="20" height="14" rx="2" ry="2"/>
-                        <line x1="8" y1="21" x2="16" y2="21"/>
-                        <line x1="12" y1="17" x2="12" y2="21"/>
-                    </svg>
+                {/* BRAND LOGO DARI PUBLIC FOLDER */}
+                <div style={{ display: 'flex', alignItems: 'center' }}>
+                    <img 
+                        src="/logositus.png" 
+                        alt="RMP Digitals Logo" 
+                        style={{ height: '50px', width: 'auto', objectFit: 'contain' }}
+                    />
                 </div>
                 
                 {/* DIVIDER VERTIKAL */}
