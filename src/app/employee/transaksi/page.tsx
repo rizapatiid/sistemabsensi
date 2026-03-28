@@ -87,9 +87,9 @@ export default async function EmployeeTransaksiPage() {
                     </strong>
                   </td>
                   <td>
-                    <span className={`${styles.badge} ${p.statusPembayaran === 'LUNAS' ? styles.badgeLunas : styles.badgeBelum}`} style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
-                      {p.statusPembayaran === 'LUNAS' && <IconCheckFile />}
-                      {p.statusPembayaran.replace("_", " ")}
+                    <span className={`${styles.badge} ${p.statusPembayaran === 'DIBAYAR' ? styles.badgeLunas : styles.badgeBelum}`} style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
+                      {p.statusPembayaran === 'DIBAYAR' && <IconCheckFile />}
+                      {p.statusPembayaran === 'DIBAYAR' ? 'DIBAYAR' : 'DIPROSES'}
                     </span>
                   </td>
                   <td>

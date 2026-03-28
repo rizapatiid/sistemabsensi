@@ -144,7 +144,7 @@ export default async function EmployeeHomePage() {
             Rp {lastPayroll?.totalGaji.toLocaleString("id-ID") || "0"}
           </div>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '8px' }}>
-            <p style={{ fontSize: '0.75rem', color: '#64748b', margin: 0 }}>Status: <span style={{ fontWeight: '700', color: lastPayroll?.statusPembayaran === "LUNAS" ? "#166534" : "#991b1b" }}>{lastPayroll?.statusPembayaran || "N/A"}</span></p>
+            <p style={{ fontSize: '0.75rem', color: '#64748b', margin: 0 }}>Status: <span style={{ fontWeight: '700', color: lastPayroll?.statusPembayaran === "DIBAYAR" ? "#166534" : "#991b1b" }}>{lastPayroll?.statusPembayaran === "DIBAYAR" ? "DIBAYAR" : "DIPROSES"}</span></p>
             <Link href="/employee/transaksi" style={{ fontSize: '0.75rem', fontWeight: '800', color: '#1a567e', textDecoration: 'none' }}>Lihat Detail →</Link>
           </div>
         </div>

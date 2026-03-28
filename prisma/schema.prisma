@@ -60,7 +60,7 @@ model Payroll {
   namaRekeningSnapshot String?
 
   createdAt            DateTime @default(now())
-  statusPembayaran     String   @default("BELUM_LUNAS") // LUNAS / BELUM_LUNAS
+  statusPembayaran     String   @default("DIPROSES") // DIBAYAR / DIPROSES
   user                 User     @relation(fields: [idKaryawan], references: [id], onDelete: Cascade)
 
   @@unique([idKaryawan, bulan, tahun])

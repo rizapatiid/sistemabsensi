@@ -96,7 +96,7 @@ export async function deleteAnnouncementAction(id: string) {
 }
 
 // -- PAYROLL --
-import { sendPayrollNotificationEmail } from "@/lib/email"
+import { sendPayrollNotificationEmail, sendPaymentConfirmationEmail } from "@/lib/email"
 
 export async function generatePayrollAction(formData: FormData) {
   const idKaryawan = formData.get("idKaryawan") as string
@@ -175,9 +175,27 @@ export async function generatePayrollAction(formData: FormData) {
 }
 
 export async function togglePayrollStatusAction(id: string, currentStatus: string) {
-  await prisma.payroll.update({
+  const newStatus = currentStatus === "DIBAYAR" ? "DIPROSES" : "DIBAYAR"
+  
+  const payroll = await prisma.payroll.update({
     where: { id },
-    data: { statusPembayaran: currentStatus === "LUNAS" ? "BELUM_LUNAS" : "LUNAS" }
+    data: { statusPembayaran: newStatus },
+    include: { user: true }
   })
+
+  // Jika status berubah menjadi DIBAYAR, kirim email konfirmasi
+  if (newStatus === "DIBAYAR" && payroll.user.email) {
+    await sendPaymentConfirmationEmail(
+      payroll.user.email,
+      payroll.user.nama,
+      payroll.bulan,
+      payroll.tahun,
+      payroll.totalGaji,
+      payroll.bankSnapshot || payroll.user.rekeningBank || "-",
+      payroll.noRekeningSnapshot || payroll.user.noRekening || "-",
+      payroll.namaRekeningSnapshot || payroll.user.namaRekening || "-"
+    )
+  }
+
   revalidatePath("/admin/payroll")
 }
