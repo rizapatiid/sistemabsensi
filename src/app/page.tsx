@@ -35,11 +35,11 @@ export default function LoginPage() {
         {/* SISI KANAN: LOGIN SECTION */}
         <div className={styles.loginSection}>
             <div className={styles.logoContainer}>
-                {/* BRAND LOGO ONLY - ELITE MINIMALIST */}
+                {/* BRAND LOGO - SCALE CONTROLLED BY CSS FOR PERFECT FIT */}
                 <img 
                     src="/logositus.png" 
                     alt="RMP Digitals Logo" 
-                    style={{ height: '80px', width: 'auto', objectFit: 'contain' }}
+                    className={styles.brandLogo}
                 />
             </div>
 
