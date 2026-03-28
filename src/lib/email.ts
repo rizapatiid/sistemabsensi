@@ -2,7 +2,7 @@ import nodemailer from "nodemailer"
 
 /**
  * World-Class Luxury Email System for RMP Digitals
- * Optimized for Prestigous Brand Consistency & Operational Speed.
+ * Optimized for Prestigous Brand Consistency & Operational Speed in Bahasa Indonesia.
  */
 
 const transporter = nodemailer.createTransport({
@@ -31,7 +31,7 @@ function getMonthName(monthNumber: number) {
 }
 
 // Master Layout (Responsive & High-End Typography)
-const emailMasterLayout = (badge: string, color: string, title: string, content: string, footer: string) => `
+const emailMasterLayout = (badge: string, color: string, title: string, content: string) => `
   <!DOCTYPE html>
   <html>
   <head>
@@ -39,16 +39,17 @@ const emailMasterLayout = (badge: string, color: string, title: string, content:
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
       @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800&display=swap');
-      body { margin: 0; padding: 0; background-color: #f1f5f9; font-family: 'Outfit', sans-serif; -webkit-font-smoothing: antialiased; }
+      body { margin: 0; padding: 0; background-color: #f1f5f9; font-family: 'Outfit', -apple-system, sans-serif; }
       .main { width: 100%; max-width: 600px; margin: 40px auto; background: #ffffff; border-radius: 24px; overflow: hidden; box-shadow: 0 20px 40px -15px rgba(0,0,0,0.1); }
-      .header { padding: 50px 40px; text-align: center; background: #f8fafc; border-bottom: 1px solid #f1f5f9; }
+      .header { padding: 50px 40px; text-align: center; background: #f8fafc; border-bottom: 2px solid #f1f5f9; }
       .body { padding: 50px 45px; }
       .badge { display: inline-block; padding: 7px 16px; border-radius: 50px; background: ${color}20; color: ${color}; font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 25px; }
       .title { color: #0f172a; font-size: 28px; font-weight: 850; line-height: 1.2; margin: 0 0 20px; letter-spacing: -0.01em; }
       .text { color: #475569; font-size: 16px; line-height: 1.7; margin-bottom: 35px; }
-      .btn { display: inline-block; padding: 20px 45px; background: #1e3a8a; color: #ffffff !important; text-decoration: none; border-radius: 16px; font-weight: 700; font-size: 16px; box-shadow: 0 10px 15px -5px rgba(30,58,138,0.3); }
+      .btn { display: inline-block; padding: 20px 45px; background: #1e3a8a; color: #ffffff !important; text-decoration: none; border-radius: 16px; font-weight: 700; font-size: 16px; box-shadow: 0 10px 15px -5px rgba(30,58,138,0.3); text-align: center; }
       .footer { padding: 40px; text-align: center; background: #f8fafc; font-size: 11px; color: #94a3b8; line-height: 1.8; border-top: 1px solid #f1f5f9; }
       .divider { width: 60px; height: 4px; background: #1e3a8a; border-radius: 10px; margin-bottom: 30px; }
+      .detail-card { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 16px; padding: 25px; margin-bottom: 35px; }
       @media(max-width: 480px) { .main { margin: 0; border-radius: 0; } .body { padding: 40px 25px; } .btn { width: 100%; box-sizing: border-box; } }
     </style>
   </head>
@@ -63,12 +64,12 @@ const emailMasterLayout = (badge: string, color: string, title: string, content:
         <div class="divider"></div>
         <h1 class="title">${title}</h1>
         <div class="text">${content}</div>
-        <div style="text-align: center;"><a href="https://www.rmp.my.id/" class="btn">AKSES PORTAL PERSONIL</a></div>
+        <div style="text-align: center;"><a href="https://www.rmp.my.id/" class="btn">MASUK KE DASHBOARD</a></div>
       </div>
       <div class="footer">
-        <strong>PT RIZA MEDIA PRODUCTIONS</strong><br/>
-        SYNERGY & TECHNOLOGY FOR EXCELLENCE<br/>
-        &copy; ${new Date().getFullYear()} Automated Security System
+        <strong>RMP DIGITALS</strong><br/>
+        SINERGI & TEKNOLOGI UNTUK EXCELLENCE<br/>
+        &copy; ${new Date().getFullYear()} Hak Cipta Dilindungi
       </div>
     </div>
   </body>
@@ -76,7 +77,7 @@ const emailMasterLayout = (badge: string, color: string, title: string, content:
 `
 
 /**
- * 1. NOTIFIKASI PAYROLL TERBIT
+ * 1. NOTIFIKASI PAYROLL TERBIT (BAHASA INDONESIA)
  */
 export async function sendPayrollNotificationEmail(toEmail: string, employeeName: string, month: number, year: number, totalGaji: number) {
   if (!toEmail) return { error: "Target email not found" }
@@ -85,23 +86,23 @@ export async function sendPayrollNotificationEmail(toEmail: string, employeeName
 
   const content = `
     Halo <strong>${employeeName.toUpperCase()}</strong>,<br/><br/>
-    Laporan kesejahteraan Anda untuk periode <strong>${monthName} ${year}</strong> telah diterbitkan secara resmi melalui sistem. RMP berkomitmen pada keterbukaan dan rekognisi atas dedikasi Anda.
+    Laporan slip gaji digital Anda untuk periode <strong>${monthName} ${year}</strong> telah berhasil diterbitkan oleh sistem kami. RMP berkomitmen pada keterbukaan dan rekognisi atas setiap kontribusi Anda.
     
     <div style="background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 100%); margin: 40px 0; border-radius: 20px; padding: 40px; text-align: center; color: #ffffff;">
       <span style="font-size: 0.75rem; font-weight: 850; text-transform: uppercase; opacity: 0.7; letter-spacing: 0.15em;">Nominal Gaji Bersih</span>
       <h2 style="font-size: 2.25rem; font-weight: 950; margin: 10px 0 0; letter-spacing: -0.02em;">${formattedGaji}</h2>
     </div>
-    Silakan kunjungi dashboard untuk rincian upah lengkap Anda.
+    Silakan masuk ke portal karyawan untuk meninjau rincian upah, tunjangan, dan status absensi Anda secara lengkap.
   `
 
   try {
-    await transporter.sendMail({ from: emailFrom, to: toEmail, subject: `[PAYROLL] - Slip Gaji Digital ${monthName} ${year}`, html: emailMasterLayout("Payroll Released", "#1e3a8a", "Slip Gaji digital Anda sudah tersedia.", content, "Privacy Policy: RMP Personnel Confidentiality.") })
+    await transporter.sendMail({ from: emailFrom, to: toEmail, subject: `[PAYROLL] - Slip Gaji Digital ${monthName} ${year} (${employeeName})`, html: emailMasterLayout("Slip Gaji Terbit", "#1e3a8a", "Gaji Digital Anda Sudah Tersedia.", content) })
     return { success: true }
   } catch (err) { console.error("SMTP Error:", err); return { error: "Network anomaly during transmission" } }
 }
 
 /**
- * 2. NOTIFIKASI PEMBAYARAN BERHASIL (DIBAYAR)
+ * 2. NOTIFIKASI PEMBAYARAN BERHASIL (BAHASA INDONESIA + DETAIL REKENING)
  */
 export async function sendPaymentConfirmationEmail(toEmail: string, employeeName: string, month: number, year: number, totalGaji: number, bankName: string, accNo: string, accName: string) {
   if (!toEmail) return { error: "Target email not found" }
@@ -109,42 +110,48 @@ export async function sendPaymentConfirmationEmail(toEmail: string, employeeName
   const formattedGaji = formatRupiah(totalGaji)
 
   const content = `
-    Selamat, <strong>${employeeName.toUpperCase()}</strong>!<br/><br/>
-    Hak atas periode <strong>${monthName} ${year}</strong> telah dipindahkan ke instansi perbankan pribadi Anda secara tuntas.
+    Selamat <strong>${employeeName.toUpperCase()}</strong>!<br/><br/>
+    Kami informasikan bahwa dana gaji Anda untuk periode periode <strong>${monthName} ${year}</strong> telah berhasil ditransfer ke rekening perbankan terdaftar.
     
-    <div style="border: 2px solid #10b981; border-radius: 24px; padding: 35px; margin: 40px 0; text-align: center; background: #f0fdf4;">
-       <h2 style="font-size: 2.5rem; font-weight: 950; color: #15803d; margin: 0;">${formattedGaji}</h2>
-       <p style="color: #166534; font-size: 0.8rem; font-weight: 850; margin: 15px 0 0; text-transform: uppercase; letter-spacing: 0.05em;">LUNAS PADA ${bankName} (${accNo})</p>
+    <div class="detail-card">
+       <h3 style="color: #1e3a8a; font-size: 13px; font-weight: 850; text-transform: uppercase; margin: 0 0 20px; border-bottom: 1px solid #f1f5f9; padding-bottom: 12px;">Rincian Transaksi</h3>
+       <table style="width: 100%; font-size: 14px;">
+         <tr><td style="color: #94a3b8; padding: 6px 0;">INSTITUSI BANK</td><td style="text-align: right; font-weight: 750;">${bankName || "-"}</td></tr>
+         <tr><td style="color: #94a3b8; padding: 6px 0;">NOMOR REKENING</td><td style="text-align: right; font-weight: 750;">${accNo || "-"}</td></tr>
+         <tr><td style="color: #94a3b8; padding: 6px 0;">ATAS NAMA</td><td style="text-align: right; font-weight: 750;">${accName || "-"}</td></tr>
+         <tr><td style="color: #166534; padding: 10px 0; font-weight: 850;">TOTAL DITERIMA</td><td style="text-align: right; font-weight: 850; color: #15803d; font-size: 18px;">${formattedGaji}</td></tr>
+       </table>
     </div>
-    Semoga bermanfaat dan terus semangat berkarya bersama RMP Digitals.
+    Silakan cek saldo bank Anda. Semoga bermanfaat bagi Anda dan keluarga.
   `
 
   try {
-    await transporter.sendMail({ from: emailFrom, to: toEmail, subject: `[DIBAYAR] - Dana Kelebihan Hak ${monthName} ${year}`, html: emailMasterLayout("Payment Successful", "#10b981", "Konfirmasi pencairan dana Anda.", content, "Finance: Trusted Financial Disbursement.") })
+    await transporter.sendMail({ from: emailFrom, to: toEmail, subject: `[DIBAYAR] - Konfirmasi Pembayaran Gaji ${monthName} ${year}`, html: emailMasterLayout("Pembayaran Berhasil", "#10b981", "Dana Anda Telah Terkirim.", content) })
     return { success: true }
   } catch (err) { console.error("SMTP Error:", err); return { error: "Network anomaly during transmission" } }
 }
 
 /**
- * 3. NOTIFIKASI KEAMANAN LOGIN
+ * 3. NOTIFIKASI KEAMANAN LOGIN (BAHASA INDONESIA)
  */
 export async function sendLoginNotificationEmail(toEmail: string, employeeName: string, ip: string, userAgent: string) {
   if (!toEmail) return { error: "Target email not found" }
   const now = new Intl.DateTimeFormat("id-ID", { dateStyle: "long", timeStyle: "medium", timeZone: "Asia/Jakarta" }).format(new Date())
 
   const content = `
-    Kami mendeteksi aktivitas login baru pada akun RMP Anda oleh <strong>${employeeName.toUpperCase()}</strong>.<br/><br/>
-    <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 16px; padding: 25px; margin-bottom: 30px;">
-       <table style="width: 100%; border-collapse: collapse;">
-         <tr><td style="color: #94a3b8; font-size: 11px; font-weight: 600; padding: 5px 0; text-transform: uppercase;">Waktu</td><td style="text-align: right; font-weight: 750; color: #1e3a8a;">${now}</td></tr>
-         <tr><td style="color: #94a3b8; font-size: 11px; font-weight: 600; padding: 5px 0; text-transform: uppercase;">Lokasi IP</td><td style="text-align: right; font-weight: 750; color: #1e3a8a;">${ip}</td></tr>
+    Sistem mendeteksi aktivitas login baru pada akun RMP Anda demi menjaga keamanan data pribadi oleh <strong>${employeeName.toUpperCase()}</strong>.<br/><br/>
+    <div class="detail-card">
+       <table style="width: 100%; border-collapse: collapse; font-size: 14px;">
+         <tr><td style="color: #94a3b8; padding: 8px 0; text-transform: uppercase; font-size: 11px; font-weight: 600;">Waktu Login</td><td style="text-align: right; font-weight: 750; color: #1e3a8a;">${now}</td></tr>
+         <tr><td style="color: #94a3b8; padding: 8px 0; text-transform: uppercase; font-size: 11px; font-weight: 600;">Lokasi IP</td><td style="text-align: right; font-weight: 750; color: #1e3a8a;">${ip}</td></tr>
+         <tr><td style="color: #94a3b8; padding: 8px 0; text-transform: uppercase; font-size: 11px; font-weight: 600;">Detail Perangkat</td><td style="text-align: right; font-weight: 500; font-size: 12px; color: #475569;">${userAgent}</td></tr>
        </table>
     </div>
-    Jika login ini tidak sah, harap segera ubah kredensial Anda sekarang.
+    Jika Anda merasa tidak melakukan aktivitas ini, mohon segera amankan akses portal Anda sekarang.
   `
 
   try {
-    await transporter.sendMail({ from: emailFrom, to: toEmail, subject: `❗ Security: Deteksi Login RMP Digitals`, html: emailMasterLayout("Security Alert", "#f97316", "Laporan aktivitas akses akun pening.", content, "Guard: Industrial Strength Security Protocol.") })
+    await transporter.sendMail({ from: emailFrom, to: toEmail, subject: `❗ Keamanan: Login RMP Digitals Terdeteksi`, html: emailMasterLayout("Keamanan Akun", "#f97316", "Laporan Aktivitas Login Anda.", content) })
     return { success: true }
   } catch (err) { console.error("SMTP Error:", err); return { error: "Network anomaly during transmission" } }
 }
