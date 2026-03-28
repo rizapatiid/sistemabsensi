@@ -4,6 +4,7 @@ import { useState } from "react"
 import styles from "@/styles/admin.module.css"
 import Link from "next/link"
 import { deleteHolidayAction, deleteAnnouncementAction } from "@/actions/admin"
+import { formatIndonesianDate } from "@/lib/date"
 
 interface Holiday {
   id: string
@@ -146,7 +147,7 @@ export default function KalenderClient({ holidays, announcements }: { holidays: 
               <tbody>
                 {holidays.map(h => (
                   <tr key={h.id}>
-                    <td style={{ fontWeight: 800, color: '#1e3a8a' }}>{new Date(h.tanggal).toLocaleDateString('id-ID', { day: '2-digit', month: 'long', year: 'numeric' })}</td>
+                    <td style={{ fontWeight: 800, color: '#1e3a8a' }}>{formatIndonesianDate(h.tanggal)}</td>
                     <td style={{ fontWeight: 700, color: '#334155' }}>{h.keterangan}</td>
                     <td style={{ textAlign: 'right' }}>
                       <button onClick={() => handleDeleteHoliday(h.id)} className={styles.btnSm} style={{ background: '#fee2e2', color: '#dc2626', border: 'none', padding: '10px 18px', borderRadius: '12px', fontWeight: 850 }}>HAPUS</button>
@@ -180,7 +181,7 @@ export default function KalenderClient({ holidays, announcements }: { holidays: 
                       </div>
                     </td>
                     <td style={{ fontWeight: 750, color: '#334155', fontSize: '0.9rem' }}>
-                        {new Date(a.tanggal).toLocaleDateString('id-ID', { day: '2-digit', month: 'short', year: 'numeric' })}
+                        {formatIndonesianDate(a.tanggal, false)}
                     </td>
                     <td style={{ textAlign: 'right' }}>
                       <div style={{ display: 'flex', gap: '8px', justifyContent: 'flex-end' }}>
@@ -208,7 +209,7 @@ export default function KalenderClient({ holidays, announcements }: { holidays: 
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '12px' }}>
                         <div>
                             <div style={{ fontSize: '0.7rem', fontWeight: 850, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Tanggal Libur</div>
-                            <div style={{ fontSize: '1.1rem', fontWeight: 900, color: '#1e3a8a', marginTop: '4px' }}>{new Date(h.tanggal).toLocaleDateString('id-ID', { day: '2-digit', month: 'long', year: 'numeric' })}</div>
+                            <div style={{ fontSize: '1.1rem', fontWeight: 900, color: '#1e3a8a', marginTop: '4px' }}>{formatIndonesianDate(h.tanggal)}</div>
                         </div>
                         <button onClick={() => handleDeleteHoliday(h.id)} style={{ padding: '8px', borderRadius: '10px', background: '#fee2e2', color: '#dc2626', border: 'none', display: 'flex' }}><IconTrash /></button>
                     </div>
@@ -228,7 +229,7 @@ export default function KalenderClient({ holidays, announcements }: { holidays: 
                         )}
                         <div style={{ flex: 1 }}>
                             <div style={{ fontSize: '1rem', fontWeight: 900, color: '#0f172a', lineHeight: '1.3' }}>{a.judul.toUpperCase()}</div>
-                            <div style={{ fontSize: '0.75rem', fontWeight: 700, color: '#64748b', marginTop: '4px' }}>{new Date(a.tanggal).toLocaleDateString('id-ID', { day: '2-digit', month: 'short', year: 'numeric' })}</div>
+                            <div style={{ fontSize: '0.75rem', fontWeight: 700, color: '#64748b', marginTop: '4px' }}>{formatIndonesianDate(a.tanggal, false)}</div>
                         </div>
                     </div>
                     
@@ -274,7 +275,7 @@ export default function KalenderClient({ holidays, announcements }: { holidays: 
                 
                 <span style={{ fontSize: '0.7rem', fontWeight: 850, color: '#3b82f6', background: '#eff6ff', padding: '4px 10px', borderRadius: '6px' }}>DETAIL PUBLIKASI</span>
                 <h2 style={{ fontSize: '1.6rem', fontWeight: 900, color: '#0f172a', margin: '12px 0 6px 0', lineHeight: '1.2' }}>{selectedAnnouncement.judul.toUpperCase()}</h2>
-                <div style={{ fontSize: '0.8rem', color: '#94a3b8', fontWeight: 600, marginBottom: '20px' }}>Terbit: {new Date(selectedAnnouncement.tanggal).toLocaleDateString('id-ID', { day: '2-digit', month: 'long', year: 'numeric' })}</div>
+                <div style={{ fontSize: '0.8rem', color: '#94a3b8', fontWeight: 600, marginBottom: '20px' }}>Terbit: {formatIndonesianDate(selectedAnnouncement.tanggal)}</div>
                 
                 {selectedAnnouncement.image && (
                     <div style={{ marginBottom: '20px', borderRadius: '16px', overflow: 'hidden', border: '1px solid #e2e8f0' }}>

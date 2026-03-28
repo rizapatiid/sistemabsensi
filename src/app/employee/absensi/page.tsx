@@ -1,11 +1,11 @@
 import prisma from "@/lib/prisma"
 import { getSession } from "@/actions/auth"
 import AbsensiClient from "./client"
+import { getTodayJakarta } from "@/lib/date"
 
 export default async function EmployeeAbsensiPage() {
   const session = await getSession()
-  const today = new Date()
-  today.setHours(0, 0, 0, 0)
+  const today = getTodayJakarta()
 
   // Cek apakah hari ini weekend (Sabtu/Minggu)
   const isWeekend = today.getDay() === 0 || today.getDay() === 6

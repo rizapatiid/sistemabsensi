@@ -3,6 +3,7 @@ import { getSession } from "@/actions/auth"
 import styles from "@/styles/employee_home.module.css"
 import Link from "next/link"
 import AnnouncementClient from "./AnnouncementClient"
+import { getTodayJakarta, formatWIBTime, getJakartaDate, formatIndonesianDate } from "@/lib/date"
 
 // Unified High-End Icons
 const IconClock = () => (
@@ -25,8 +26,8 @@ export default async function EmployeeHomePage() {
   const session = await getSession()
   if (!session) return null
 
-  const today = new Date()
-  today.setHours(0, 0, 0, 0)
+  const today = getTodayJakarta()
+  const now = getJakartaDate()
 
   const user = await prisma.user.findUnique({ where: { id: session.id } })
   const firstDay = new Date(today.getFullYear(), today.getMonth(), 1)
@@ -43,7 +44,7 @@ export default async function EmployeeHomePage() {
   const isWeekend = today.getDay() === 0 || today.getDay() === 6
 
   const announcements = await prisma.announcement.findMany({ 
-    where: { OR: [{ scheduleDate: null }, { scheduleDate: { lte: new Date() } }] },
+    where: { OR: [{ scheduleDate: null }, { scheduleDate: { lte: now } }] },
     orderBy: { tanggal: "desc" },
     take: 5
   })
@@ -86,21 +87,21 @@ export default async function EmployeeHomePage() {
             <span className={styles.metricLabel}>STATUS ABSENSI HARI INI</span>
             <div className={styles.metricIcon}><IconClock /></div>
           </div>
-          {isWeekend || isHoliday ? (
-            <div className={`${styles.attendanceStatus} ${styles.statusLibur}`}>
-              <h4>HARI LIBUR</h4>
-              <p>{isHoliday?.keterangan || "Libur Pekan"}</p>
-            </div>
-          ) : hasAbsenToday ? (
+          {hasAbsenToday ? (
             <div className={`${styles.attendanceStatus} ${hasAbsenToday.status === "HADIR" ? styles.statusHadir : styles.statusIzin}`}>
               <h4>{hasAbsenToday.status === "HADIR" ? "SUDAH PRESENSI" : "IZIN TERCATAT"}</h4>
               {hasAbsenToday.status === "HADIR" ? (
-                <span>{new Intl.DateTimeFormat("id-ID", { timeStyle: "short" }).format(hasAbsenToday.waktuMasuk)}</span>
+                <span>{formatWIBTime(hasAbsenToday.waktuMasuk)}</span>
               ) : (
                 <p style={{ fontSize: '0.7rem', color: '#1a567e', fontWeight: '800', margin: '4px 0 0', textTransform: 'uppercase' }}>
                   {hasAbsenToday.alasan || "Alasan Izin"}
                 </p>
               )}
+            </div>
+          ) : isWeekend || isHoliday ? (
+            <div className={`${styles.attendanceStatus} ${styles.statusLibur}`}>
+              <h4>HARI LIBUR</h4>
+              <p>{isHoliday?.keterangan || "Libur Pekan"}</p>
             </div>
           ) : (
             <div className={`${styles.attendanceStatus} ${styles.statusAbsen}`}>
@@ -115,7 +116,7 @@ export default async function EmployeeHomePage() {
             <div style={{ display: 'flex', flexDirection: 'column' }}>
                <span className={styles.metricLabel}>RINGKASAN KEHADIRAN</span>
                <span style={{ fontSize: '0.65rem', fontWeight: '800', color: '#1a567e', textTransform: 'uppercase', letterSpacing: '0.05em', marginTop: '4px' }}>
-                 PERIODE: {new Intl.DateTimeFormat("id-ID", { month: "long" }).format(today).toUpperCase()}
+                 PERIODE: {formatIndonesianDate(today).split(' ')[1].toUpperCase()}
                </span>
             </div>
             <div className={styles.metricIcon}><IconCalendar /></div>
@@ -170,7 +171,7 @@ export default async function EmployeeHomePage() {
                 upcomingHolidays.map((h) => (
                   <div key={h.id} className={styles.holidayItem}>
                     <div className={styles.holidayDate}>
-                      <span className={styles.holidayMonth}>{new Intl.DateTimeFormat("id-ID", { month: "short" }).format(h.tanggal).toUpperCase()}</span>
+                      <span className={styles.holidayMonth}>{formatIndonesianDate(h.tanggal, false).split(' ')[1].toUpperCase()}</span>
                       <span className={styles.holidayDay}>{h.tanggal.getDate()}</span>
                     </div>
                     <div>

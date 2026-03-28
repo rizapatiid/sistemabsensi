@@ -2,6 +2,7 @@
 
 import { useState } from "react"
 import styles from "@/styles/admin.module.css"
+import { formatIndonesianDate, formatWIBTime } from "@/lib/date"
 
 interface Absensi {
   id: string
@@ -173,11 +174,11 @@ export default function AbsensiAdminClient({ absensi }: { absensi: Absensi[] }) 
                       <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
                           <IconCalendarTable />
                           <div style={{ fontWeight: '800', color: '#0f172a', fontSize: '0.85rem', whiteSpace: 'nowrap' }}>
-                          {new Intl.DateTimeFormat("id-ID", { day: '2-digit', month: 'short', year: 'numeric' }).format(new Date(a.tanggal))}
+                          {formatIndonesianDate(a.tanggal, false)}
                           </div>
                       </div>
                       <div style={{ paddingLeft: '22px', color: '#64748b', fontSize: '0.75rem', fontWeight: '700', marginTop: '1px' }}>
-                          Pukul: {new Intl.DateTimeFormat("id-ID", { hour: '2-digit', minute: '2-digit', hour12: false }).format(new Date(a.waktuMasuk))}
+                          {formatWIBTime(a.waktuMasuk)}
                       </div>
                     </td>
                     <td>

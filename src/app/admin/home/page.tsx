@@ -2,6 +2,7 @@ import prisma from "@/lib/prisma"
 import styles from "@/styles/admin.module.css"
 import { getSession } from "@/actions/auth"
 import Link from "next/link"
+import { getTodayJakarta, formatWIBTime, getJakartaDate } from "@/lib/date"
 
 // World-Class Command Icons
 const IconUsers = () => <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
@@ -18,8 +19,7 @@ export default async function AdminHomePage() {
   const user = await prisma.user.findUnique({ where: { id: session.id } })
   
   const totalEmployees = await prisma.user.count({ where: { role: "KARYAWAN" } })
-  const today = new Date()
-  today.setHours(0, 0, 0, 0)
+  const today = getTodayJakarta()
   
   const presentTodayCount = await prisma.attendance.count({
     where: { tanggal: { gte: today }, status: "HADIR" }
@@ -53,7 +53,7 @@ export default async function AdminHomePage() {
         <div style={{ display: 'flex', alignItems: 'center', gap: '24px' }}>
             <div style={{ textAlign: 'right', display: 'flex', flexDirection: 'column' }}>
                 <span style={{ color: '#10b981', fontSize: '0.75rem', fontWeight: 900 }}>ONLINE</span>
-                <span style={{ color: '#94a3b8', fontSize: '0.65rem', fontWeight: 700 }}>{new Date().toLocaleTimeString('id-id', { hour: '2-digit', minute: '2-digit' })} WIB</span>
+                <span style={{ color: '#94a3b8', fontSize: '0.65rem', fontWeight: 700 }}>{formatWIBTime(getJakartaDate())}</span>
             </div>
             <div style={{ width: '40px', height: '40px', background: 'rgba(255,255,255,0.05)', borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#94a3b8' }}><IconBell /></div>
         </div>
@@ -127,7 +127,7 @@ export default async function AdminHomePage() {
                             </div>
                             <div style={{ flex: 1 }}>
                                 <div style={{ fontSize: '0.9rem', fontWeight: 900, color: '#1e293b' }}>{att.user.nama}</div>
-                                <div style={{ fontSize: '0.7rem', color: '#94a3b8', fontWeight: 700 }}>{att.waktuMasuk ? new Date(att.waktuMasuk).toLocaleTimeString('id-id', { hour: '2-digit', minute: '2-digit' }) : '-'} WIB</div>
+                                <div style={{ fontSize: '0.7rem', color: '#94a3b8', fontWeight: 700 }}>{att.waktuMasuk ? formatWIBTime(att.waktuMasuk) : '-'}</div>
                             </div>
                             <span style={{ fontSize: '0.65rem', fontWeight: 850, color: att.status === 'HADIR' ? '#10b981' : '#f59e0b' }}>{att.status}</span>
                         </div>

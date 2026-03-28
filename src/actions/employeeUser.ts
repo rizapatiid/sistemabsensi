@@ -3,13 +3,13 @@
 import prisma from "@/lib/prisma"
 import { revalidatePath } from "next/cache"
 import { getSession } from "@/actions/auth"
+import { getTodayJakarta, getJakartaDate } from "@/lib/date"
 
 export async function submitKehadiranAction(status: "HADIR" | "IZIN", foto?: string, buktiApp?: string, alasan?: string) {
   const session = await getSession()
   if (!session || session.role !== "KARYAWAN") return { error: "Unauthorized" }
 
-  const today = new Date()
-  today.setHours(0, 0, 0, 0)
+  const today = getTodayJakarta()
 
   // Cek apakah sudah absen hari ini
   const existing = await prisma.attendance.findUnique({
@@ -29,7 +29,7 @@ export async function submitKehadiranAction(status: "HADIR" | "IZIN", foto?: str
     data: {
       idKaryawan: session.id,
       tanggal: today,
-      waktuMasuk: new Date(),
+      waktuMasuk: getJakartaDate(),
       status,
       foto,
       buktiApp,
