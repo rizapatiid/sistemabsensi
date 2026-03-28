@@ -1,4 +1,4 @@
-/* WORLD-CLASS LOGIN UI - RMP DIGITALS ELITE DESIGN (RESTORED DESKTOP, ULTRA-COMPACT MOBILE) */
+/* WORLD-CLASS LOGIN UI - RMP DIGITALS ELITE DESIGN (ULTRA-COMPACT PREMIUM) */
 
 .container {
   min-height: 100dvh;
@@ -11,32 +11,32 @@
 }
 
 .brandLogo {
-  height: 120px; /* RESTORED TO PREVIOUS SWEET SPOT */
+  height: 95px; /* REFINED FOR ULTRA-COMPACT */
   width: auto;
   object-fit: contain;
   transition: all 0.3s ease;
-  margin-bottom: 8px;
+  margin-bottom: 6px;
 }
 
 .card {
   width: 100%;
-  max-width: 1024px; /* RESTORED - JANGAN DI UTAK ATIK */
+  max-width: 820px; /* ULTRA-COMPACT DESKTOP WIDTH */
   background: white;
-  border-radius: 28px;
+  border-radius: 24px;
   display: flex;
   overflow: hidden;
-  box-shadow: 0 25px 50px -12px rgba(15, 23, 42, 0.08);
+  box-shadow: 0 20px 40px -8px rgba(15, 23, 42, 0.08);
   border: 1px solid rgba(255, 255, 255, 0.8);
 }
 
-/* SISI KIRI: ILUSTRASI (DESKTOP) */
+/* SISI KIRI: ILUSTRASI */
 .illustrationSection {
-  flex: 1.1;
+  flex: 0.95; /* REDUCED WEIGHT */
   background: #1e3a8a;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 60px;
+  padding: 40px;
   position: relative;
   overflow: hidden;
 }
@@ -44,16 +44,16 @@
 .illustration {
   width: 100%;
   height: auto;
-  max-width: 420px;
+  max-width: 300px; /* REFINED SCALE */
   object-fit: contain;
-  filter: drop-shadow(0 15px 30px rgba(0,0,0,0.15));
+  filter: drop-shadow(0 10px 20px rgba(0,0,0,0.12));
   z-index: 1;
 }
 
 /* SISI KANAN: LOGIN AREA */
 .loginSection {
   flex: 1;
-  padding: 56px 64px; /* RESTORED DESKTOP PADDING */
+  padding: 44px 52px; /* DYNAMIC SPACING REDUCTION */
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -61,7 +61,7 @@
 }
 
 .logoContainer {
-  margin-bottom: 40px;
+  margin-bottom: 30px;
   display: flex;
   justify-content: center;
 }
@@ -69,21 +69,21 @@
 .divider {
   height: 1px;
   background: linear-gradient(90deg, rgba(226, 232, 240, 0) 0%, #e2e8f0 50%, rgba(226, 232, 240, 0) 100%);
-  margin-bottom: 32px;
+  margin-bottom: 24px;
 }
 
 .halamanTitle {
-  font-size: 1.75rem;
+  font-size: 1.45rem;
   font-weight: 900;
   color: #0f172a;
-  margin-bottom: 8px;
+  margin-bottom: 5px;
   letter-spacing: -0.03em;
 }
 
 .halamanSubtitle {
-  font-size: 0.95rem;
+  font-size: 0.85rem;
   color: #64748b;
-  margin-bottom: 40px;
+  margin-bottom: 30px;
   font-weight: 500;
 }
 
@@ -91,17 +91,17 @@
 .form {
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: 18px;
 }
 
 .inputGroup {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 8px;
 }
 
 .inputLabel {
-  font-size: 0.7rem;
+  font-size: 0.62rem;
   font-weight: 850;
   color: #1e3a8a;
   letter-spacing: 0.08em;
@@ -110,11 +110,11 @@
 
 .inputField {
   width: 100%;
-  padding: 18px 20px;
+  padding: 13px 16px;
   background: #f8fafc;
   border: 1.5px solid #e2e8f0;
-  border-radius: 16px;
-  font-size: 0.95rem;
+  border-radius: 12px;
+  font-size: 0.88rem;
   font-weight: 600;
   color: #0f172a;
   transition: all 0.2s ease;
@@ -124,96 +124,84 @@
 .inputField:focus {
   background: white;
   border-color: #3b82f6;
-  box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.08);
+  box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.06);
 }
 
 /* BUTTON STYLING */
 .submitBtn {
-  margin-top: 12px;
-  padding: 18px;
+  margin-top: 8px;
+  padding: 16px;
   background: #1e3a8a;
   color: white;
   border: none;
-  border-radius: 16px;
-  font-size: 0.9rem;
+  border-radius: 12px;
+  font-size: 0.82rem;
   font-weight: 850;
   cursor: pointer;
   transition: all 0.3s ease;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 10px;
+  gap: 8px;
 }
 
 .submitBtn:hover:not(:disabled) {
   background: #1e40af;
-  transform: translateY(-2px);
+  transform: translateY(-1px);
 }
 
 .error {
   background: #fef2f2;
   color: #ef4444;
-  padding: 14px 18px;
-  border-radius: 14px;
+  padding: 12px 16px;
+  border-radius: 12px;
   border: 1px solid #fee2e2;
-  font-size: 0.85rem;
+  font-size: 0.75rem;
   font-weight: 700;
-  margin-bottom: 24px;
+  margin-bottom: 18px;
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
 }
 
 .footer {
-  margin-top: 56px;
-  font-size: 0.7rem;
+  margin-top: 44px;
+  font-size: 0.62rem;
   color: #94a3b8;
   text-align: center;
   font-weight: 600;
 }
 
-/* RESPONSIVE BREAKPOINTS (ALL DEVICES ACCESS) */
+/* RESPONSIVE BREAKPOINTS */
 @media (max-width: 960px) {
   .card {
-     max-width: 900px;
+     max-width: 780px;
   }
 }
 
 @media (max-width: 768px) {
   .card {
     flex-direction: column;
-    max-width: 340px; /* ULTRA-COMPACT MOBILE CARD - PERKECIL DISINI */
-    border-radius: 24px;
+    max-width: 320px; /* NANO-COMPACT MOBILE CARD */
+    border-radius: 20px;
     margin: auto;
-    box-shadow: 0 15px 30px -5px rgba(0,0,0,0.1);
   }
   .illustrationSection {
     display: none;
   }
   .loginSection {
-    padding: 40px 24px; /* MORE COMPACT ON MOBILE DEVICE */
+    padding: 44px 24px;
   }
   .brandLogo {
-    height: 75px; /* REFINED MINI LOGO FOR 340px CARD */
+    height: 70px;
   }
   .halamanTitle {
-    font-size: 1.35rem;
+    font-size: 1.25rem;
     text-align: center;
   }
   .halamanSubtitle {
     text-align: center;
-    margin-bottom: 24px;
-    font-size: 0.85rem;
-  }
-  .inputField {
-    padding: 14px 16px;
-    font-size: 0.85rem;
-  }
-  .submitBtn {
-    padding: 16px;
+    margin-bottom: 20px;
     font-size: 0.8rem;
-  }
-  .footer {
-    margin-top: 32px;
   }
 }
