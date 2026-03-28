@@ -52,7 +52,6 @@ export async function sendPayrollNotificationEmail(
     html: `
       <div style="font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif; max-width: 600px; margin: 0 auto; color: #0f172a; border: 1px solid #e2e8f0; border-radius: 20px; overflow: hidden; background-color: #ffffff; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);">
         
-        {/* HEADER SECTION - BRANDING */}
         <div style="background-color: #f8fafc; padding: 40px 32px; text-align: center; border-bottom: 1px solid #f1f5f9;">
           <img src="${logoUrl}" alt="RMP Digitals" style="height: 80px; width: auto; margin-bottom: 16px;">
           <h1 style="color: #1e3a8a; margin: 0; font-size: 1.4rem; letter-spacing: 0.1em; font-weight: 850;">RMP DIGITALS</h1>

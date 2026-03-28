@@ -161,9 +161,13 @@ export async function generatePayrollAction(formData: FormData) {
       }
     })
     
-    // Kirim Notifikasi Email Otomatis Jika Email Tersedia
+    // Kirim Notifikasi Email Otomatis Jika Email Tersedia (GARDU PENGAMAN)
     if (user.email) {
-      await sendPayrollNotificationEmail(user.email, user.nama, bulan, tahun, totalGaji)
+      try {
+        await sendPayrollNotificationEmail(user.email, user.nama, bulan, tahun, totalGaji)
+      } catch (e) {
+        console.error("Notifikasi email gagal dikirim (Generate), sistem tetap lanjut:", e)
+      }
     }
 
     revalidatePath("/admin/payroll")
@@ -183,18 +187,22 @@ export async function togglePayrollStatusAction(id: string, currentStatus: strin
     include: { user: true }
   })
 
-  // Jika status berubah menjadi DIBAYAR, kirim email konfirmasi
+  // Jika status berubah menjadi DIBAYAR, kirim email konfirmasi (GARDU PENGAMAN AKTIF)
   if (newStatus === "DIBAYAR" && payroll.user.email) {
-    await sendPaymentConfirmationEmail(
-      payroll.user.email,
-      payroll.user.nama,
-      payroll.bulan,
-      payroll.tahun,
-      payroll.totalGaji,
-      payroll.bankSnapshot || payroll.user.rekeningBank || "-",
-      payroll.noRekeningSnapshot || payroll.user.noRekening || "-",
-      payroll.namaRekeningSnapshot || payroll.user.namaRekening || "-"
-    )
+    try {
+      await sendPaymentConfirmationEmail(
+        payroll.user.email,
+        payroll.user.nama,
+        payroll.bulan,
+        payroll.tahun,
+        payroll.totalGaji,
+        payroll.bankSnapshot || payroll.user.rekeningBank || "-",
+        payroll.noRekeningSnapshot || payroll.user.noRekening || "-",
+        payroll.namaRekeningSnapshot || payroll.user.namaRekening || "-"
+      )
+    } catch (emailErr) {
+      console.error("Gagal mengirim email konfirmasi, tapi status tetap diupdate:", emailErr)
+    }
   }
 
   revalidatePath("/admin/payroll")
