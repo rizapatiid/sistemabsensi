@@ -60,7 +60,7 @@ model Payroll {
   namaRekeningSnapshot String?
 
   createdAt            DateTime @default(now())
-  statusPembayaran     StatusPembayaran @default(DIPROSES)
+  statusPembayaran     String   @default("DIPROSES") // DIBAYAR / DIPROSES
   user                 User     @relation(fields: [idKaryawan], references: [id], onDelete: Cascade)
 
   @@unique([idKaryawan, bulan, tahun])
@@ -80,9 +80,4 @@ model Announcement {
   image        String?  // Base64 string dari gambar pengumuman (opsional)
   scheduleDate DateTime? // Tanggal jadwal pengumuman (jika null, langsung tampil)
   tanggal      DateTime @default(now())
-}
-
-enum StatusPembayaran {
-  DIBAYAR
-  DIPROSES
 }
