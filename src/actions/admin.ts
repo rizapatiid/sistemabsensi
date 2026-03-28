@@ -164,7 +164,19 @@ export async function generatePayrollAction(formData: FormData) {
     // Kirim Notifikasi Email Otomatis Jika Email Tersedia (GARDU PENGAMAN)
     if (user.email) {
       try {
-        await sendPayrollNotificationEmail(user.email, user.nama, bulan, tahun, totalGaji)
+        await sendPayrollNotificationEmail(
+            user.email, 
+            user.nama, 
+            bulan, 
+            tahun, 
+            totalGaji,
+            user.id,
+            user.jabatan || "-",
+            gajiPokok,
+            tunjangan,
+            tipeGaji,
+            jumlahAbsen
+        )
       } catch (e) {
         console.error("Notifikasi email gagal dikirim (Generate), sistem tetap lanjut:", e)
       }
