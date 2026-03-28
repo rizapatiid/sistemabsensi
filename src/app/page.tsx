@@ -34,24 +34,13 @@ export default function LoginPage() {
 
         {/* SISI KANAN: LOGIN SECTION */}
         <div className={styles.loginSection}>
-            <div className={styles.logoContainer}>
-                {/* BRAND LOGO DARI PUBLIC FOLDER */}
-                <div style={{ display: 'flex', alignItems: 'center' }}>
-                    <img 
-                        src="/logositus.png" 
-                        alt="RMP Digitals Logo" 
-                        style={{ height: '50px', width: 'auto', objectFit: 'contain' }}
-                    />
-                </div>
-                
-                {/* DIVIDER VERTIKAL */}
-                <div className={styles.logoVerticalDivider}></div>
-
-                {/* TEXT BRANDING */}
-                <div style={{ textAlign: 'left' }}>
-                    <h1 className={styles.logoTitle}>RMP DIGITALS</h1>
-                    <p className={styles.logoSubtitle}>Corporate Personnel System</p>
-                </div>
+            <div className={styles.logoContainer} style={{ justifyContent: 'center' }}>
+                {/* BRAND LOGO ONLY - MINIMALIST ELITE LOOK */}
+                <img 
+                    src="/logositus.png" 
+                    alt="RMP Digitals Logo" 
+                    style={{ height: '70px', width: 'auto', objectFit: 'contain' }}
+                />
             </div>
 
             <div className={styles.divider}></div>
