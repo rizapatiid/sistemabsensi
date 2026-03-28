@@ -50,6 +50,8 @@ export default function PayrollForm({ users }: { users: User[] }) {
   const currentYear = new Date().getFullYear()
   const tahunList = [currentYear - 1, currentYear, currentYear + 1]
 
+  const [statusMsg, setStatusMsg] = useState<{ type: 'success' | 'error', text: string } | null>(null)
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     setLoading(true)
@@ -57,19 +59,70 @@ export default function PayrollForm({ users }: { users: User[] }) {
     try {
       const res = await generatePayrollAction(formData)
       if (res?.error) {
-        alert(res.error)
+        setStatusMsg({ type: 'error', text: res.error })
       } else {
-        alert("Slip Gaji berhasil digenerate!")
-        window.location.reload()
+        setStatusMsg({ type: 'success', text: "Slip Gaji digital berhasil terbit & email terkirim!" })
       }
-    } catch (e) {
-      alert("Terjadi kesalahan sistem")
+    } catch (err) {
+      setStatusMsg({ type: 'error', text: "Terjadi kesalahan sistem yang tidak terduga." })
     }
     setLoading(false)
   }
 
+  const handleCloseStatus = () => {
+    if (statusMsg?.type === 'success') {
+      window.location.reload()
+    } else {
+      setStatusMsg(null)
+    }
+  }
+
   return (
     <div style={{ width: "100%" }}>
+      {/* PRESTIGOUS STATUS MODAL */}
+      {statusMsg && (
+        <div style={{
+          position: 'fixed', inset: 0, background: 'rgba(15, 23, 42, 0.85)', backdropFilter: 'blur(8px)',
+          display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 9999, padding: '20px'
+        }}>
+          <div style={{
+            background: 'white', padding: '40px', borderRadius: '24px', maxWidth: '400px', width: '100%',
+            textAlign: 'center', boxShadow: '0 25px 50px -12px rgba(0,0,0,0.5)', border: '1px solid #f1f5f9',
+            animation: 'modalSlideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1)'
+          }}>
+            <div style={{
+              width: '80px', height: '80px', background: statusMsg.type === 'success' ? '#dcfce7' : '#fee2e2',
+              borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 24px'
+            }}>
+              {statusMsg.type === 'success' ? (
+                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#16a34a" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+              ) : (
+                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#dc2626" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+              )}
+            </div>
+            <h3 style={{ fontSize: '1.5rem', fontWeight: 900, color: '#0f172a', margin: '0 0 12px' }}>
+              {statusMsg.type === 'success' ? 'Berhasil!' : 'Terjadi Kesalahan'}
+            </h3>
+            <p style={{ color: '#64748b', fontWeight: 600, fontSize: '0.95rem', lineHeight: 1.6, marginBottom: '32px' }}>
+              {statusMsg.text}
+            </p>
+            <button onClick={handleCloseStatus} style={{
+              width: '100%', padding: '16px', borderRadius: '14px', border: 'none', background: '#1e3a8a',
+              color: 'white', fontWeight: 850, fontSize: '1rem', cursor: 'pointer', transition: 'transform 0.2s ease',
+              boxShadow: '0 10px 15px -3px rgba(30, 58, 138, 0.3)'
+            }}>
+              {statusMsg.type === 'success' ? 'LANJUTKAN' : 'COBA LAGI'}
+            </button>
+          </div>
+          <style dangerouslySetInnerHTML={{ __html: `
+            @keyframes modalSlideUp {
+              from { opacity: 0; transform: translateY(30px) scale(0.95); }
+              to { opacity: 1; transform: translateY(0) scale(1); }
+            }
+          ` }} />
+        </div>
+      )}
+
       <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
         
         {/* Section: Penerima */}
