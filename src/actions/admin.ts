@@ -96,6 +96,8 @@ export async function deleteAnnouncementAction(id: string) {
 }
 
 // -- PAYROLL --
+import { sendPayrollNotificationEmail } from "@/lib/email"
+
 export async function generatePayrollAction(formData: FormData) {
   const idKaryawan = formData.get("idKaryawan") as string
   const bulan = parseInt(formData.get("bulan") as string)
@@ -159,6 +161,11 @@ export async function generatePayrollAction(formData: FormData) {
       }
     })
     
+    // Kirim Notifikasi Email Otomatis Jika Email Tersedia
+    if (user.email) {
+      await sendPayrollNotificationEmail(user.email, user.nama, bulan, tahun, totalGaji)
+    }
+
     revalidatePath("/admin/payroll")
     return { success: true }
   } catch (err: any) {
