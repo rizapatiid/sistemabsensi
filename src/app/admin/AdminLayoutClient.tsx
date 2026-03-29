@@ -53,19 +53,11 @@ export default function AdminLayoutClient({ children, user }: AdminLayoutClientP
       />
       <aside className={`${styles.sidebar} ${!isSidebarOpen ? styles.sidebarCollapsed : ""} ${isSidebarOpen ? styles.sidebarActive : ""}`}>
         <div className={styles.logo}>
-          <div className="logo-icon" style={{ 
-            color: '#1a567e'
-          }}>
-            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{color: '#1a567e'}}>
-              <rect x="2" y="3" width="20" height="14" rx="2" ry="2"/>
-              <line x1="8" y1="21" x2="16" y2="21"/>
-              <line x1="12" y1="17" x2="12" y2="21"/>
-            </svg>
-          </div>
-          <div className={styles.logoText}>
-            <span className={styles.logoBrand} style={{ color: '#1a567e', letterSpacing: '-1px' }}>RMP DIGITALS</span>
-            <span className={styles.logoSub}>Sistem Pegawai Profesional</span>
-          </div>
+          <img 
+            src="/logositus.png" 
+            alt="RMP Digitals" 
+            className={styles.sidebarLogo}
+          />
         </div>
         <nav className={styles.nav}>
           {navLinks.map((link) => {
@@ -89,7 +81,7 @@ export default function AdminLayoutClient({ children, user }: AdminLayoutClientP
         </nav>
       </aside>
       <div className={styles.mainWrapper}>
-        <Navbar user={user} onMobileMenuToggle={toggleSidebar} />
+        <Navbar user={user} onMobileMenuToggle={toggleSidebar} isSidebarCollapsed={!isSidebarOpen} />
         <main className={styles.mainContent}>
           {children}
         </main>

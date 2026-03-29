@@ -12,14 +12,15 @@ interface User {
 interface NavbarProps {
   user: User;
   onMobileMenuToggle?: () => void;
+  isSidebarCollapsed?: boolean;
 }
 
-export default function Navbar({ user, onMobileMenuToggle }: NavbarProps) {
+export default function Navbar({ user, onMobileMenuToggle, isSidebarCollapsed }: NavbarProps) {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const router = useRouter();
 
   return (
-    <header className="navbar">
+    <header className={`navbar ${isSidebarCollapsed ? 'sidebar-state-collapsed' : ''}`}>
       <div className="navbar-left">
         <button className="hamburger-btn" onClick={onMobileMenuToggle}>
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
@@ -28,6 +29,11 @@ export default function Navbar({ user, onMobileMenuToggle }: NavbarProps) {
             <line x1="3" y1="18" x2="21" y2="18"></line>
           </svg>
         </button>
+        <img 
+          src="/logositus.png" 
+          alt="RMP Digitals" 
+          className="navbar-logo"
+        />
       </div>
       <div className="navbar-right">
         <div className="user-profile" onClick={() => setIsDropdownOpen(!isDropdownOpen)}>
@@ -140,6 +146,30 @@ export default function Navbar({ user, onMobileMenuToggle }: NavbarProps) {
           font-size: 0.75rem;
           color: #64748b;
           font-weight: 500;
+        }
+        .navbar-logo {
+          height: 54px;
+          display: none;
+        }
+        
+        .sidebar-state-collapsed .navbar-logo {
+           display: block;
+        }
+
+        .sidebar-state-collapsed .hamburger-btn {
+           background: transparent;
+           border-color: transparent;
+           padding: 4px;
+        }
+
+        @media (max-width: 1024px) {
+          .navbar-left {
+            gap: 12px;
+          }
+          .navbar-logo {
+            display: block;
+            width: auto;
+          }
         }
         .navbar-right {
           display: flex;

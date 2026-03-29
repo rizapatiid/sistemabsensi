@@ -27,7 +27,8 @@
 
 .sidebarCollapsed .logoBrand,
 .sidebarCollapsed .logoSub,
-.sidebarCollapsed .logoText {
+.sidebarCollapsed .logoText,
+.sidebarCollapsed .sidebarLogo {
   display: none !important;
 }
 
@@ -62,6 +63,12 @@
   color: #1e3a8a; /* Navy blue like SIAKAD */
   line-height: 1;
   letter-spacing: -2px;
+}
+
+.sidebarLogo {
+  height: 54px;
+  width: auto;
+  object-fit: contain;
 }
 
 .logoSub {
