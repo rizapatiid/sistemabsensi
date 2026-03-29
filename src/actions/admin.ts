@@ -73,7 +73,7 @@ export async function createAnnouncementAction(formData: FormData) {
 
   if (!judul || !konten) return { error: "Data tidak lengkap" }
 
-  await prisma.announcement.create({
+  const newAnnouncement = await prisma.announcement.create({
     data: { judul, konten, image: image || null, scheduleDate }
   })
   
@@ -85,7 +85,7 @@ export async function createAnnouncementAction(formData: FormData) {
     await sendNotificationToAllUsers(
       "Pengumuman Baru",
       judul,
-      "/employee/home"
+      `/employee/home?announcementId=${newAnnouncement.id}`
     )
   } catch (e) {
     console.error("Gagal broadcast notifikasi pengumuman:", e)
@@ -167,7 +167,7 @@ export async function generatePayrollAction(formData: FormData) {
     : gajiPokok + tunjangan;
 
   try {
-    await prisma.payroll.create({
+    const newPayroll = await prisma.payroll.create({
       data: { 
         idKaryawan, 
         bulan, 
@@ -202,7 +202,7 @@ export async function generatePayrollAction(formData: FormData) {
         idKaryawan,
         "Slip Gaji Tersedia",
         `Slip gaji untuk periode ${bulan}/${tahun} telah diterbitkan.`,
-        "/employee/transaksi"
+        `/employee/transaksi?payrollId=${newPayroll.id}`
       )
     } catch (e) {
       console.error("Gagal mengirim notifikasi push slip gaji:", e)
@@ -251,7 +251,7 @@ export async function togglePayrollStatusAction(id: string, currentStatus: strin
         payroll.idKaryawan,
         "Pembayaran Gaji Berhasil",
         `Gaji periode ${payroll.bulan}/${payroll.tahun} sebesar Rp ${payroll.totalGaji.toLocaleString("id-ID")} telah dikirim.`,
-        "/employee/transaksi"
+        `/employee/transaksi?payrollId=${payroll.id}`
       )
     } catch (e) {
       console.error("Gagal mengirim notifikasi push pembayaran:", e)

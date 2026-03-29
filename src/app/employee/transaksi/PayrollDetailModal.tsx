@@ -22,8 +22,8 @@ interface PayrollDetail {
   namaRekeningSnapshot: string | null
 }
 
-export default function PayrollDetailModal({ p }: { p: PayrollDetail }) {
-  const [isOpen, setIsOpen] = useState(false)
+export default function PayrollDetailModal({ p, autoOpen = false }: { p: PayrollDetail, autoOpen?: boolean }) {
+  const [isOpen, setIsOpen] = useState(autoOpen)
 
   const closeModal = () => setIsOpen(false)
   const openModal = () => setIsOpen(true)

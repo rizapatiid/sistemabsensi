@@ -18,7 +18,13 @@ const IconMoney = () => (
   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="2"/><path d="M6 12h.01M18 12h.01"/></svg>
 )
 
-export default async function EmployeeTransaksiPage() {
+export default async function EmployeeTransaksiPage({ 
+  searchParams 
+}: { 
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }> 
+}) {
+  const params = await searchParams
+  const activeId = params.payrollId as string
   const session = await getSession()
   const user = await prisma.user.findUnique({ where: { id: session?.id } })
   const payrolls = await prisma.payroll.findMany({
@@ -93,12 +99,15 @@ export default async function EmployeeTransaksiPage() {
                     </span>
                   </td>
                   <td>
-                    <PayrollDetailModal p={{
-                      ...p,
-                      nama: user?.nama || "",
-                      jabatan: user?.jabatan || "",
-                      namaRekening: user?.namaRekening || "",
-                    }} />
+                    <PayrollDetailModal 
+                      autoOpen={p.id === activeId}
+                      p={{
+                        ...p,
+                        nama: user?.nama || "",
+                        jabatan: user?.jabatan || "",
+                        namaRekening: user?.namaRekening || "",
+                      }} 
+                    />
                   </td>
                 </tr>
               ))}

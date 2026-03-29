@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import styles from "@/styles/employee_home.module.css"
 
 interface Announcement {
@@ -11,8 +11,15 @@ interface Announcement {
   tanggal: Date;
 }
 
-export default function AnnouncementClient({ announcements }: { announcements: Announcement[] }) {
+export default function AnnouncementClient({ announcements, autoOpenId }: { announcements: Announcement[], autoOpenId?: string }) {
   const [selected, setSelected] = useState<Announcement | null>(null)
+
+  useEffect(() => {
+    if (autoOpenId) {
+      const found = announcements.find(a => a.id === autoOpenId)
+      if (found) setSelected(found)
+    }
+  }, [autoOpenId, announcements])
 
   return (
     <>
