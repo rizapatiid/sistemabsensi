@@ -4,6 +4,7 @@ import prisma from "@/lib/prisma"
 import { revalidatePath } from "next/cache"
 import { redirect } from "next/navigation"
 import { z } from "zod"
+import { sendNotificationToUser, sendNotificationToAllUsers } from "@/actions/push"
 
 // -- KALENDER / HARI LIBUR --
 export async function createHolidayAction(formData: FormData) {
@@ -35,6 +36,17 @@ export async function createHolidayAction(formData: FormData) {
 
     revalidatePath("/admin/kalender")
     revalidatePath("/employee/absensi")
+
+    // Kirim Notifikasi Push Libur (Broadcast)
+    try {
+      await sendNotificationToAllUsers(
+        "Hari Libur Baru",
+        `${keterangan} pada tanggal ${tanggal.toLocaleDateString("id-ID")}`,
+        "/employee/absensi"
+      )
+    } catch (e) {
+      console.error("Gagal broadcast notifikasi libur:", e)
+    }
     // redirect inside try-catch with Server Actions can be tricky, 
     // but in Next.js 14/15 it works if it's the last statement.
   } catch (error) {
@@ -67,6 +79,18 @@ export async function createAnnouncementAction(formData: FormData) {
   
   revalidatePath("/admin/kalender")
   revalidatePath("/employee/home")
+
+  // Kirim Notifikasi Push Pengumuman (Broadcast)
+  try {
+    await sendNotificationToAllUsers(
+      "Pengumuman Baru",
+      judul,
+      "/employee/home"
+    )
+  } catch (e) {
+    console.error("Gagal broadcast notifikasi pengumuman:", e)
+  }
+
   return { success: true }
 }
 
@@ -171,6 +195,19 @@ export async function generatePayrollAction(formData: FormData) {
     }
 
     revalidatePath("/admin/payroll")
+
+    // Kirim Notifikasi Push Slip Gaji
+    try {
+      await sendNotificationToUser(
+        idKaryawan,
+        "Slip Gaji Tersedia",
+        `Slip gaji untuk periode ${bulan}/${tahun} telah diterbitkan.`,
+        "/employee/transaksi"
+      )
+    } catch (e) {
+      console.error("Gagal mengirim notifikasi push slip gaji:", e)
+    }
+
     return { success: true }
   } catch (err: any) {
     console.error("Payroll Error:", err)
@@ -206,4 +243,18 @@ export async function togglePayrollStatusAction(id: string, currentStatus: strin
   }
 
   revalidatePath("/admin/payroll")
+
+  // Kirim Notifikasi Push Pembayaran
+  if (newStatus === "DIBAYAR") {
+    try {
+      await sendNotificationToUser(
+        payroll.idKaryawan,
+        "Pembayaran Gaji Berhasil",
+        `Gaji periode ${payroll.bulan}/${payroll.tahun} sebesar Rp ${payroll.totalGaji.toLocaleString("id-ID")} telah dikirim.`,
+        "/employee/transaksi"
+      )
+    } catch (e) {
+      console.error("Gagal mengirim notifikasi push pembayaran:", e)
+    }
+  }
 }

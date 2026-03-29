@@ -81,3 +81,32 @@ export async function sendNotificationToUser(userId: string, title: string, body
 
   return results
 }
+
+export async function sendNotificationToAllUsers(title: string, body: string, url: string = "/") {
+  const subscriptions = await prisma.pushSubscription.findMany()
+
+  const results = await Promise.all(
+    subscriptions.map(async (sub) => {
+      try {
+        await webpush.sendNotification(
+          {
+            endpoint: sub.endpoint,
+            keys: {
+              p256dh: sub.p256dh,
+              auth: sub.auth,
+            },
+          },
+          JSON.stringify({ title, body, url })
+        )
+        return { success: true }
+      } catch (error: any) {
+        if (error.statusCode === 410 || error.statusCode === 404) {
+          await prisma.pushSubscription.delete({ where: { id: sub.id } })
+        }
+        return { success: false, error: error.message }
+      }
+    })
+  )
+
+  return results
+}

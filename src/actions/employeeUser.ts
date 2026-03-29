@@ -4,6 +4,7 @@ import prisma from "@/lib/prisma"
 import { revalidatePath } from "next/cache"
 import { getSession } from "@/actions/auth"
 import { getTodayJakarta, getJakartaDate } from "@/lib/date"
+import { sendNotificationToUser } from "@/actions/push"
 
 export async function submitKehadiranAction(status: "HADIR" | "IZIN", foto?: string, buktiApp?: string, alasan?: string) {
   const session = await getSession()
@@ -39,6 +40,18 @@ export async function submitKehadiranAction(status: "HADIR" | "IZIN", foto?: str
 
   revalidatePath("/employee/absensi")
   revalidatePath("/employee/riwayat")
+
+  // Kirim Notifikasi Push
+  try {
+    await sendNotificationToUser(
+      session.id, 
+      "Absen Berhasil", 
+      `Anda telah berhasil melakukan absen ${status === "HADIR" ? "Hadir" : "Izin"} pada hari ini.`
+    )
+  } catch (e) {
+    console.error("Gagal mengirim notifikasi push absen:", e)
+  }
+
   return { success: true }
 }
 
