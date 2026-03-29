@@ -1,7 +1,8 @@
 "use client"
 
 import { useState } from "react"
-import styles from "@/styles/admin.module.css"
+import Image from "next/image"
+import styles from "@/styles/slip_gaji.module.css"
 
 interface PayrollDetail {
   id: string
@@ -20,6 +21,7 @@ interface PayrollDetail {
   bankSnapshot: string | null
   noRekeningSnapshot: string | null
   namaRekeningSnapshot: string | null
+  createdAt?: Date | string
 }
 
 export default function PayrollDetailModal({ p, autoOpen = false }: { p: PayrollDetail, autoOpen?: boolean }) {
@@ -28,22 +30,37 @@ export default function PayrollDetailModal({ p, autoOpen = false }: { p: Payroll
   const closeModal = () => setIsOpen(false)
   const openModal = () => setIsOpen(true)
 
+  const monthName = new Intl.DateTimeFormat("id-ID", { month: "long" }).format(new Date(p.tahun, p.bulan - 1));
+  
+  // Format print date properly to avoid TypeError
+  const printDate = new Intl.DateTimeFormat("id-ID", { 
+    day: 'numeric', 
+    month: 'long', 
+    year: 'numeric'
+  }).format(new Date()) + " " + new Intl.DateTimeFormat("id-ID", {
+    hour: '2-digit',
+    minute: '2-digit'
+  }).format(new Date());
+
   return (
     <>
       <button 
         onClick={openModal}
-        className={styles.btnSm} 
+        className={styles.viewBtn} 
         style={{ 
-          backgroundColor: "var(--primary)", 
+          backgroundColor: "#1e3a8a", 
           color: "white", 
           border: "none", 
-          padding: "4px 8px", 
-          borderRadius: "4px",
+          padding: "6px 14px", 
+          borderRadius: "8px",
           cursor: "pointer",
-          fontSize: "0.75rem"
+          fontSize: "0.75rem",
+          fontWeight: "700",
+          boxShadow: "0 2px 4px rgba(30, 58, 138, 0.2)",
+          transition: "all 0.2s"
         }}
       >
-        Lihat Detail
+        Lihat Slip
       </button>
 
       {isOpen && (
@@ -53,126 +70,158 @@ export default function PayrollDetailModal({ p, autoOpen = false }: { p: Payroll
           left: 0,
           right: 0,
           bottom: 0,
-          backgroundColor: "rgba(0,0,0,0.5)",
+          backgroundColor: "rgba(15, 23, 42, 0.8)",
+          backdropFilter: "blur(6px)",
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
           zIndex: 9999,
-          padding: "1rem"
+          padding: "0.5rem"
         }} onClick={closeModal}>
-          <div className="modal-content" style={{
-            backgroundColor: "white",
-            padding: "2rem",
-            borderRadius: "12px",
-            width: "100%",
-            maxWidth: "500px",
-            boxShadow: "0 10px 25px rgba(0,0,0,0.2)",
-            position: "relative"
-          }} onClick={e => e.stopPropagation()}>
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1.5rem", borderBottom: "2px solid var(--primary)", paddingBottom: "0.5rem" }}>
-              <h2 style={{ color: "#111827", margin: 0 }}>Slip Gaji Digital</h2>
-              <button 
-                onClick={() => window.print()} 
-                style={{ 
-                  backgroundColor: "var(--primary)", 
-                  color: "white", 
-                  border: "none", 
-                  padding: "4px 12px", 
-                  borderRadius: "4px", 
-                  cursor: "pointer",
-                  fontSize: "0.8rem"
-                }}
-                className="no-print"
-              >
-                Cetak / PDF
-              </button>
-            </div>
+          <div className={styles.slipContainer} onClick={e => e.stopPropagation()}>
             
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem", marginBottom: "1.5rem", color: "#374151" }}>
-              <div>
-                <small style={{ color: "#6b7280", display: "block" }}>Nama Karyawan</small>
-                <div style={{ fontWeight: "700", color: "#111827" }}>{p.nama}</div>
+            <div style={{ 
+              position: 'absolute', 
+              top: '8%', 
+              left: '50%', 
+              transform: 'translateX(-50%) rotate(-15deg)', 
+              fontSize: '3.5rem', 
+              fontWeight: '900', 
+              color: 'rgba(30,58,138,0.05)', 
+              pointerEvents: 'none',
+              zIndex: 0,
+              whiteSpace: 'nowrap'
+            }} className="no-print">
+              AUTHENTIC
+            </div>
+
+            {/* Header */}
+            <header className={styles.slipHeader} style={{ position: 'relative', zIndex: 1 }}>
+              <div className={styles.brand}>
+                <Image src="/iconapps.png" alt="Logo" width={32} height={32} className={styles.logo} />
+                <div>
+                  <div className={styles.brandName}>Riza Media Productions</div>
+                  <div style={{ fontSize: '0.6rem', color: '#64748b', fontWeight: '600', letterSpacing: '0.01em' }}>OFFICIAL DOCUMENT</div>
+                </div>
               </div>
-              <div>
-                <small style={{ color: "#6b7280", display: "block" }}>Jabatan</small>
-                <div style={{ fontWeight: "700", color: "#111827" }}>{p.jabatan || "-"}</div>
+              <div className={styles.slipTitle}>
+                <h2>SLIP GAJI</h2>
+                <div className={styles.slipNumber}>PAY-{String(p.bulan).padStart(2, '0')}{p.tahun.toString().slice(-2)}</div>
               </div>
-              <div>
-                <small style={{ color: "#6b7280", display: "block" }}>Periode</small>
-                <div style={{ fontWeight: "700", color: "#111827" }}>Bulan {p.bulan} / {p.tahun}</div>
+            </header>
+
+            {/* Employee Info Section */}
+            <div className={styles.infoGrid} style={{ position: 'relative', zIndex: 1 }}>
+              <div className={styles.infoItem}>
+                <label>Nama</label>
+                <div className={styles.rowValue}>{p.nama}</div>
               </div>
-              <div>
-                <small style={{ color: "#6b7280", display: "block" }}>Status</small>
-                <div style={{ 
-                  fontWeight: "700", 
-                  color: p.statusPembayaran === "LUNAS" ? "#166534" : "#b91c1c" 
-                }}>{p.statusPembayaran}</div>
+              <div className={styles.infoItem}>
+                <label>Posisi</label>
+                <div className={styles.rowValue}>{p.jabatan || "Karyawan"}</div>
+              </div>
+              <div className={styles.infoItem}>
+                <label>Periode</label>
+                <div className={styles.rowValue}>{monthName} {p.tahun}</div>
+              </div>
+              <div className={styles.infoItem}>
+                <label>Status</label>
+                <div>
+                  <span className={`${styles.statusBadge} ${p.statusPembayaran === 'DIBAYAR' ? styles.statusLunas : styles.statusPending}`}>
+                    {p.statusPembayaran === 'DIBAYAR' ? 'LUNAS' : 'PROSES'}
+                  </span>
+                </div>
               </div>
             </div>
 
-            <div style={{ backgroundColor: "#f3f4f6", padding: "1.25rem", borderRadius: "8px", marginBottom: "1.5rem", border: "1px solid #e5e7eb" }}>
-              <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "0.75rem", color: "#374151" }}>
-                <span>Gaji Pokok ({p.tipeGaji})</span>
-                <span style={{ fontWeight: "600" }}>Rp. {p.gajiPokok.toLocaleString("id-ID")}</span>
+            {/* Income Details */}
+            <div className={styles.tableSection} style={{ position: 'relative', zIndex: 1 }}>
+              <h4>Rincian Upah</h4>
+              
+              <div className={styles.row}>
+                <span className={styles.rowLabel}>Gaji Pokok ({p.tipeGaji})</span>
+                <span className={styles.rowValue}>Rp {p.gajiPokok.toLocaleString("id-ID")}</span>
               </div>
+              
               {p.tipeGaji === "HARIAN" && (
-                <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "0.75rem", fontSize: "0.85rem", color: "#4b5563" }}>
-                  <span>Total Kehadiran</span>
-                  <span style={{ fontWeight: "600" }}>{p.jumlahAbsen} Hari</span>
+                <div className={styles.row} style={{ background: '#f8fafc', padding: '4px 6px', borderRadius: '4px' }}>
+                  <span className={styles.rowLabel}>Total Hadir</span>
+                  <span className={styles.rowValue}>{p.jumlahAbsen} Hari</span>
                 </div>
               )}
-              <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "0.75rem", color: "#374151" }}>
-                <span>
-                  Tunjangan
-                  {p.keteranganTunjangan && <div style={{ fontSize: "0.75rem", color: "#6b7280" }}>({p.keteranganTunjangan})</div>}
+
+              <div className={styles.row}>
+                <span className={styles.rowLabel}>
+                  Tunjangan/Bonus
+                  {p.keteranganTunjangan && <div style={{ fontSize: '0.6rem', color: '#94a3b8' }}>{p.keteranganTunjangan}</div>}
                 </span>
-                <span style={{ fontWeight: "600" }}>Rp. {p.tunjangan.toLocaleString("id-ID")}</span>
-              </div>
-              <div style={{ marginTop: "1rem", paddingTop: "1rem", borderTop: "2px dashed #d1d5db", display: "flex", justifyContent: "space-between", fontWeight: "800", fontSize: "1.25rem", color: "#111827" }}>
-                <span>Total Bersih</span>
-                <span style={{ color: "var(--primary)" }}>Rp. {p.totalGaji.toLocaleString("id-ID")}</span>
+                <span className={styles.rowValue}>Rp {p.tunjangan.toLocaleString("id-ID")}</span>
               </div>
             </div>
 
-            <div style={{ fontSize: "0.85rem", borderTop: "1px solid #e5e7eb", paddingTop: "1rem" }}>
-              <div style={{ color: "#6b7280", marginBottom: "0.5rem" }}>Tujuan Transfer (Snapshot):</div>
-              <div style={{ fontWeight: "700", color: "#111827", fontSize: "1rem" }}>{p.bankSnapshot || "-"} - {p.noRekeningSnapshot || "-"}</div>
-              <div style={{ fontSize: "0.9rem", color: "#374151", fontWeight: "500" }}>a.n. {p.namaRekeningSnapshot || p.nama}</div>
+            {/* Total Section */}
+            <div className={styles.totalRow} style={{ position: 'relative', zIndex: 1 }}>
+              <div className={styles.totalLabel}>TOTAL DITERIMA (THP)</div>
+              <span className={styles.totalValue}>Rp {p.totalGaji.toLocaleString("id-ID")}</span>
             </div>
 
-            <button 
-              onClick={closeModal}
-              className="no-print"
-              style={{
-                marginTop: "2rem",
-                width: "100%",
-                padding: "0.75rem",
-                backgroundColor: "#1f2937",
-                color: "white",
-                border: "none",
-                borderRadius: "6px",
-                cursor: "pointer",
-                fontWeight: "700"
-              }}
-            >
-              Tutup
-            </button>
+            {/* Bank Snapshot */}
+            <div className={styles.bankInfo} style={{ border: '1px solid #e2e8f0', background: '#f8fafc', position: 'relative', zIndex: 1, padding: '0.6rem' }}>
+              <label style={{ fontSize: '0.6rem', textTransform: 'uppercase', color: '#94a3b8', fontWeight: '800', display: 'block', marginBottom: '4px' }}>Tujuan Transfer</label>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <div>
+                  <div style={{ fontWeight: '700', color: '#1e3a8a', fontSize: '0.85rem' }}>{p.bankSnapshot || "N/A"}</div>
+                  <div style={{ color: '#0f172a', fontWeight: '800', fontSize: '0.8rem' }}>{p.noRekeningSnapshot || "XXXX-XXXX-XXXX"}</div>
+                  <div style={{ color: '#64748b', fontSize: '0.7rem' }}>a.n. {p.namaRekeningSnapshot || p.nama}</div>
+                </div>
+              </div>
+            </div>
+
+            {/* Footer / Signature Area */}
+            <div className={styles.footer} style={{ position: 'relative', zIndex: 1 }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: '1rem' }}>
+                <div style={{ textAlign: 'left' }}>
+                  <p>Diterbitkan:</p>
+                  <p style={{ fontWeight: '700', color: '#1e293b' }}>{printDate}</p>
+                </div>
+                <div style={{ textAlign: 'center', minWidth: '100px' }}>
+                  <p style={{ marginBottom: '30px' }}>Administrasi,</p>
+                  <div style={{ position: 'relative' }}>
+                     <div style={{ 
+                       position: 'absolute', 
+                       top: '-30px', 
+                       left: '50%', 
+                       transform: 'translateX(-50%) rotate(-5deg)', 
+                       opacity: 0.8,
+                       fontSize: '0.5rem',
+                       color: '#1e3a8a',
+                       border: '1.5px solid #1e3a8a',
+                       padding: '2px 6px',
+                       borderRadius: '2px',
+                       fontWeight: '900'
+                     }}>
+                       E-CERTIFIED
+                     </div>
+                     <div style={{ height: '1px', width: '100%', background: '#1e293b' }}></div>
+                  </div>
+                </div>
+              </div>
+              <div style={{ fontSize: '0.55rem', color: '#94a3b8', lineHeight: 1.4, borderTop: '1px dashed #e2e8f0', paddingTop: '0.5rem' }}>
+                &copy; {new Date().getFullYear()} PT. Riza Media Productions.<br/>
+                Dokumen digital sah tanpa tanda tangan basah.
+              </div>
+            </div>
+
+            {/* Actions */}
+            <div className={styles.actionButtons}>
+              <button onClick={() => window.print()} className={styles.printBtn}>
+                Cetak / PDF
+              </button>
+              <button onClick={closeModal} className={styles.closeBtn}>
+                Tutup
+              </button>
+            </div>
           </div>
-          <style jsx global>{`
-            @media print {
-              .no-print { display: none !important; }
-              body * { visibility: hidden; }
-              .modal-content, .modal-content * { visibility: visible; }
-              .modal-content { 
-                position: absolute; 
-                left: 0; 
-                top: 0; 
-                width: 100%; 
-                box-shadow: none !important;
-                padding: 0 !important;
-              }
-            }
-          `}</style>
         </div>
       )}
     </>

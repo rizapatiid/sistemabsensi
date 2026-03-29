@@ -1,0 +1,229 @@
+.slipContainer {
+  background-color: #fff;
+  padding: 1rem;
+  border-radius: 10px;
+  width: 100%;
+  max-width: 440px;
+  max-height: 92vh;
+  overflow-y: auto;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  position: relative;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  color: #1e293b;
+  scrollbar-width: thin;
+  scrollbar-color: #cbd5e1 transparent;
+}
+
+@media (max-width: 600px) {
+  .slipContainer {
+    max-width: 350px;
+    padding: 0.75rem;
+  }
+}
+
+.slipHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 0.5rem;
+  border-bottom: 2px solid #f1f5f9;
+  padding-bottom: 0.5rem;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.logo {
+  width: 36px;
+  height: 36px;
+  object-fit: contain;
+}
+
+.brandName {
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: #0f172a;
+  letter-spacing: -0.01em;
+  line-height: 1;
+}
+
+.slipTitle {
+  text-align: right;
+}
+
+.slipTitle h2 {
+  font-size: 1rem;
+  font-weight: 800;
+  color: #1e3a8a;
+  margin: 0;
+  text-transform: uppercase;
+  line-height: 1;
+}
+
+.slipNumber {
+  font-size: 0.65rem;
+  color: #64748b;
+  margin-top: 2px;
+}
+
+.infoGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.infoItem label {
+  display: block;
+  font-size: 0.65rem;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin-bottom: 2px;
+}
+
+.rowValue {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.statusBadge {
+  display: inline-flex;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 0.6rem;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.statusLunas {
+  background-color: #f0fdf4;
+  color: #166534;
+}
+
+.statusPending {
+  background-color: #fff7ed;
+  color: #9a3412;
+}
+
+.tableSection {
+  margin-bottom: 1rem;
+}
+
+.tableSection h4 {
+  font-size: 0.75rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  color: #1e3a8a;
+  border-left: 2px solid #1e3a8a;
+  padding-left: 8px;
+}
+
+.row {
+  display: flex;
+  justify-content: space-between;
+  padding: 6px 0;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.rowLabel {
+  color: #475569;
+  font-size: 0.75rem;
+}
+
+.rowValue {
+  font-weight: 600;
+  color: #0f172a;
+  font-size: 0.8rem;
+}
+
+.totalRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 1rem;
+  margin-top: 0.5rem;
+  background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 100%);
+  border-radius: 8px;
+  color: white;
+}
+
+.totalLabel {
+  font-weight: 500;
+  font-size: 0.75rem;
+}
+
+.totalValue {
+  font-size: 1rem;
+  font-weight: 800;
+}
+
+.bankInfo {
+  margin-top: 0.75rem;
+  padding: 0.75rem;
+  background-color: #f8fafc;
+  border-radius: 6px;
+  font-size: 0.75rem;
+}
+
+.footer {
+  margin-top: 1.25rem;
+  padding-top: 0.75rem;
+  border-top: 1px dashed #e2e8f0;
+  text-align: center;
+}
+
+.footer p {
+  font-size: 0.65rem;
+  color: #94a3b8;
+  margin-bottom: 2px;
+}
+
+.actionButtons {
+  display: flex;
+  gap: 8px;
+  margin-top: 1.25rem;
+}
+
+.printBtn {
+  flex: 1;
+  padding: 10px;
+  background-color: #1e3a8a;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  font-size: 0.8rem;
+}
+
+.closeBtn {
+  padding: 10px 16px;
+  background-color: #f1f5f9;
+  color: #475569;
+  border: none;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  font-size: 0.8rem;
+}
+
+@media print {
+  .actionButtons { display: none !important; }
+  .slipContainer {
+    box-shadow: none !important;
+    padding: 0 !important;
+    border: none !important;
+    max-width: none !important;
+    max-height: none !important;
+    overflow: visible !important;
+  }
+}
