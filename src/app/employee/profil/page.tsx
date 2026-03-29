@@ -4,6 +4,7 @@ import { redirect } from "next/navigation"
 import styles from "@/styles/profil_karyawan.module.css"
 import ProfileForm from "./ProfileForm"
 import CopyIdButton from "./CopyIdButton"
+import PushNotificationManager from "@/components/PushNotificationManager"
 
 // Professional Line Icons
 const IconUser = () => (
@@ -147,6 +148,11 @@ export default async function EmployeeProfilePage() {
 
             <ProfileForm user={user} />
         </div>
+      </div>
+      
+      {/* 4. NOTIFICATION SETTINGS */}
+      <div style={{ marginTop: '20px' }}>
+        <PushNotificationManager />
       </div>
     </div>
   )

@@ -3,6 +3,7 @@ import { getSession } from "@/actions/auth"
 import { redirect } from "next/navigation"
 import styles from "@/styles/profil_karyawan.module.css"
 import AdminProfileForm from "./AdminProfileForm"
+import PushNotificationManager from "@/components/PushNotificationManager"
 
 // Professional SVG Icons
 const IconUser = () => (
@@ -137,9 +138,12 @@ export default async function AdminProfilePage() {
                 </div>
             </div>
 
-            {/* Reusable Form Component for Admin Editing */}
             <AdminProfileForm user={user} />
         </div>
+      </div>
+
+      <div style={{ marginTop: '20px' }}>
+        <PushNotificationManager />
       </div>
     </div>
   )
