@@ -36,6 +36,8 @@ export default function RootLayout({
       <head>
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+        <link rel="icon" href="/iconapps.png" />
+        <link rel="apple-touch-icon" href="/iconapps.png" />
       </head>
       <body>
         <RegisterServiceWorker />

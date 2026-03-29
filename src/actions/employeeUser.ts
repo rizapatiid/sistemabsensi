@@ -38,20 +38,7 @@ export async function submitKehadiranAction(status: "HADIR" | "IZIN", foto?: str
     }
   })
 
-  revalidatePath("/employee/absensi")
   revalidatePath("/employee/riwayat")
-
-  // Kirim Notifikasi Push
-  try {
-    await sendNotificationToUser(
-      session.id, 
-      "Absen Berhasil", 
-      `Anda telah berhasil melakukan absen ${status === "HADIR" ? "Hadir" : "Izin"} pada hari ini.`
-    )
-  } catch (e) {
-    console.error("Gagal mengirim notifikasi push absen:", e)
-  }
-
   return { success: true }
 }
 

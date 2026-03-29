@@ -3,7 +3,7 @@ const CACHE_NAME = 'rmp-absensi-v1';
 const ASSETS_TO_CACHE = [
   '/',
   '/favicon.ico',
-  '/icon.png',
+  '/iconapps.png',
   '/logositus.png',
 ];
 
@@ -55,8 +55,8 @@ self.addEventListener('push', function (event) {
       const data = event.data.json();
       const options = {
         body: data.body,
-        icon: data.icon || '/icon.png',
-        badge: '/badge.png',
+        icon: data.icon || '/iconapps.png',
+        badge: '/iconapps.png',
         vibrate: [100, 50, 100],
         data: {
           url: data.url || '/',

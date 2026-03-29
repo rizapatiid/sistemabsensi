@@ -185,8 +185,8 @@ export async function generatePayrollAction(formData: FormData) {
       }
     })
     
-    // Kirim Notifikasi Email Otomatis Jika Email Tersedia (GARDU PENGAMAN)
-    if (user.email) {
+    // Kirim Notifikasi Email Otomatis Jika Email Tersedia
+    if (user.email && user.emailNotifEnabled) {
       try {
         await sendPayrollNotificationEmail(user.email, user.nama, bulan, tahun, totalGaji)
       } catch (e) {
@@ -224,8 +224,8 @@ export async function togglePayrollStatusAction(id: string, currentStatus: strin
     include: { user: true }
   })
 
-  // Jika status berubah menjadi DIBAYAR, kirim email konfirmasi (GARDU PENGAMAN AKTIF)
-  if (newStatus === "DIBAYAR" && payroll.user.email) {
+  // Jika status berubah menjadi DIBAYAR, kirim email konfirmasi
+  if (newStatus === "DIBAYAR" && payroll.user.email && payroll.user.emailNotifEnabled) {
     try {
       await sendPaymentConfirmationEmail(
         payroll.user.email,

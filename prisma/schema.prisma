@@ -21,6 +21,7 @@ model User {
   rekeningBank String?
   noRekening   String?
   namaRekening String?
+  emailNotifEnabled Boolean @default(true)
   createdAt    DateTime     @default(now())
   updatedAt    DateTime     @updatedAt
 

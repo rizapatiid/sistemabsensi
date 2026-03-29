@@ -123,8 +123,8 @@ export default function AbsensiClient({
         </div>
       </section>
 
-      {msg && (
-        <div className={`${styles.alertBox} ${msg.type === "success" ? styles.successAlert : styles.errorAlert}`}>
+      {msg && msg.type === "error" && (
+        <div className={`${styles.alertBox} ${styles.errorAlert}`}>
           {msg.text}
         </div>
       )}
