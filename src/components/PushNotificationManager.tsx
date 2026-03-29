@@ -42,11 +42,16 @@ export default function PushNotificationManager() {
       setLoading(true);
       const registration = await navigator.serviceWorker.ready;
       
+      const publicKey = process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY;
+      if (!publicKey) {
+        console.error("VAPID Public Key is missing from environment variables.");
+        alert("Konfigurasi notifikasi tidak lengkap. Hubungi Admin.");
+        return;
+      }
+
       const sub = await registration.pushManager.subscribe({
         userVisibleOnly: true,
-        applicationServerKey: urlBase64ToUint8Array(
-          process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY!
-        ),
+        applicationServerKey: urlBase64ToUint8Array(publicKey),
       });
 
       const subData = JSON.parse(JSON.stringify(sub));
