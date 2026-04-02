@@ -80,6 +80,9 @@ export default function AbsensiClient({
   const [alasan, setAlasan] = useState("")
   const [submittedStatus, setSubmittedStatus] = useState<string | null>(null)
   const [uploadProgress, setUploadProgress] = useState(0)
+  const [izinSubtype, setIzinSubtype] = useState<"IZIN" | "LAINNYA">("IZIN")
+  const [capturedIzinPhoto, setCapturedIzinPhoto] = useState<string | null>(null)
+  const [izinCameraActive, setIzinCameraActive] = useState(false)
   
   const activeStatus = submittedStatus || existingStatus
   const videoRef = useRef<HTMLVideoElement>(null)
@@ -129,8 +132,13 @@ export default function AbsensiClient({
       if (!capturedPhoto || !capturedScreenshot) {
         setMsg({ type: "error", text: "Lengkapi bukti selfie dan screenshot terlebih dahulu!" }); return
       }
-    } else if (status === "IZIN" && (!alasan || !alasan.trim())) {
-      setMsg({ type: "error", text: "Alasan izin wajib diisi!" }); return
+    } else if (status === "IZIN") {
+      if (izinSubtype === "IZIN" && !capturedIzinPhoto) {
+        setMsg({ type: "error", text: "Wajib melampirkan foto/upload surat izin!" }); return
+      }
+      if (!alasan || !alasan.trim()) {
+        setMsg({ type: "error", text: "Keterangan wajib diisi!" }); return
+      }
     }
 
     setLoading(true); setMsg(null); setUploadProgress(0)
@@ -146,7 +154,12 @@ export default function AbsensiClient({
       })
     }, 150)
 
-    const res = await submitKehadiranAction(status, capturedPhoto || undefined, capturedScreenshot || undefined, alasan || undefined)
+    const res = await submitKehadiranAction(
+      izinSubtype === "LAINNYA" ? "LAINNYA" as any : status, 
+      status === "HADIR" ? capturedPhoto || undefined : capturedIzinPhoto || undefined, 
+      capturedScreenshot || undefined, 
+      alasan || undefined
+    )
     
     clearInterval(interval)
     setUploadProgress(100)
@@ -322,20 +335,101 @@ export default function AbsensiClient({
         </div>
       </section>
 
-      {/* 3. MODAL IZIN (Clean Popup) */}
+      {/* 3. MODAL IZIN (Refined) */}
       {showIzinModal && (
-        <div className={styles.modalOverlay} onClick={() => setShowIzinModal(false)}>
-          <div className={styles.modal} onClick={e => e.stopPropagation()}>
-            <div style={{ textAlign: 'center', marginBottom: '24px' }}>
-              <div style={{ background: '#f8fafc', padding: '16px', borderRadius: '50%', color: '#1e3a8a', display: 'inline-flex', marginBottom: '16px' }}><IconFileText /></div>
-              <h2 style={{ fontSize: "1.25rem", fontWeight: "800", color: "#0f172a", margin: 0 }}>Pengajuan Izin</h2>
-              <p style={{ fontSize: '0.8rem', color: '#64748b', marginTop: '4px' }}>Sebutkan alasan atau keterangan sakit Anda di bawah ini.</p>
+        <div className={styles.modalOverlay} onClick={() => { if(!loading) setShowIzinModal(false); }}>
+          <div className={styles.modal} onClick={e => e.stopPropagation()} style={{ maxWidth: '400px' }}>
+            <div style={{ textAlign: 'center', marginBottom: '20px' }}>
+              <div style={{ background: '#f8fafc', padding: '12px', borderRadius: '50%', color: '#1e3a8a', display: 'inline-flex', marginBottom: '12px' }}><IconFileText /></div>
+              <h2 style={{ fontSize: "1.15rem", fontWeight: "800", color: "#0f172a", margin: 0 }}>Pengajuan Non-Kehadiran</h2>
+            </div>
+
+            {/* Subtype Selector */}
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px', marginBottom: '20px', background: '#f1f5f9', padding: '4px', borderRadius: '8px' }}>
+              <button 
+                onClick={() => setIzinSubtype("IZIN")}
+                style={{ padding: '8px', borderRadius: '6px', fontSize: '0.8rem', fontWeight: '700', border: 'none', cursor: 'pointer', background: izinSubtype === "IZIN" ? '#fff' : 'transparent', color: izinSubtype === "IZIN" ? '#1e3a8a' : '#64748b', boxShadow: izinSubtype === "IZIN" ? '0 1px 3px rgba(0,0,0,0.1)' : 'none' }}
+              >
+                IZIN / SAKIT
+              </button>
+              <button 
+                onClick={() => setIzinSubtype("LAINNYA")}
+                style={{ padding: '8px', borderRadius: '6px', fontSize: '0.8rem', fontWeight: '700', border: 'none', cursor: 'pointer', background: izinSubtype === "LAINNYA" ? '#fff' : 'transparent', color: izinSubtype === "LAINNYA" ? '#1e3a8a' : '#64748b', boxShadow: izinSubtype === "LAINNYA" ? '0 1px 3px rgba(0,0,0,0.1)' : 'none' }}
+              >
+                LAINNYA
+              </button>
             </div>
             
-            <textarea className={styles.textArea} placeholder="Tulis alasan lengkap..." value={alasan} onChange={(e) => setAlasan(e.target.value)} rows={4} />
+            {izinSubtype === "IZIN" && (
+              <div style={{ marginBottom: '20px' }}>
+                <label style={{ fontSize: '0.7rem', fontWeight: '800', color: '#64748b', display: 'block', marginBottom: '8px', textTransform: 'uppercase' }}>Lampiran Surat Izin (Foto/File)</label>
+                <div className={`${styles.captureBox} ${capturedIzinPhoto ? styles.activeCaptureBox : ""}`} style={{ height: '120px' }}>
+                  {capturedIzinPhoto ? (
+                    <>
+                      <img src={capturedIzinPhoto} alt="Surat Izin" className={styles.previewImage} />
+                      <button onClick={() => setCapturedIzinPhoto(null)} className={styles.reCaptureBtn}>×</button>
+                    </>
+                  ) : izinCameraActive ? (
+                    <>
+                      <video ref={videoRef} autoPlay playsInline className={styles.videoElement} />
+                      <button onClick={async () => {
+                        if (videoRef.current && canvasRef.current) {
+                          const video = videoRef.current; const canvas = canvasRef.current
+                          canvas.width = video.videoWidth; canvas.height = video.videoHeight
+                          const ctx = canvas.getContext("2d")
+                          if (ctx) {
+                            ctx.drawImage(video, 0, 0); const dataUrl = canvas.toDataURL("image/jpeg", 0.8)
+                            const compressed = await compressImage(dataUrl, 800, 800)
+                            setCapturedIzinPhoto(compressed); const stream = video.srcObject as MediaStream
+                            if (stream) stream.getTracks().forEach(t => t.stop())
+                            setIzinCameraActive(false)
+                          }
+                        }
+                      }} className={styles.snapBtn} style={{ fontSize: '0.6rem', padding: '6px 12px' }}>AMBIL FOTO</button>
+                    </>
+                  ) : (
+                    <div style={{ display: 'flex', gap: '12px' }}>
+                      <button onClick={async () => {
+                        setIzinCameraActive(true)
+                        try {
+                          const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } })
+                          if (videoRef.current) videoRef.current.srcObject = stream
+                        } catch (err) { setMsg({ type: "error", text: "Gagal kamera" }); setIzinCameraActive(false); }
+                      }} className={styles.secondaryBtn} style={{ padding: '8px 12px', fontSize: '0.7rem' }}>KAMERA</button>
+                      
+                      <label className={styles.secondaryBtn} style={{ padding: '8px 12px', fontSize: '0.7rem', cursor: 'pointer' }}>
+                        UPLOAD
+                        <input type="file" accept="image/*" style={{ display: 'none' }} onChange={async (e) => {
+                          const file = e.target.files?.[0]
+                          if (file) {
+                            const reader = new FileReader()
+                            reader.onloadend = async () => {
+                              const compressed = await compressImage(reader.result as string, 1000, 1000)
+                              setCapturedIzinPhoto(compressed)
+                            }
+                            reader.readAsDataURL(file)
+                          }
+                        }} />
+                      </label>
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
+
+            <div style={{ marginBottom: '20px' }}>
+              <label style={{ fontSize: '0.7rem', fontWeight: '800', color: '#64748b', display: 'block', marginBottom: '8px', textTransform: 'uppercase' }}>
+                {izinSubtype === "IZIN" ? "Keterangan Izin" : "Keterangan / Keperluan"}
+              </label>
+              <textarea className={styles.textArea} placeholder="Tuliskan keterangan..." value={alasan} onChange={(e) => setAlasan(e.target.value)} rows={3} style={{ fontSize: '0.85rem' }} />
+            </div>
 
             <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '12px' }}>
-              <button className={styles.primaryBtn} onClick={() => handleAbsen("IZIN")} disabled={loading || !alasan.trim()}>
+              <button 
+                className={styles.primaryBtn} 
+                onClick={() => handleAbsen("IZIN")} 
+                disabled={loading || (izinSubtype === "IZIN" && !capturedIzinPhoto) || !alasan.trim()}
+              >
                 {loading ? (
                    <div style={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '4px' }}>
                     <span style={{ fontSize: '0.8rem' }}>MENGIRIM ({uploadProgress}%)</span>
@@ -343,9 +437,9 @@ export default function AbsensiClient({
                       <div style={{ width: `${uploadProgress}%`, height: '100%', background: '#fff', transition: 'width 0.2s ease-out' }} />
                     </div>
                   </div>
-                ) : "KIRIM IZIN"}
+                ) : "KIRIM PENGAJUAN"}
               </button>
-              <button className={styles.secondaryBtn} onClick={() => { setShowIzinModal(false); setAlasan(""); }} disabled={loading}>
+              <button className={styles.secondaryBtn} onClick={() => { setShowIzinModal(false); setAlasan(""); setCapturedIzinPhoto(null); setIzinCameraActive(false); }} disabled={loading}>
                 BATAL
               </button>
             </div>
