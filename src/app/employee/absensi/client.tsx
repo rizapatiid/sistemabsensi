@@ -49,6 +49,7 @@ export default function AbsensiClient({
   const [showIzinModal, setShowIzinModal] = useState(false)
   const [alasan, setAlasan] = useState("")
   const [submittedStatus, setSubmittedStatus] = useState<string | null>(null)
+  const [uploadProgress, setUploadProgress] = useState(0)
   
   const activeStatus = submittedStatus || existingStatus
   const videoRef = useRef<HTMLVideoElement>(null)
@@ -98,10 +99,27 @@ export default function AbsensiClient({
       setMsg({ type: "error", text: "Alasan izin wajib diisi!" }); return
     }
 
-    setLoading(true); setMsg(null)
+    setLoading(true); setMsg(null); setUploadProgress(0)
+
+    // Simulate progress
+    const interval = setInterval(() => {
+      setUploadProgress(prev => {
+        if (prev >= 90) {
+          clearInterval(interval)
+          return 90
+        }
+        return prev + 5
+      })
+    }, 150)
+
     const res = await submitKehadiranAction(status, capturedPhoto || undefined, capturedScreenshot || undefined, alasan || undefined)
+    
+    clearInterval(interval)
+    setUploadProgress(100)
+
     if (res?.error) {
       setMsg({ type: "error", text: res.error })
+      setUploadProgress(0)
     } else {
       setMsg({ type: "success", text: "Data kehadiran berhasil dikirim!" })
       setSubmittedStatus(status); setShowIzinModal(false); setAlasan("")
@@ -211,7 +229,14 @@ export default function AbsensiClient({
 
             <div className={styles.actionArea}>
               <button className={styles.primaryBtn} onClick={() => handleAbsen("HADIR")} disabled={loading || !capturedPhoto || !capturedScreenshot}>
-                {loading ? "MENGIRIM..." : ( <> <IconSend /> KIRIM KEHADIRAN </> )}
+                {loading ? (
+                  <div style={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '4px' }}>
+                    <div style={{ fontSize: '0.9rem' }}>MENGIRIM ({uploadProgress}%)</div>
+                    <div style={{ width: '100%', height: '4px', background: 'rgba(255,255,255,0.2)', borderRadius: '10px', overflow: 'hidden' }}>
+                      <div style={{ width: `${uploadProgress}%`, height: '100%', background: '#fff', transition: 'width 0.2s ease-out' }} />
+                    </div>
+                  </div>
+                ) : ( <> <IconSend /> KIRIM KEHADIRAN </> )}
               </button>
               <button className={styles.secondaryBtn} onClick={() => setShowIzinModal(true)} disabled={loading}>
                 AJUKAN IZIN
@@ -277,7 +302,14 @@ export default function AbsensiClient({
 
             <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '12px' }}>
               <button className={styles.primaryBtn} onClick={() => handleAbsen("IZIN")} disabled={loading || !alasan.trim()}>
-                {loading ? "KIRIM..." : "KIRIM IZIN"}
+                {loading ? (
+                   <div style={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '4px' }}>
+                    <span style={{ fontSize: '0.8rem' }}>MENGIRIM ({uploadProgress}%)</span>
+                    <div style={{ width: '100%', height: '3px', background: 'rgba(255,255,255,0.2)', borderRadius: '10px', overflow: 'hidden' }}>
+                      <div style={{ width: `${uploadProgress}%`, height: '100%', background: '#fff', transition: 'width 0.2s ease-out' }} />
+                    </div>
+                  </div>
+                ) : "KIRIM IZIN"}
               </button>
               <button className={styles.secondaryBtn} onClick={() => { setShowIzinModal(false); setAlasan(""); }} disabled={loading}>
                 BATAL
