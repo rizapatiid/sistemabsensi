@@ -41,6 +41,36 @@ export default function AbsensiClient({
   hasAttendance: boolean,
   existingStatus?: string
 }) {
+  const compressImage = (dataUrl: string, maxWidth = 800, maxHeight = 800): Promise<string> => {
+    return new Promise((resolve) => {
+      const img = new Image()
+      img.onload = () => {
+        const canvas = document.createElement('canvas')
+        let width = img.width
+        let height = img.height
+
+        if (width > height) {
+          if (width > maxWidth) {
+            height *= maxWidth / width
+            width = maxWidth
+          }
+        } else {
+          if (height > maxHeight) {
+            width *= maxHeight / height
+            height = maxHeight
+          }
+        }
+
+        canvas.width = width
+        canvas.height = height
+        const ctx = canvas.getContext('2d')
+        ctx?.drawImage(img, 0, 0, width, height)
+        resolve(canvas.toDataURL('image/jpeg', 0.7))
+      }
+      img.src = dataUrl
+    })
+  }
+
   const [loading, setLoading] = useState(false)
   const [msg, setMsg] = useState<{type: "error"|"success", text: string} | null>(null)
   const [capturedPhoto, setCapturedPhoto] = useState<string | null>(null)
@@ -55,11 +85,14 @@ export default function AbsensiClient({
   const videoRef = useRef<HTMLVideoElement>(null)
   const canvasRef = useRef<HTMLCanvasElement>(null)
 
-  const handleScreenshot = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleScreenshot = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
     if (file) {
       const reader = new FileReader()
-      reader.onloadend = () => setCapturedScreenshot(reader.result as string)
+      reader.onloadend = async () => {
+        const compressed = await compressImage(reader.result as string, 1200, 1200)
+        setCapturedScreenshot(compressed)
+      }
       reader.readAsDataURL(file)
     }
   }
@@ -76,14 +109,15 @@ export default function AbsensiClient({
     }
   }
 
-  const takePhoto = () => {
+  const takePhoto = async () => {
     if (videoRef.current && canvasRef.current) {
       const video = videoRef.current; const canvas = canvasRef.current
       canvas.width = video.videoWidth; canvas.height = video.videoHeight
       const ctx = canvas.getContext("2d")
       if (ctx) {
-        ctx.drawImage(video, 0, 0); const dataUrl = canvas.toDataURL("image/jpeg")
-        setCapturedPhoto(dataUrl); const stream = video.srcObject as MediaStream
+        ctx.drawImage(video, 0, 0); const dataUrl = canvas.toDataURL("image/jpeg", 0.8)
+        const compressed = await compressImage(dataUrl, 800, 800)
+        setCapturedPhoto(compressed); const stream = video.srcObject as MediaStream
         if (stream) stream.getTracks().forEach(t => t.stop())
         setCameraActive(false)
       }
