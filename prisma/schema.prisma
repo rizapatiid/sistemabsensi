@@ -93,3 +93,11 @@ model Announcement {
   scheduleDate DateTime? // Tanggal jadwal pengumuman (jika null, langsung tampil)
   tanggal      DateTime @default(now())
 }
+
+model PasswordReset {
+  id        String   @id @default(cuid())
+  email     String
+  otp       String
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+}

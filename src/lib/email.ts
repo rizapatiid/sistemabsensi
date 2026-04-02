@@ -155,3 +155,26 @@ export async function sendLoginNotificationEmail(toEmail: string, employeeName: 
     return { success: true }
   } catch (err) { console.error("SMTP Error:", err); return { error: "Network anomaly during transmission" } }
 }
+/**
+ * 4. NOTIFIKASI RESET PASSWORD (OTP)
+ */
+export async function sendResetPasswordEmail(toEmail: string, employeeName: string, otp: string) {
+  if (!toEmail) return { error: "Target email not found" }
+
+  const content = `
+    Halo <strong>${employeeName.toUpperCase()}</strong>,<br/><br/>
+    Anda telah meminta untuk mengatur ulang kata sandi akun RMP Digitals Anda. Gunakan kode verifikasi di bawah ini untuk melanjutkan proses:
+    
+    <div style="background: #f8fafc; border: 2px dashed #1e3a8a; margin: 30px 0; border-radius: 16px; padding: 30px; text-align: center;">
+      <span style="font-size: 0.75rem; font-weight: 850; text-transform: uppercase; color: #64748b; letter-spacing: 0.15em; display: block; margin-bottom: 10px;">Kode OTP Anda</span>
+      <h2 style="font-size: 1.8rem; font-weight: 950; margin: 0; color: #1e3a8a; letter-spacing: 0.2em;">${otp}</h2>
+    </div>
+    
+    Kode ini hanya berlaku selama <strong>10 menit</strong>. Jika Anda tidak meminta pengaturan ulang kata sandi, abaikan email ini atau hubungi tim IT kami segera.
+  `
+
+  try {
+    await transporter.sendMail({ from: emailFrom, to: toEmail, subject: `[OTP] - Kode Pengaturan Ulang Kata Sandi RMP`, html: emailMasterLayout("Reset Password", "#1e3a8a", "Permintaan Atur Ulang Sandi.", content) })
+    return { success: true }
+  } catch (err) { console.error("SMTP Error:", err); return { error: "Gagal mengirim email OTP" } }
+}

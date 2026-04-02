@@ -3,7 +3,7 @@
 import prisma from "@/lib/prisma"
 import { cookies, headers } from "next/headers"
 import { redirect } from "next/navigation"
-import { sendLoginNotificationEmail } from "@/lib/email"
+import { sendLoginNotificationEmail, sendResetPasswordEmail } from "@/lib/email"
 
 export async function loginAction(formData: FormData) {
   const idKaryawan = formData.get("idKaryawan") as string
@@ -26,12 +26,17 @@ export async function loginAction(formData: FormData) {
     })
   }
 
-  const user = await prisma.user.findUnique({
-    where: { id: idKaryawan }
+  const user = await prisma.user.findFirst({
+    where: {
+      OR: [
+        { id: { equals: idKaryawan, mode: 'insensitive' } },
+        { email: { equals: idKaryawan, mode: 'insensitive' } }
+      ]
+    }
   })
 
   if (!user || user.password !== password) {
-    return { error: "ID Karyawan atau Password salah." }
+    return { error: "ID Karyawan/Email atau Password salah." }
   }
 
   if (user.status === "BLOKIR") {
@@ -65,6 +70,87 @@ export async function loginAction(formData: FormData) {
   } else {
     redirect("/employee/home")
   }
+}
+
+export async function requestPasswordResetAction(email: string) {
+  if (!email) return { error: "Email harus diisi." }
+
+  try {
+    const user = await prisma.user.findFirst({
+      where: { 
+        email: {
+          equals: email.toLowerCase().trim(),
+          mode: 'insensitive' 
+        } 
+      }
+    })
+
+    if (!user) {
+      // Untuk keamanan, jangan beri tahu jika email tidak ada
+      // Tapi dalam aplikasi internal, mungkin lebih baik beri tahu.
+      return { error: "Akun dengan email tersebut tidak ditemukan." }
+    }
+
+    const otp = Math.floor(100000 + Math.random() * 900000).toString()
+    const expiresAt = new Date(Date.now() + 10 * 60 * 1000) // 10 menit
+
+    await prisma.passwordReset.create({
+      data: {
+        email,
+        otp,
+        expiresAt
+      }
+    })
+
+    await sendResetPasswordEmail(email, user.nama, otp)
+    return { success: true }
+  } catch (err) {
+    console.error("DEBUG_OTP_ERROR:", err)
+    return { error: "Gagal memproses permintaan reset password. Silakan cek koneksi internet atau hubungi admin." }
+  }
+}
+
+export async function verifyOtpAction(email: string, otp: string) {
+  const reset = await prisma.passwordReset.findFirst({
+    where: {
+      email,
+      otp,
+      expiresAt: { gt: new Date() }
+    },
+    orderBy: { createdAt: 'desc' }
+  })
+
+  if (!reset) return { error: "Kode OTP tidak valid atau sudah kedaluwarsa." }
+  return { success: true }
+}
+
+export async function resetPasswordAction(formData: FormData) {
+  const email = formData.get("email") as string
+  const otp = formData.get("otp") as string
+  const newPassword = formData.get("newPassword") as string
+
+  const reset = await prisma.passwordReset.findFirst({
+    where: {
+      email,
+      otp,
+      expiresAt: { gt: new Date() }
+    },
+    orderBy: { createdAt: 'desc' }
+  })
+
+  if (!reset) return { error: "Sesi reset tidak valid." }
+
+  await prisma.user.updateMany({
+    where: { email },
+    data: { password: newPassword } // In production, hash this!
+  })
+
+  // Hapus semua reset request untuk email ini
+  await prisma.passwordReset.deleteMany({
+    where: { email }
+  })
+
+  return { success: true }
 }
 
 export async function logoutAction() {
