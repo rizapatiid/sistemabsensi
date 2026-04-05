@@ -6,7 +6,7 @@ import { usePathname } from "next/navigation"
 import styles from "@/styles/dashboard.module.css"
 import Navbar from "@/components/Navbar"
 import { getTotalUnreadCount } from "@/actions/chat"
-import { getUnreadAnnouncementCount, markAnnouncementsAsRead } from "@/actions/admin"
+import { getUnreadAnnouncementCount, markAnnouncementsAsRead, getUnreadPayrollCount, markPayrollsAsRead } from "@/actions/admin"
 
 interface EmployeeLayoutClientProps {
   children: React.ReactNode;
@@ -18,6 +18,7 @@ export default function EmployeeLayoutClient({ children, user }: EmployeeLayoutC
   const [isSidebarOpen, setIsSidebarOpen] = useState(false)
   const [unreadCount, setUnreadCount] = useState(0)
   const [announcementCount, setAnnouncementCount] = useState(0)
+  const [payrollCount, setPayrollCount] = useState(0)
 
   // Initialize sidebar based on screen width on mount
   useEffect(() => {
@@ -27,12 +28,14 @@ export default function EmployeeLayoutClient({ children, user }: EmployeeLayoutC
 
     // Fetch total unread count
     const fetchData = async () => {
-      const [chatRes, annRes] = await Promise.all([
+      const [chatRes, annRes, payRes] = await Promise.all([
         getTotalUnreadCount(user.id),
-        getUnreadAnnouncementCount(user.id)
+        getUnreadAnnouncementCount(user.id),
+        getUnreadPayrollCount(user.id)
       ])
       if (chatRes.success) setUnreadCount(chatRes.count)
       if (annRes.success) setAnnouncementCount(annRes.count)
+      if (payRes.success) setPayrollCount(payRes.count)
     }
 
     fetchData()
@@ -48,6 +51,15 @@ export default function EmployeeLayoutClient({ children, user }: EmployeeLayoutC
       })
     }
   }, [pathname, user.id, announcementCount])
+
+  // Clear payroll badge when visiting page
+  useEffect(() => {
+    if (pathname === "/employee/transaksi" && payrollCount > 0) {
+      markPayrollsAsRead(user.id).then(res => {
+        if (res.success) setPayrollCount(0)
+      })
+    }
+  }, [pathname, user.id, payrollCount])
 
   const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen)
 
@@ -155,6 +167,9 @@ export default function EmployeeLayoutClient({ children, user }: EmployeeLayoutC
                   )}
                   {link.name === "Pusat Pengumuman" && announcementCount > 0 && (
                     <span className={styles.sidebarBadge}>{announcementCount}</span>
+                  )}
+                  {link.name === "Slip Gaji & Rekening" && payrollCount > 0 && (
+                    <span className={styles.sidebarBadge}>{payrollCount}</span>
                   )}
                 </span>
                 <span className={styles.navLabel}>{link.name}</span>

@@ -297,3 +297,33 @@ export async function togglePayrollStatusAction(id: string, currentStatus: strin
     }
   }
 }
+
+export async function getUnreadPayrollCount(userId: string) {
+  try {
+    const count = await prisma.payroll.count({
+      where: {
+        idKaryawan: userId,
+        isRead: false
+      }
+    })
+    return { success: true, count }
+  } catch (error) {
+    return { success: false, count: 0 }
+  }
+}
+
+export async function markPayrollsAsRead(userId: string) {
+  try {
+    await prisma.payroll.updateMany({
+      where: {
+        idKaryawan: userId,
+        isRead: false
+      },
+      data: { isRead: true }
+    })
+    revalidatePath("/employee/transaksi")
+    return { success: true }
+  } catch (error) {
+    return { success: false }
+  }
+}

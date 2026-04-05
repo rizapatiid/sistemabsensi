@@ -76,6 +76,7 @@ model Payroll {
 
   createdAt            DateTime @default(now())
   statusPembayaran     String   @default("DIPROSES") // DIBAYAR / DIPROSES
+  isRead               Boolean  @default(false)
   user                 User     @relation(fields: [idKaryawan], references: [id], onDelete: Cascade)
 
   @@unique([idKaryawan, bulan, tahun])
