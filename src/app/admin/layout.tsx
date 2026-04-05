@@ -15,7 +15,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
   if (!userProfile) redirect("/")
 
   return (
-    <AdminLayoutClient user={{ name: userProfile.nama, role: userProfile.role }} >
+    <AdminLayoutClient user={{ id: session.id, name: userProfile.nama, role: userProfile.role }} >
       {children}
     </AdminLayoutClient>
   )

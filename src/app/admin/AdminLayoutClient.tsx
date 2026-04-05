@@ -5,22 +5,34 @@ import Link from "next/link"
 import { usePathname } from "next/navigation"
 import styles from "@/styles/dashboard.module.css"
 import Navbar from "@/components/Navbar"
+import { getTotalUnreadCount } from "@/actions/chat"
 
 interface AdminLayoutClientProps {
   children: React.ReactNode;
-  user: { name: string; role: string };
+  user: { id: string; name: string; role: string };
 }
 
 export default function AdminLayoutClient({ children, user }: AdminLayoutClientProps) {
   const pathname = usePathname()
   const [isSidebarOpen, setIsSidebarOpen] = useState(false)
+  const [unreadCount, setUnreadCount] = useState(0)
 
   // Initialize sidebar based on screen width on mount
   useEffect(() => {
     if (window.innerWidth > 1024) {
       setIsSidebarOpen(true)
     }
-  }, [])
+
+    // Fetch total unread count
+    const fetchUnread = async () => {
+      const res = await getTotalUnreadCount(user.id)
+      if (res.success) setUnreadCount(res.count)
+    }
+
+    fetchUnread()
+    const interval = setInterval(fetchUnread, 10000)
+    return () => clearInterval(interval)
+  }, [user.id])
 
   const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen)
 
@@ -43,7 +55,7 @@ export default function AdminLayoutClient({ children, user }: AdminLayoutClientP
     { name: "Kelola Admin", href: "/admin/kelola-admin", icon: (
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
     ) },
-    { name: "Support Chat", href: "/admin/chat", icon: (
+    { name: "Chat", href: "/admin/chat", icon: (
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
     ) },
   ]
@@ -127,7 +139,12 @@ export default function AdminLayoutClient({ children, user }: AdminLayoutClientP
                   }
                 }}
               >
-                <span className={styles.navIcon}>{link.icon}</span>
+                <span className={styles.navIcon}>
+                   {link.icon}
+                   {link.name === "Chat" && unreadCount > 0 && (
+                     <span className={styles.sidebarBadge}>{unreadCount}</span>
+                   )}
+                </span>
                 <span className={styles.navLabel}>{link.name}</span>
               </Link>
             )

@@ -5,22 +5,34 @@ import Link from "next/link"
 import { usePathname } from "next/navigation"
 import styles from "@/styles/dashboard.module.css"
 import Navbar from "@/components/Navbar"
+import { getTotalUnreadCount } from "@/actions/chat"
 
 interface EmployeeLayoutClientProps {
   children: React.ReactNode;
-  user: { name: string; role: string };
+  user: { id: string; name: string; role: string };
 }
 
 export default function EmployeeLayoutClient({ children, user }: EmployeeLayoutClientProps) {
   const pathname = usePathname()
   const [isSidebarOpen, setIsSidebarOpen] = useState(false)
+  const [unreadCount, setUnreadCount] = useState(0)
 
   // Initialize sidebar based on screen width on mount
   useEffect(() => {
     if (window.innerWidth > 1024) {
       setIsSidebarOpen(true)
     }
-  }, [])
+
+    // Fetch total unread count
+    const fetchUnread = async () => {
+      const res = await getTotalUnreadCount(user.id)
+      if (res.success) setUnreadCount(res.count)
+    }
+
+    fetchUnread()
+    const interval = setInterval(fetchUnread, 10000)
+    return () => clearInterval(interval)
+  }, [user.id])
 
   const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen)
 
@@ -40,7 +52,7 @@ export default function EmployeeLayoutClient({ children, user }: EmployeeLayoutC
     { name: "Slip Gaji & Rekening", href: "/employee/transaksi", icon: (
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/><path d="M7 15h.01"/><path d="M11 15h.01"/><path d="M15 15h.01"/></svg>
     ) },
-    { name: "Bantuan & Chat", href: "/employee/chat", icon: (
+    { name: "Chat", href: "/employee/chat", icon: (
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
     ) },
   ]
@@ -121,7 +133,12 @@ export default function EmployeeLayoutClient({ children, user }: EmployeeLayoutC
                    if (window.innerWidth <= 1024) setIsSidebarOpen(false)
                 }}
               >
-                <span className={styles.navIcon}>{link.icon}</span>
+                <span className={styles.navIcon}>
+                  {link.icon}
+                  {link.name === "Chat" && unreadCount > 0 && (
+                    <span className={styles.sidebarBadge}>{unreadCount}</span>
+                  )}
+                </span>
                 <span className={styles.navLabel}>{link.name}</span>
               </Link>
             )

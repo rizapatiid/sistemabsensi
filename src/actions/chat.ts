@@ -142,6 +142,20 @@ export async function getChatList(userId: string) {
   }
 }
 
+export async function getTotalUnreadCount(userId: string) {
+  try {
+    const count = await prisma.message.count({
+      where: {
+        receiverId: userId,
+        isRead: false
+      }
+    })
+    return { success: true, count }
+  } catch (error) {
+    return { success: false, count: 0 }
+  }
+}
+
 export async function deleteMessage(messageId: string, userId: string) {
   try {
     const message = await prisma.message.findUnique({ where: { id: messageId } })

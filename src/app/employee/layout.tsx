@@ -55,7 +55,7 @@ export default async function EmployeeLayout({ children }: { children: React.Rea
   }
 
   return (
-    <EmployeeLayoutClient user={{ name: user.nama, role: user.role }} >
+    <EmployeeLayoutClient user={{ id: session.id, name: user.nama, role: user.role }} >
       {children}
     </EmployeeLayoutClient>
   )
