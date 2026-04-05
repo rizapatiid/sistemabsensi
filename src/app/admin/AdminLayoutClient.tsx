@@ -43,6 +43,9 @@ export default function AdminLayoutClient({ children, user }: AdminLayoutClientP
     { name: "Kelola Admin", href: "/admin/kelola-admin", icon: (
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
     ) },
+    { name: "Support Chat", href: "/admin/chat", icon: (
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+    ) },
   ]
 
   return (
@@ -52,13 +55,64 @@ export default function AdminLayoutClient({ children, user }: AdminLayoutClientP
         onClick={() => setIsSidebarOpen(false)}
       />
       <aside className={`${styles.sidebar} ${!isSidebarOpen ? styles.sidebarCollapsed : ""} ${isSidebarOpen ? styles.sidebarActive : ""}`}>
-        <div className={styles.logo}>
-          <img 
-            src="/logositus.png" 
-            alt="RMP Digitals" 
-            className={styles.sidebarLogo}
-          />
+        {/* Sidebar Header: Perfectly Aligned with Topbar (70px) */}
+        <div style={{ 
+          padding: !isSidebarOpen ? '0' : '0 16px', 
+          display: 'flex', 
+          flexDirection: isSidebarOpen ? 'row' : 'column',
+          alignItems: 'center',
+          justifyContent: isSidebarOpen ? 'space-between' : 'center',
+          gap: '12px',
+          borderBottom: '1px solid #f1f5f9',
+          marginBottom: '8px',
+          height: '70px',
+          minHeight: '70px'
+        }}>
+          {/* LOGO (Only shown when expanded, on the LEFT) */}
+          {isSidebarOpen && (
+            <img 
+              src="/logositus.png" 
+              alt="RMP Digitals" 
+              style={{ height: '36px', width: 'auto', objectFit: 'contain' }}
+            />
+          )}
+
+          {/* THE TOGGLE BUTTON (On the RIGHT when expanded, CENTER when collapsed) */}
+          <button 
+            className={`hamburger-btn ${!isSidebarOpen ? 'is-collapsed' : ''}`} 
+            onClick={toggleSidebar}
+            style={{ 
+              background: !isSidebarOpen ? '#1e40af' : 'white', 
+              color: !isSidebarOpen ? 'white' : '#1e40af',
+              border: '1px solid #eef2f6',
+              borderRadius: '10px',
+              width: '38px',
+              height: '38px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              cursor: 'pointer',
+              flexShrink: 0,
+              transition: 'all 0.3s cubic-bezier(0.16, 1, 0.3, 1)',
+              boxShadow: '0 2px 4px rgba(0,0,0,0.05)'
+            }}
+          >
+            {!isSidebarOpen ? (
+              /* COLLAPSED: GARIS 3 (Hamburger) */
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <line x1="3" y1="12" x2="21" y2="12"></line>
+                <line x1="3" y1="6" x2="21" y2="6"></line>
+                <line x1="3" y1="18" x2="21" y2="18"></line>
+              </svg>
+            ) : (
+              /* EXPANDED: X (Close) */
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line>
+              </svg>
+            )}
+          </button>
         </div>
+        
         <nav className={styles.nav}>
           {navLinks.map((link) => {
             const isActive = pathname === link.href || pathname.startsWith(link.href + "/")
@@ -82,7 +136,7 @@ export default function AdminLayoutClient({ children, user }: AdminLayoutClientP
       </aside>
       <div className={styles.mainWrapper}>
         <Navbar user={user} onMobileMenuToggle={toggleSidebar} isSidebarCollapsed={!isSidebarOpen} />
-        <main className={styles.mainContent}>
+        <main className={styles.mainContent} style={pathname.includes("/chat") ? { padding: 0 } : {}}>
           {children}
         </main>
       </div>

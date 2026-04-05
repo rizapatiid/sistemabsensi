@@ -28,6 +28,8 @@ model User {
   attendances  Attendance[]
   payrolls     Payroll[]
   pushSubscriptions PushSubscription[]
+  sentMessages Message[] @relation("SentMessages")
+  receivedMessages Message[] @relation("ReceivedMessages")
 }
 
 model PushSubscription {
@@ -100,4 +102,16 @@ model PasswordReset {
   otp       String
   expiresAt DateTime
   createdAt DateTime @default(now())
+}
+
+model Message {
+  id         String   @id @default(cuid())
+  senderId   String
+  receiverId String?  // Optional: null means global or system broadcast
+  content    String
+  isRead     Boolean  @default(false)
+  createdAt  DateTime @default(now())
+
+  sender     User     @relation("SentMessages", fields: [senderId], references: [id], onDelete: Cascade)
+  receiver   User?    @relation("ReceivedMessages", fields: [receiverId], references: [id], onDelete: SetNull)
 }

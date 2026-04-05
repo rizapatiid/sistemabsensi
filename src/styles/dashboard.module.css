@@ -22,7 +22,7 @@
 }
 
 .sidebarCollapsed {
-  width: 72px !important;
+  width: 84px !important;
 }
 
 .sidebarCollapsed .logoBrand,
@@ -35,7 +35,7 @@
 .sidebarCollapsed .navLink {
   justify-content: center;
   padding: 12px 0;
-  width: 48px;
+  width: 54px;
   margin: 0 auto;
 }
 
@@ -44,12 +44,13 @@
 }
 
 .logo {
-  padding: 24px 20px;
+  padding: 16px 20px;
   display: flex;
   align-items: center;
-  gap: 12px;
+  justify-content: center;
   border-bottom: 1px solid #f1f5f9;
   margin-bottom: 8px;
+  min-height: 80px;
 }
 
 .logoText {

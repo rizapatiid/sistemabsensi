@@ -75,7 +75,8 @@
   gap: 8px;
   align-items: center;
   margin-top: 8px;
-  flex-wrap: wrap; /* Allow wrapping on very small screens to avoid overflow */
+  flex-wrap: wrap;
+  /* Allow wrapping on very small screens to avoid overflow */
 }
 
 .filterSelect {
@@ -87,7 +88,8 @@
   font-size: 0.85rem;
   font-weight: 600;
   outline: none;
-  flex: 1; /* Grow evenly */
+  flex: 1;
+  /* Grow evenly */
   min-width: 100px;
 }
 
@@ -142,7 +144,8 @@
 .table {
   width: 100%;
   border-collapse: collapse;
-  min-width: 600px; /* Ensure table doesn't shrink too much */
+  min-width: 600px;
+  /* Ensure table doesn't shrink too much */
 }
 
 .table th {
@@ -165,8 +168,17 @@
   vertical-align: middle;
 }
 
-.dateMain { font-weight: 700; color: #0f172a; display: block; }
-.dateSub { font-size: 0.75rem; color: #94a3b8; display: block; }
+.dateMain {
+  font-weight: 700;
+  color: #0f172a;
+  display: block;
+}
+
+.dateSub {
+  font-size: 0.75rem;
+  color: #94a3b8;
+  display: block;
+}
 
 .badge {
   padding: 6px 12px;
@@ -179,24 +191,72 @@
   white-space: nowrap;
 }
 
-.badgeHadir { background: #dcfce7; color: #166534; }
-.badgeIzin { background: #dbeafe; color: #1e40af; }
+.badgeHadir {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.badgeIzin {
+  background: #dbeafe;
+  color: #1e40af;
+}
 
 /* DESKTOP ENHANCEMENTS */
 @media (min-width: 769px) {
-  .headerSection { flex-direction: row; padding: 32px; align-items: center; }
-  .headerContent { flex: 1; }
-  .statsGrid { width: auto; grid-template-columns: repeat(2, minmax(180px, 1fr)); }
-  .statCard { padding: 20px 24px; }
-  .statValue { font-size: 1.75rem; }
-  .filterBar { margin-top: 16px; width: fit-content; }
-  .filterSelect { min-width: 150px; }
-  .headerContent h1 { font-size: 1.75rem; }
-  .mainCard { padding: 32px; }
-  .table th, .table td { padding: 16px 24px; }
+  .headerSection {
+    flex-direction: row;
+    padding: 32px;
+    align-items: center;
+  }
+
+  .headerContent {
+    flex: 1;
+  }
+
+  .statsGrid {
+    width: auto;
+    grid-template-columns: repeat(2, minmax(180px, 1fr));
+  }
+
+  .statCard {
+    padding: 20px 24px;
+  }
+
+  .statValue {
+    font-size: 1.75rem;
+  }
+
+  .filterBar {
+    margin-top: 16px;
+    width: fit-content;
+  }
+
+  .filterSelect {
+    min-width: 150px;
+  }
+
+  .headerContent h1 {
+    font-size: 1.75rem;
+  }
+
+  .mainCard {
+    padding: 32px;
+  }
+
+  .table th,
+  .table td {
+    padding: 16px 24px;
+  }
 }
 
 @media (max-width: 600px) {
-  .statsGrid { grid-template-columns: 1fr; } /* Stack stats on very small screens */
-  .filterSelect { min-width: 0; width: 100%; }
+  .statsGrid {
+    grid-template-columns: 1fr;
+  }
+
+  /* Stack stats on very small screens */
+  .filterSelect {
+    min-width: 0;
+    width: 100%;
+  }
 }

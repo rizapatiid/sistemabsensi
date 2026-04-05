@@ -22,17 +22,31 @@ export default function Navbar({ user, onMobileMenuToggle, isSidebarCollapsed }:
   return (
     <header className={`navbar ${isSidebarCollapsed ? 'sidebar-state-collapsed' : ''}`}>
       <div className="navbar-left">
-        <button className="hamburger-btn" onClick={onMobileMenuToggle}>
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+        {/* Shown conditionally on Desktop (only when sidebar is collapsed) and always on Mobile Toggle */}
+        {isSidebarCollapsed && (
+          <img
+            src="/logositus.png"
+            alt="RMP Digitals"
+            className="navbar-logo-desktop"
+          />
+        )}
+
+        <button
+          className="navbar-mobile-toggle"
+          onClick={onMobileMenuToggle}
+        >
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
             <line x1="3" y1="12" x2="21" y2="12"></line>
             <line x1="3" y1="6" x2="21" y2="6"></line>
             <line x1="3" y1="18" x2="21" y2="18"></line>
           </svg>
         </button>
-        <img 
-          src="/logositus.png" 
-          alt="RMP Digitals" 
-          className="navbar-logo"
+
+        {/* For mobile view, always show logo next to toggle */}
+        <img
+          src="/logositus.png"
+          alt="RMP Digitals"
+          className="navbar-logo-mobile"
         />
       </div>
       <div className="navbar-right">
@@ -54,7 +68,7 @@ export default function Navbar({ user, onMobileMenuToggle, isSidebarCollapsed }:
               </svg>
             </div>
           </div>
-          
+
           {isDropdownOpen && (
             <div className="user-dropdown glass" onClick={(e) => e.stopPropagation()}>
               <div className="dropdown-header">
@@ -62,7 +76,7 @@ export default function Navbar({ user, onMobileMenuToggle, isSidebarCollapsed }:
                 <p>{user?.role}</p>
               </div>
               <div className="dropdown-divider"></div>
-              <div 
+              <div
                 className="dropdown-item profile-item"
                 onClick={() => {
                   setIsDropdownOpen(false);
@@ -76,7 +90,7 @@ export default function Navbar({ user, onMobileMenuToggle, isSidebarCollapsed }:
                 Profil Saya
               </div>
               <div className="dropdown-divider"></div>
-              <div 
+              <div
                 className="dropdown-item logout-item"
                 onClick={async (e) => {
                   e.stopPropagation();
@@ -112,30 +126,34 @@ export default function Navbar({ user, onMobileMenuToggle, isSidebarCollapsed }:
         .navbar-left {
           display: flex;
           align-items: center;
-          gap: 20px;
+          gap: 12px;
         }
-        .hamburger-btn {
-          background: #f8fafc;
-          border: 1px solid #e2e8f0;
-          color: #1a567e;
-          cursor: pointer;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          padding: 8px;
-          border-radius: 10px;
-          transition: all 0.2s;
+        .navbar-logo-desktop {
+          height: 48px;
+          display: block;
         }
-        .hamburger-btn:hover {
-          background: #f1f5f9;
-          transform: scale(1.05);
+        .navbar-logo-mobile {
+          display: none;
         }
-        .welcome-msg {
-          display: flex;
-          flex-direction: column;
+        .navbar-mobile-toggle {
+          display: none;
         }
-        @media (max-width: 640px) {
-          .welcome-msg { display: none; }
+        @media (max-width: 1024px) {
+          .navbar-logo-desktop {
+            display: none;
+          }
+          .navbar-logo-mobile {
+            display: block;
+            height: 38px;
+          }
+          .navbar-mobile-toggle {
+            display: flex !important;
+            background: white;
+            border: 1px solid #eef2f6;
+            color: #1e40af;
+            padding: 8px;
+            border-radius: 10px;
+          }
         }
         .welcome-text {
           font-weight: 700;
@@ -157,9 +175,7 @@ export default function Navbar({ user, onMobileMenuToggle, isSidebarCollapsed }:
         }
 
         .sidebar-state-collapsed .hamburger-btn {
-           background: transparent;
-           border-color: transparent;
-           padding: 4px;
+          /* Restore visibility */
         }
 
         @media (max-width: 1024px) {
