@@ -30,6 +30,9 @@ export default async function AdminPayrollPage() {
     tunjangan: p.tunjangan,
     totalGaji: p.totalGaji,
     statusPembayaran: p.statusPembayaran,
+    bankSnapshot: p.bankSnapshot,
+    noRekeningSnapshot: p.noRekeningSnapshot,
+    namaRekeningSnapshot: p.namaRekeningSnapshot,
     user: {
       id: p.user.id,
       nama: p.user.nama,
