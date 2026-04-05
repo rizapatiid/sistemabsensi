@@ -2,7 +2,9 @@ import prisma from "@/lib/prisma"
 import { getSession } from "@/actions/auth"
 import styles from "@/styles/riwayat_karyawan.module.css"
 import ImageModal from "./ImageModal"
-import { formatWIBTime } from "@/lib/date"
+import { formatWIBTime, formatIndonesianDate } from "@/lib/date"
+
+export const dynamic = "force-dynamic"
 
 // Professional Line Icons
 const IconCalendar = () => (
@@ -152,14 +154,14 @@ export default async function EmployeeRiwayatPage({
                 <tr key={a.id}>
                   <td>
                     <span className={styles.dateMain}>
-                      {new Intl.DateTimeFormat("id-ID", { day: 'numeric', month: 'long', year: 'numeric' }).format(a.tanggal)}
+                      {formatIndonesianDate(a.tanggal)}
                     </span>
                     <span className={styles.dateSub}>
-                      {new Intl.DateTimeFormat("id-ID", { weekday: 'long' }).format(a.tanggal)}
+                      {new Intl.DateTimeFormat("id-ID", { weekday: 'long', timeZone: "Asia/Jakarta" }).format(a.tanggal)}
                     </span>
                   </td>
                   <td>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontWeight: '800', color: '#334155' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontWeight: '900', color: '#1e3a8a' }}>
                       <IconClock />
                       {formatWIBTime(a.waktuMasuk)}
                     </div>
