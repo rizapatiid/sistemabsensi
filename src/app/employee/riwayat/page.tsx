@@ -2,6 +2,7 @@ import prisma from "@/lib/prisma"
 import { getSession } from "@/actions/auth"
 import styles from "@/styles/riwayat_karyawan.module.css"
 import ImageModal from "./ImageModal"
+import { formatWIBTime } from "@/lib/date"
 
 // Professional Line Icons
 const IconCalendar = () => (
@@ -160,7 +161,7 @@ export default async function EmployeeRiwayatPage({
                   <td>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontWeight: '800', color: '#334155' }}>
                       <IconClock />
-                      {new Intl.DateTimeFormat("id-ID", { hour: '2-digit', minute: '2-digit', hour12: false }).format(a.waktuMasuk)}
+                      {formatWIBTime(a.waktuMasuk)}
                     </div>
                   </td>
                   <td>

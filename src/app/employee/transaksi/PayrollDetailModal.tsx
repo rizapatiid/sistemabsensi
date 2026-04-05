@@ -32,15 +32,15 @@ export default function PayrollDetailModal({ p, autoOpen = false }: { p: Payroll
 
   const monthName = new Intl.DateTimeFormat("id-ID", { month: "long" }).format(new Date(p.tahun, p.bulan - 1));
   
-  // Format print date properly to avoid TypeError
-  const printDate = new Intl.DateTimeFormat("id-ID", { 
+  // Format creation date properly
+  const createdDate = p.createdAt ? new Intl.DateTimeFormat("id-ID", { 
     day: 'numeric', 
     month: 'long', 
     year: 'numeric'
-  }).format(new Date()) + " " + new Intl.DateTimeFormat("id-ID", {
+  }).format(new Date(p.createdAt)) + " " + new Intl.DateTimeFormat("id-ID", {
     hour: '2-digit',
     minute: '2-digit'
-  }).format(new Date());
+  }).format(new Date(p.createdAt)) : "N/A";
 
   return (
     <>
@@ -182,7 +182,7 @@ export default function PayrollDetailModal({ p, autoOpen = false }: { p: Payroll
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: '1rem' }}>
                 <div style={{ textAlign: 'left' }}>
                   <p>Diterbitkan:</p>
-                  <p style={{ fontWeight: '700', color: '#1e293b' }}>{printDate}</p>
+                  <p style={{ fontWeight: '700', color: '#1e293b' }}>{createdDate}</p>
                 </div>
                 <div style={{ textAlign: 'center', minWidth: '100px' }}>
                   <p style={{ marginBottom: '30px' }}>Administrasi,</p>

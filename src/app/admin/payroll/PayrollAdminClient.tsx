@@ -23,6 +23,9 @@ interface Payroll {
   tunjangan: number
   totalGaji: number
   statusPembayaran: string
+  bankSnapshot: string | null
+  noRekeningSnapshot: string | null
+  namaRekeningSnapshot: string | null
   user: User
 }
 
@@ -132,8 +135,8 @@ export default function PayrollAdminClient({ payrolls, users }: { payrolls: Payr
                       </div>
                     </td>
                     <td>
-                      <div style={{ fontWeight: 800, color: '#1e293b', fontSize: '0.9rem' }}>{p.user.rekeningBank || '-'}</div>
-                      <div style={{ fontSize: '0.75rem', color: '#64748b', fontWeight: '700' }}>{p.user.noRekening || '-'}</div>
+                      <div style={{ fontWeight: 800, color: '#1e293b', fontSize: '0.9rem' }}>{p.bankSnapshot || p.user.rekeningBank || '-'}</div>
+                      <div style={{ fontSize: '0.75rem', color: '#64748b', fontWeight: '700' }}>{p.noRekeningSnapshot || p.user.noRekening || '-'}</div>
                     </td>
                     <td>
                       <span className={`${styles.badge} ${p.statusPembayaran === 'DIBAYAR' ? styles.badgeHadir : styles.badgeIzin}`} style={{ padding: '6px 14px', borderRadius: '10px', fontSize: '0.8rem', fontWeight: 850 }}>
