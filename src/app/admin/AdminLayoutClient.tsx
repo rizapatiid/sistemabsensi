@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation"
 import styles from "@/styles/dashboard.module.css"
 import Navbar from "@/components/Navbar"
 import { getTotalUnreadCount } from "@/actions/chat"
+import { getUnreadAnnouncementCount, markAnnouncementsAsRead } from "@/actions/admin"
 
 interface AdminLayoutClientProps {
   children: React.ReactNode;
@@ -16,6 +17,7 @@ export default function AdminLayoutClient({ children, user }: AdminLayoutClientP
   const pathname = usePathname()
   const [isSidebarOpen, setIsSidebarOpen] = useState(false)
   const [unreadCount, setUnreadCount] = useState(0)
+  const [announcementCount, setAnnouncementCount] = useState(0)
 
   // Initialize sidebar based on screen width on mount
   useEffect(() => {
@@ -24,15 +26,28 @@ export default function AdminLayoutClient({ children, user }: AdminLayoutClientP
     }
 
     // Fetch total unread count
-    const fetchUnread = async () => {
-      const res = await getTotalUnreadCount(user.id)
-      if (res.success) setUnreadCount(res.count)
+    const fetchData = async () => {
+      const [chatRes, annRes] = await Promise.all([
+        getTotalUnreadCount(user.id),
+        getUnreadAnnouncementCount(user.id)
+      ])
+      if (chatRes.success) setUnreadCount(chatRes.count)
+      if (annRes.success) setAnnouncementCount(annRes.count)
     }
 
-    fetchUnread()
-    const interval = setInterval(fetchUnread, 10000)
+    fetchData()
+    const interval = setInterval(fetchData, 10000)
     return () => clearInterval(interval)
   }, [user.id])
+
+  // Clear badge when visiting admin announcement page
+  useEffect(() => {
+    if (pathname === "/admin/kalender" && announcementCount > 0) {
+      markAnnouncementsAsRead(user.id).then(res => {
+        if (res.success) setAnnouncementCount(0)
+      })
+    }
+  }, [pathname, user.id, announcementCount])
 
   const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen)
 
@@ -143,6 +158,9 @@ export default function AdminLayoutClient({ children, user }: AdminLayoutClientP
                    {link.icon}
                    {link.name === "Chat" && unreadCount > 0 && (
                      <span className={styles.sidebarBadge}>{unreadCount}</span>
+                   )}
+                   {link.name === "Pengumuman" && announcementCount > 0 && (
+                     <span className={styles.sidebarBadge}>{announcementCount}</span>
                    )}
                 </span>
                 <span className={styles.navLabel}>{link.name}</span>

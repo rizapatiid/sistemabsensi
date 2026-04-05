@@ -119,6 +119,45 @@ export async function deleteAnnouncementAction(id: string) {
   revalidatePath("/admin/kalender")
 }
 
+export async function getUnreadAnnouncementCount(userId: string) {
+  try {
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+      select: { lastSeenAnnouncement: true }
+    })
+    
+    if (!user) return { success: false, count: 0 }
+
+    const count = await prisma.announcement.count({
+      where: {
+        tanggal: { gt: user.lastSeenAnnouncement },
+        // Also respect scheduleDate if it's in the future
+        OR: [
+          { scheduleDate: null },
+          { scheduleDate: { lte: new Date() } }
+        ]
+      }
+    })
+    return { success: true, count }
+  } catch (error) {
+    return { success: false, count: 0 }
+  }
+}
+
+export async function markAnnouncementsAsRead(userId: string) {
+  try {
+    await prisma.user.update({
+      where: { id: userId },
+      data: { lastSeenAnnouncement: new Date() }
+    })
+    revalidatePath("/employee/home")
+    revalidatePath("/admin/home")
+    return { success: true }
+  } catch (error) {
+    return { success: false }
+  }
+}
+
 // -- PAYROLL --
 import { sendPayrollNotificationEmail, sendPaymentConfirmationEmail } from "@/lib/email"
 
