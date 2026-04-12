@@ -3,12 +3,16 @@ import { getSession } from "@/actions/auth"
 import { redirect } from "next/navigation"
 import styles from "@/styles/profil_karyawan.module.css"
 import AdminProfileForm from "./AdminProfileForm"
+import CopyIdButton from "@/components/CopyIdButton"
 import PushNotificationManager from "@/components/PushNotificationManager"
 import EmailNotificationSettings from "@/components/EmailNotificationSettings"
 
 // Professional SVG Icons
 const IconUser = () => (
   <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+)
+const IconId = () => (
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><path d="M10 10c0 1.1-.9 2-2 2s-2-.9-2-2 .9-2 2-2 2 .9 2 2z"/><path d="M14 10h4"/><path d="M14 14h4"/><path d="M6 16c0-1.1.9-2 2-2s2 .9 2 2"/></svg>
 )
 const IconShield = () => (
   <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
@@ -64,9 +68,12 @@ export default async function AdminProfilePage() {
           
           <div className={styles.infoGroup}>
             <span className={styles.infoLabel}>Username / ID Login</span>
-            <div className={styles.infoValue}>
-              <IconUser />
-              <span>{user.id}</span>
+            <div className={styles.infoValue} style={{ display: 'flex', alignItems: 'center' }}>
+               <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <IconId />
+                <span>{user.id}</span>
+              </div>
+              <CopyIdButton id={user.id} title="Salin ID Admin" />
             </div>
           </div>
 

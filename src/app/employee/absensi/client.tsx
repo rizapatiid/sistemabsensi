@@ -48,21 +48,12 @@ export default function AbsensiClient({
         const canvas = document.createElement('canvas')
         let width = img.width
         let height = img.height
-
         if (width > height) {
-          if (width > maxWidth) {
-            height *= maxWidth / width
-            width = maxWidth
-          }
+          if (width > maxWidth) { height *= maxWidth / width; width = maxWidth; }
         } else {
-          if (height > maxHeight) {
-            width *= maxHeight / height
-            height = maxHeight
-          }
+          if (height > maxHeight) { width *= maxHeight / height; height = maxHeight; }
         }
-
-        canvas.width = width
-        canvas.height = height
+        canvas.width = width; canvas.height = height
         const ctx = canvas.getContext('2d')
         ctx?.drawImage(img, 0, 0, width, height)
         resolve(canvas.toDataURL('image/jpeg', 0.7))
@@ -142,14 +133,9 @@ export default function AbsensiClient({
     }
 
     setLoading(true); setMsg(null); setUploadProgress(0)
-
-    // Simulate progress
     const interval = setInterval(() => {
       setUploadProgress(prev => {
-        if (prev >= 90) {
-          clearInterval(interval)
-          return 90
-        }
+        if (prev >= 95) { clearInterval(interval); return 95; }
         return prev + 5
       })
     }, 150)
@@ -177,58 +163,56 @@ export default function AbsensiClient({
   return (
     <div className={styles.pageContainer}>
       
-      {/* 1. CLEAN HEADER SECTION */}
+      {/* 1. COMMAND CENTER HEADER */}
       <section className={styles.headerSection}>
         <div className={styles.headerContent}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '8px' }}>
-            <div style={{ color: '#1e3a8a' }}><IconClock /></div>
             <h1>Portal Absensi Digital</h1>
-          </div>
-          <p>Lakukan pencatatan kehadiran harian Anda dengan melampirkan bukti yang diperlukan.</p>
+            <p>Selesaikan verifikasi harian Anda untuk validasi kehadiran hari ini.</p>
+        </div>
+        <div style={{ background: '#f8fafc', padding: '12px 24px', borderRadius: '16px', border: '1px solid #e2e8f0', display: 'flex', alignItems: 'center', gap: '12px' }}>
+            <div style={{ color: '#0f172a' }}><IconClock /></div>
+            <div style={{ fontSize: '0.85rem', fontWeight: 900, color: '#0f172a' }}>
+                {new Intl.DateTimeFormat("id-ID", { hour: '2-digit', minute: '2-digit' }).format(new Date())} <span style={{ opacity: 0.4 }}>WIB</span>
+            </div>
         </div>
       </section>
 
-      {msg && msg.type === "error" && (
-        <div className={`${styles.alertBox} ${styles.errorAlert}`}>
-          {msg.text}
-        </div>
-      )}
-
-      {/* 2. MAIN STATUS CARD */}
+      {/* 2. MAIN INTERACTIVE AREA */}
       <div className={styles.statusCard}>
         {isClosed ? (
-          <div style={{ padding: "8px" }}>
-            <div style={{ color: '#ef4444', marginBottom: '20px' }}><IconAlert /></div>
-            <h2 style={{ fontSize: "1.5rem", fontWeight: "800", color: "#0f172a", margin: 0, letterSpacing: '-0.02em' }}>Portal Terkunci</h2>
-            <p style={{ marginTop: "12px", color: "#64748b", fontWeight: "500", maxWidth: '400px', margin: '12px auto' }}>{message}</p>
+          <div style={{ padding: "12px" }}>
+            <div className={styles.successIcon} style={{ background: '#fef2f2', color: '#ef4444', margin: '0 auto 32px' }}><IconAlert /></div>
+            <h2 style={{ fontSize: "1.75rem", fontWeight: 900, color: "#0f172a", margin: 0 }}>Terminal Terkunci</h2>
+            <p style={{ marginTop: "16px", color: "#64748b", fontWeight: 600, maxWidth: '400px', margin: '16px auto', lineHeight: 1.6 }}>{message}</p>
           </div>
         ) : hasAttendance || submittedStatus ? (
-          <div style={{ padding: "8px" }}>
-            <div className={styles.successIcon} style={{ background: activeStatus === 'HADIR' ? '#f0fdf4' : '#eff6ff', color: activeStatus === 'HADIR' ? '#16a34a' : '#1e3a8a', borderColor: activeStatus === 'HADIR' ? '#dcfce7' : '#dbeafe', margin: '0 auto 24px' }}>
+          <div style={{ padding: "12px" }}>
+            <div className={styles.successIcon} style={{ background: activeStatus === 'HADIR' ? '#f0fdf4' : '#eff6ff', color: activeStatus === 'HADIR' ? '#16a34a' : '#0f172a', margin: '0 auto 32px' }}>
               {activeStatus === "HADIR" ? <IconCheck /> : <IconFileText />}
             </div>
-            <h2 style={{ fontSize: "1.75rem", fontWeight: "800", color: "#0f172a", margin: 0, letterSpacing: '-0.03em' }}>
-              {activeStatus === "HADIR" ? "Presensi Berhasil" : "Izin Tercatat"}
-            </h2>
-            <p style={{ marginTop: "12px", color: "#64748b", fontWeight: "500", maxWidth: '450px' }}>
+            <h2 style={{ fontSize: "2rem", fontWeight: 900, color: "#0f172a", margin: 0 }}>{activeStatus === "HADIR" ? "Presensi Selesai" : "Pengajuan Diterima"}</h2>
+            <p style={{ marginTop: "16px", color: "#64748b", fontWeight: 600, maxWidth: '480px', margin: '16px auto', lineHeight: 1.6 }}>
               {activeStatus === "HADIR" 
-                ? "Terima kasih, data kehadiran Anda sudah masuk ke sistem. Selamat bekerja dan tetap produktif!" 
-                : "Dokumen pengajuan izin Anda sudah kami terima dan akan segera diproses oleh admin."}
+                ? "Data kehadiran Anda telah berhasil divalidasi oleh sistem. Pastikan untuk tetap produktif hari ini." 
+                : "Dokumen absensi non-kehadiran Anda telah masuk ke sistem dan akan diproses oleh manajemen."}
             </p>
           </div>
         ) : (
           <div style={{ width: "100%" }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '24px', paddingBottom: '16px', borderBottom: '1px solid #f1f5f9' }}>
-                <div style={{ color: '#1e3a8a' }}><IconClock /></div>
-                <h2 style={{ fontSize: "1.15rem", fontWeight: "800", color: "#0f172a", margin: 0 }}>Input Kehadiran Hari Ini</h2>
+            <div style={{ textAlign: 'left', marginBottom: '40px' }}>
+                <h2 style={{ fontSize: "1.5rem", fontWeight: 900, color: "#0f172a", margin: '0 0 12px' }}>Input Kehadiran</h2>
+                <p style={{ color: "#64748b", fontSize: "0.95rem", fontWeight: 600, margin: 0 }}>Sertakan bukti selfie dan screenshot aplikasi yang aktif sebagai lampiran wajib.</p>
             </div>
-            <p style={{ color: "#64748b", fontSize: "0.85rem", fontWeight: "500", textAlign: 'left', marginBottom: '32px' }}>Silakan selesaikan dua langkah verifikasi berikut untuk mencatat kehadiran Anda secara sah di sistem.</p>
+
+            {msg && msg.type === "error" && (
+                <div className={styles.alertBox} style={{ backgroundColor: '#fef2f2', color: '#991b1b', border: '1px solid #fee2e2', marginBottom: '32px' }}>{msg.text}</div>
+            )}
 
             <div className={styles.captureGrid}>
-              <div style={{ display: "flex", flexDirection: "column" }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '12px' }}>
+              <div className={styles.captureColumn}>
+                <div className={styles.stepIndicator}>
                     <div className={styles.stepCircle}>1</div>
-                    <span className={styles.stepLabel}>VERIFIKASI WAJAH / SELFIE</span>
+                    <span className={styles.stepLabel}>Verify Face Identity</span>
                 </div>
                 <div className={`${styles.captureBox} ${capturedPhoto ? styles.activeCaptureBox : ""}`}>
                   {capturedPhoto ? (
@@ -239,21 +223,21 @@ export default function AbsensiClient({
                   ) : cameraActive ? (
                     <>
                       <video ref={videoRef} autoPlay playsInline className={styles.videoElement} />
-                      <button onClick={takePhoto} className={styles.snapBtn}>AMBIL FOTO</button>
+                      <button onClick={takePhoto} className={styles.snapBtn}>AMBIL FOTO SEKARANG</button>
                     </>
                   ) : (
-                    <div onClick={startCamera} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '16px', color: '#1e3a8a' }}>
+                    <div onClick={startCamera} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                       <div className={styles.actionIcon}><IconCamera /></div>
-                      <span style={{ fontSize: '0.75rem', fontWeight: '800', letterSpacing: '0.05em' }}>BUKA KAMERA</span>
+                      <span style={{ fontSize: '0.8rem', fontWeight: 900, color: '#0f172a' }}>START CAMERA</span>
                     </div>
                   )}
                 </div>
               </div>
 
-              <div style={{ display: "flex", flexDirection: "column" }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '12px' }}>
+              <div className={styles.captureColumn}>
+                <div className={styles.stepIndicator}>
                     <div className={styles.stepCircle}>2</div>
-                    <span className={styles.stepLabel}>UNGGAH BUKTI SCREENSHOT APP</span>
+                    <span className={styles.stepLabel}>Application Screenshot</span>
                 </div>
                 <div className={`${styles.captureBox} ${capturedScreenshot ? styles.activeCaptureBox : ""}`}>
                   {capturedScreenshot ? (
@@ -262,10 +246,10 @@ export default function AbsensiClient({
                       <button onClick={() => setCapturedScreenshot(null)} className={styles.reCaptureBtn}>×</button>
                     </>
                   ) : (
-                    <label style={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '16px', color: '#1e3a8a', cursor: 'pointer' }}>
+                    <label style={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}>
                       <input type="file" accept="image/*" onChange={handleScreenshot} style={{ display: "none" }} />
                       <div className={styles.actionIcon}><IconUpload /></div>
-                      <span style={{ fontSize: '0.75rem', fontWeight: '800', letterSpacing: '0.05em' }}>PILIH FILE</span>
+                      <span style={{ fontSize: '0.8rem', fontWeight: 900, color: '#0f172a' }}>UPLOAD CAPTURE</span>
                     </label>
                   )}
                 </div>
@@ -278,95 +262,70 @@ export default function AbsensiClient({
               <button className={styles.primaryBtn} onClick={() => handleAbsen("HADIR")} disabled={loading || !capturedPhoto || !capturedScreenshot}>
                 {loading ? (
                   <div style={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '4px' }}>
-                    <div style={{ fontSize: '0.9rem' }}>MENGIRIM ({uploadProgress}%)</div>
+                    <div style={{ fontSize: '0.85rem' }}>MENGUNGGAH ({uploadProgress}%)</div>
                     <div style={{ width: '100%', height: '4px', background: 'rgba(255,255,255,0.2)', borderRadius: '10px', overflow: 'hidden' }}>
                       <div style={{ width: `${uploadProgress}%`, height: '100%', background: '#fff', transition: 'width 0.2s ease-out' }} />
                     </div>
                   </div>
-                ) : ( <> <IconSend /> KIRIM KEHADIRAN </> )}
+                ) : ( <> <IconSend /> KIRIM DATA KEHADIRAN </> )}
               </button>
               <button className={styles.secondaryBtn} onClick={() => setShowIzinModal(true)} disabled={loading}>
-                AJUKAN IZIN
+                PENGAJUAN IZIN
               </button>
             </div>
           </div>
         )}
       </div>
 
-      {/* 4. KETENTUAN & KEBIJAKAN PRESENSI */}
-      <section className={styles.card} style={{ marginTop: '20px', padding: '32px' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '20px', paddingBottom: '16px', borderBottom: '1px solid #f1f5f9' }}>
-          <div style={{ color: '#1e3a8a' }}><IconShield /></div>
-          <h2 style={{ fontSize: "1.15rem", fontWeight: "800", color: "#0f172a", margin: 0 }}>Ketentuan & Kebijakan Presensi</h2>
+      {/* 3. POLICY GRID SECTION */}
+      <section className={styles.card}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '32px', paddingBottom: '20px', borderBottom: '1px solid #f1f5f9' }}>
+          <div style={{ color: '#0f172a' }}><IconShield /></div>
+          <h2 style={{ fontSize: "1.25rem", fontWeight: 900, color: "#0f172a", margin: 0 }}>Panduan & Integritas Presensi</h2>
         </div>
 
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '24px' }}>
-          <div className={styles.policyItem}>
-             <div className={styles.policyNumber}>01</div>
-             <div>
-               <h4 className={styles.policyTitle}>Batas Waktu Harian</h4>
-               <p className={styles.policyText}>Sistem presensi dibuka mulai pukul 07:00 hingga 10:00 WIB. Presensi di luar jam tersebut akan dianggap terlambat/alfa.</p>
-             </div>
-          </div>
-
-          <div className={styles.policyItem}>
-             <div className={styles.policyNumber}>02</div>
-             <div>
-               <h4 className={styles.policyTitle}>Lampiran Wajib</h4>
-               <p className={styles.policyText}>Setiap karyawan wajib menyertakan foto selfie (wajah jelas) dan screenshot aplikasi yang aktif untuk divalidasi oleh HRD.</p>
-             </div>
-          </div>
-
-          <div className={styles.policyItem}>
-             <div className={styles.policyNumber}>03</div>
-             <div>
-               <h4 className={styles.policyTitle}>Prosedur Izin/Sakit</h4>
-               <p className={styles.policyText}>Pengajuan izin maksimal dilakukan SEBELUM pukul 10:00 WIB. Khusus sakit wajib melampirkan surat keterangan dokter ke kantor fisik.</p>
-             </div>
-          </div>
-
-          <div className={styles.policyItem}>
-             <div className={styles.policyNumber}>04</div>
-             <div>
-               <h4 className={styles.policyTitle}>Keamanan Data</h4>
-               <p className={styles.policyText}>Setiap data kehadiran direkam dengan koordinat waktu server yang akurat. Manipulasi data akan dikenakan sanksi sesuai SP Kepegawaian.</p>
-             </div>
-          </div>
+          {[
+            { n: '01', t: 'Window Transaksi', d: 'Layanan absensi aktif pukul 07.00 - 10.00 WIB. Pastikan perangkat Anda terhubung ke internet yang stabil.' },
+            { n: '02', t: 'Validasi Multi-Bukti', d: 'Sistem mewajibkan lampiran visual wajah dan bukti aplikasi sebagai syarat sah penerimaan data oleh manajemen.' },
+            { n: '03', t: 'Status Non-Hadir', d: 'Segala bentuk izin atau ketidakhadiran lainnya wajib disertai dokumen pendukung dan dikirim sebelum batas waktu.' },
+            { n: '04', t: 'Timestamp Server', d: 'Absensi menggunakan waktu server Jakarta yang tidak dapat dimanipulasi melalui pengaturan waktu perangkat lokal.' },
+            { n: '05', t: 'Pemeriksaan Berlapis', d: 'HRD akan melakukan audit berkala. Manipulasi data atau ketidaksesuaian bukti selfie akan dikenakan sanksi disipliner.' },
+            { n: '06', t: 'Dukungan Teknis', d: 'Jika terjadi kendala sistem (Error), segera hubungi tim IT dengan melampirkan bukti screenshot kendala tersebut.' }
+          ].map(p => (
+            <div key={p.n} className={styles.policyItem}>
+              <div className={styles.policyNumber}>{p.n}</div>
+              <div>
+                <h4 className={styles.policyTitle}>{p.t}</h4>
+                <p className={styles.policyText}>{p.d}</p>
+              </div>
+            </div>
+          ))}
         </div>
       </section>
 
-      {/* 3. MODAL IZIN (Refined) */}
+      {/* 4. MODAL PENGAJUAN IZIN */}
       {showIzinModal && (
         <div className={styles.modalOverlay} onClick={() => { if(!loading) setShowIzinModal(false); }}>
-          <div className={styles.modal} onClick={e => e.stopPropagation()} style={{ maxWidth: '400px' }}>
-            <div style={{ textAlign: 'center', marginBottom: '20px' }}>
-              <div style={{ background: '#f8fafc', padding: '12px', borderRadius: '50%', color: '#1e3a8a', display: 'inline-flex', marginBottom: '12px' }}><IconFileText /></div>
-              <h2 style={{ fontSize: "1.15rem", fontWeight: "800", color: "#0f172a", margin: 0 }}>Pengajuan Non-Kehadiran</h2>
+          <div className={styles.modal} onClick={e => e.stopPropagation()}>
+            <div style={{ textAlign: 'center', marginBottom: '32px' }}>
+              <div style={{ background: '#f8fafc', padding: '16px', borderRadius: '20px', color: '#0f172a', display: 'inline-flex', marginBottom: '16px', border: '1px solid #e2e8f0' }}><IconFileText /></div>
+              <h2 style={{ fontSize: "1.5rem", fontWeight: 900, color: "#0f172a", margin: 0 }}>Pengajuan Non-Aktif</h2>
+              <p style={{ margin: '8px 0 0', color: '#64748b', fontSize: '0.9rem', fontWeight: 500 }}>Sertakan dokumen pendukung untuk divalidasi.</p>
             </div>
 
-            {/* Subtype Selector */}
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px', marginBottom: '20px', background: '#f1f5f9', padding: '4px', borderRadius: '8px' }}>
-              <button 
-                onClick={() => setIzinSubtype("IZIN")}
-                style={{ padding: '8px', borderRadius: '6px', fontSize: '0.8rem', fontWeight: '700', border: 'none', cursor: 'pointer', background: izinSubtype === "IZIN" ? '#fff' : 'transparent', color: izinSubtype === "IZIN" ? '#1e3a8a' : '#64748b', boxShadow: izinSubtype === "IZIN" ? '0 1px 3px rgba(0,0,0,0.1)' : 'none' }}
-              >
-                IZIN / SAKIT
-              </button>
-              <button 
-                onClick={() => setIzinSubtype("LAINNYA")}
-                style={{ padding: '8px', borderRadius: '6px', fontSize: '0.8rem', fontWeight: '700', border: 'none', cursor: 'pointer', background: izinSubtype === "LAINNYA" ? '#fff' : 'transparent', color: izinSubtype === "LAINNYA" ? '#1e3a8a' : '#64748b', boxShadow: izinSubtype === "LAINNYA" ? '0 1px 3px rgba(0,0,0,0.1)' : 'none' }}
-              >
-                LAINNYA
-              </button>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px', marginBottom: '24px', background: '#f1f5f9', padding: '4px', borderRadius: '12px' }}>
+              <button onClick={() => setIzinSubtype("IZIN")} style={{ padding: '10px', borderRadius: '10px', fontSize: '0.8rem', fontWeight: '900', border: 'none', cursor: 'pointer', background: izinSubtype === "IZIN" ? '#fff' : 'transparent', color: izinSubtype === "IZIN" ? '#0f172a' : '#94a3b8', boxShadow: izinSubtype === "IZIN" ? '0 1px 3px rgba(0,0,0,0.1)' : 'none' }}>IZIN / SAKIT</button>
+              <button onClick={() => setIzinSubtype("LAINNYA")} style={{ padding: '10px', borderRadius: '10px', fontSize: '0.8rem', fontWeight: '900', border: 'none', cursor: 'pointer', background: izinSubtype === "LAINNYA" ? '#fff' : 'transparent', color: izinSubtype === "LAINNYA" ? '#0f172a' : '#94a3b8', boxShadow: izinSubtype === "LAINNYA" ? '0 1px 3px rgba(0,0,0,0.1)' : 'none' }}>LAINNYA</button>
             </div>
             
             {izinSubtype === "IZIN" && (
-              <div style={{ marginBottom: '20px' }}>
-                <label style={{ fontSize: '0.7rem', fontWeight: '800', color: '#64748b', display: 'block', marginBottom: '8px', textTransform: 'uppercase' }}>Lampiran Surat Izin (Foto/File)</label>
-                <div className={`${styles.captureBox} ${capturedIzinPhoto ? styles.activeCaptureBox : ""}`} style={{ height: '120px' }}>
+              <div style={{ marginBottom: '24px' }}>
+                <label style={{ fontSize: '0.7rem', fontWeight: '900', color: '#94a3b8', display: 'block', marginBottom: '12px', textTransform: 'uppercase' }}>Unggah Surat Izin / Keterangan Dokter</label>
+                <div className={`${styles.captureBox} ${capturedIzinPhoto ? styles.activeCaptureBox : ""}`} style={{ height: '140px' }}>
                   {capturedIzinPhoto ? (
                     <>
-                      <img src={capturedIzinPhoto} alt="Surat Izin" className={styles.previewImage} />
+                      <img src={capturedIzinPhoto} alt="Lampiran" className={styles.previewImage} />
                       <button onClick={() => setCapturedIzinPhoto(null)} className={styles.reCaptureBtn}>×</button>
                     </>
                   ) : izinCameraActive ? (
@@ -379,13 +338,13 @@ export default function AbsensiClient({
                           const ctx = canvas.getContext("2d")
                           if (ctx) {
                             ctx.drawImage(video, 0, 0); const dataUrl = canvas.toDataURL("image/jpeg", 0.8)
-                            const compressed = await compressImage(dataUrl, 800, 800)
+                            const compressed = await compressImage(dataUrl, 1000, 1000)
                             setCapturedIzinPhoto(compressed); const stream = video.srcObject as MediaStream
                             if (stream) stream.getTracks().forEach(t => t.stop())
                             setIzinCameraActive(false)
                           }
                         }
-                      }} className={styles.snapBtn} style={{ fontSize: '0.6rem', padding: '6px 12px' }}>AMBIL FOTO</button>
+                      }} className={styles.snapBtn} style={{ fontSize: '0.7rem', padding: '8px 16px' }}>AMBIL FOTO</button>
                     </>
                   ) : (
                     <div style={{ display: 'flex', gap: '12px' }}>
@@ -394,20 +353,16 @@ export default function AbsensiClient({
                         try {
                           const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } })
                           if (videoRef.current) videoRef.current.srcObject = stream
-                        } catch (err) { setMsg({ type: "error", text: "Gagal kamera" }); setIzinCameraActive(false); }
-                      }} className={styles.secondaryBtn} style={{ padding: '8px 12px', fontSize: '0.7rem' }}>KAMERA</button>
-                      
-                      <label className={styles.secondaryBtn} style={{ padding: '8px 12px', fontSize: '0.7rem', cursor: 'pointer' }}>
-                        UPLOAD
-                        <input type="file" accept="image/*" style={{ display: 'none' }} onChange={async (e) => {
+                        } catch (err) { setIzinCameraActive(false); }
+                      }} className={styles.secondaryBtn} style={{ padding: '10px 16px', fontSize: '0.75rem' }}>KAMERA</button>
+                      <label className={styles.secondaryBtn} style={{ padding: '10px 16px', fontSize: '0.75rem', cursor: 'pointer' }}>
+                        UPLOAD <input type="file" accept="image/*" style={{ display: 'none' }} onChange={async (e) => {
                           const file = e.target.files?.[0]
                           if (file) {
-                            const reader = new FileReader()
-                            reader.onloadend = async () => {
-                              const compressed = await compressImage(reader.result as string, 1000, 1000)
+                            const reader = new FileReader(); reader.onloadend = async () => {
+                              const compressed = await compressImage(reader.result as string, 1200, 1200)
                               setCapturedIzinPhoto(compressed)
-                            }
-                            reader.readAsDataURL(file)
+                            }; reader.readAsDataURL(file)
                           }
                         }} />
                       </label>
@@ -417,31 +372,16 @@ export default function AbsensiClient({
               </div>
             )}
 
-            <div style={{ marginBottom: '20px' }}>
-              <label style={{ fontSize: '0.7rem', fontWeight: '800', color: '#64748b', display: 'block', marginBottom: '8px', textTransform: 'uppercase' }}>
-                {izinSubtype === "IZIN" ? "Keterangan Izin" : "Keterangan / Keperluan"}
-              </label>
-              <textarea className={styles.textArea} placeholder="Tuliskan keterangan..." value={alasan} onChange={(e) => setAlasan(e.target.value)} rows={3} style={{ fontSize: '0.85rem' }} />
+            <div style={{ marginBottom: '32px' }}>
+              <label style={{ fontSize: '0.7rem', fontWeight: '900', color: '#94a3b8', display: 'block', marginBottom: '8px', textTransform: 'uppercase' }}>Keterangan Penjelasan</label>
+              <textarea className={styles.textArea} placeholder="Tuliskan alasan lengkap..." value={alasan} onChange={(e) => setAlasan(e.target.value)} rows={3} />
             </div>
 
-            <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '12px' }}>
-              <button 
-                className={styles.primaryBtn} 
-                onClick={() => handleAbsen("IZIN")} 
-                disabled={loading || (izinSubtype === "IZIN" && !capturedIzinPhoto) || !alasan.trim()}
-              >
-                {loading ? (
-                   <div style={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '4px' }}>
-                    <span style={{ fontSize: '0.8rem' }}>MENGIRIM ({uploadProgress}%)</span>
-                    <div style={{ width: '100%', height: '3px', background: 'rgba(255,255,255,0.2)', borderRadius: '10px', overflow: 'hidden' }}>
-                      <div style={{ width: `${uploadProgress}%`, height: '100%', background: '#fff', transition: 'width 0.2s ease-out' }} />
-                    </div>
-                  </div>
-                ) : "KIRIM PENGAJUAN"}
+            <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '16px' }}>
+              <button className={styles.primaryBtn} onClick={() => handleAbsen("IZIN")} disabled={loading || (izinSubtype === "IZIN" && !capturedIzinPhoto) || !alasan.trim()}>
+                {loading ? "PROSES..." : "KIRIM DATA"}
               </button>
-              <button className={styles.secondaryBtn} onClick={() => { setShowIzinModal(false); setAlasan(""); setCapturedIzinPhoto(null); setIzinCameraActive(false); }} disabled={loading}>
-                BATAL
-              </button>
+              <button className={styles.secondaryBtn} onClick={() => { setShowIzinModal(false); setAlasan(""); setCapturedIzinPhoto(null); setIzinCameraActive(false); }} disabled={loading}>BATAL</button>
             </div>
           </div>
         </div>

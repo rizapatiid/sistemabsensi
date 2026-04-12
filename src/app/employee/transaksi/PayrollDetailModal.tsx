@@ -24,6 +24,10 @@ interface PayrollDetail {
   createdAt?: Date | string
 }
 
+const IconEye = () => (
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+)
+
 export default function PayrollDetailModal({ p, autoOpen = false }: { p: PayrollDetail, autoOpen?: boolean }) {
   const [isOpen, setIsOpen] = useState(autoOpen)
 
@@ -48,7 +52,7 @@ export default function PayrollDetailModal({ p, autoOpen = false }: { p: Payroll
         onClick={openModal}
         className={styles.viewBtn} 
         style={{ 
-          backgroundColor: "#1e3a8a", 
+          backgroundColor: "#0f172a", 
           color: "white", 
           border: "none", 
           padding: "6px 14px", 
@@ -56,10 +60,14 @@ export default function PayrollDetailModal({ p, autoOpen = false }: { p: Payroll
           cursor: "pointer",
           fontSize: "0.75rem",
           fontWeight: "700",
-          boxShadow: "0 2px 4px rgba(30, 58, 138, 0.2)",
-          transition: "all 0.2s"
+          boxShadow: "0 2px 4px rgba(15, 23, 42, 0.2)",
+          transition: "all 0.2s",
+          display: 'flex',
+          alignItems: 'center',
+          gap: '8px'
         }}
       >
+        <IconEye />
         Lihat Slip
       </button>
 

@@ -18,6 +18,10 @@ const IconMoney = () => (
   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="2"/><path d="M6 12h.01M18 12h.01"/></svg>
 )
 
+const IconRotate = () => (
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M21 12a9 9 0 1 1-6.21-8.56"/><polyline points="22 2 22 7 17 7"/></svg>
+)
+
 export default async function EmployeeTransaksiPage({ 
   searchParams 
 }: { 
@@ -59,11 +63,11 @@ export default async function EmployeeTransaksiPage({
           <table className={styles.table}>
             <thead>
               <tr>
-                <th><div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}><IconHistory /> Periode</div></th>
+                <th>Periode</th>
                 <th>Detail Upah</th>
                 <th>Gaji Pokok</th>
                 <th>Tunjangan</th>
-                <th><div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}><IconMoney /> Total Bersih</div></th>
+                <th>Total Bersih</th>
                 <th>Status</th>
                 <th>Detail</th>
               </tr>
@@ -94,7 +98,7 @@ export default async function EmployeeTransaksiPage({
                   </td>
                   <td>
                     <span className={`${styles.badge} ${p.statusPembayaran === 'DIBAYAR' ? styles.badgeLunas : styles.badgeBelum}`} style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
-                      {p.statusPembayaran === 'DIBAYAR' && <IconCheckFile />}
+                      {p.statusPembayaran === 'DIBAYAR' ? <IconCheckFile /> : <IconRotate />}
                       {p.statusPembayaran === 'DIBAYAR' ? 'DIBAYAR' : 'DIPROSES'}
                     </span>
                   </td>

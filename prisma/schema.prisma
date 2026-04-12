@@ -117,3 +117,10 @@ model Message {
   sender     User     @relation("SentMessages", fields: [senderId], references: [id], onDelete: Cascade)
   receiver   User?    @relation("ReceivedMessages", fields: [receiverId], references: [id], onDelete: SetNull)
 }
+model SystemSetting {
+  id              String   @id @default("global")
+  maintenance     Boolean  @default(false)
+  maintenanceReason String? 
+  maintenanceUntil  String?
+  updatedAt       DateTime @updatedAt
+}

@@ -123,133 +123,154 @@ export default function PayrollForm({ users }: { users: User[] }) {
         </div>
       )}
 
-      <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+      <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
         
-        {/* Section: Penerima */}
-        <div style={{ background: '#f8fafc', padding: '14px', borderRadius: '12px', border: '1px solid #e2e8f0' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '12px' }}>
-                <div style={{ color: '#1e3a8a', display: 'flex' }}><IconUserForm /></div>
-                <label style={{ fontSize: '0.85rem', fontWeight: 900, color: '#0f172a' }}>Filter Nama Karyawan</label>
-            </div>
-            <select 
-                className={styles.filterPill} 
-                style={{ width: '100%', appearance: 'none', background: 'white', padding: '10px 16px' }}
-                name="idKaryawan" 
-                required 
-                value={selectedUserId} 
-                onChange={e => setSelectedUserId(e.target.value)}
-            >
-                <option value="">-- Cari Nama Staff --</option>
-                {users.map(u => <option key={u.id} value={u.id}>{u.nama} ({u.id})</option>)}
-            </select>
+        {/* SCROLLABLE INPUT AREA */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', paddingBottom: '20px' }}>
+            {/* Section: Penerima */}
+            <div style={{ background: '#f8fafc', padding: '16px', borderRadius: '18px', border: '1px solid #e2e8f0' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '12px' }}>
+                    <div style={{ background: '#eff6ff', color: '#3b82f6', padding: '6px', borderRadius: '8px', display: 'flex' }}><IconUserForm /></div>
+                    <label style={{ fontSize: '0.8rem', fontWeight: 900, color: '#0f172a' }}>Pilih Nama Karyawan</label>
+                </div>
+                <select 
+                    className={styles.filterPill} 
+                    style={{ width: '100%', appearance: 'none', background: 'white', padding: '10px 14px', borderRadius: '10px', border: '1px solid #e2e8f0', fontSize: '0.85rem' }}
+                    name="idKaryawan" 
+                    required 
+                    value={selectedUserId} 
+                    onChange={e => setSelectedUserId(e.target.value)}
+                >
+                    <option value="">-- Pilih Staff --</option>
+                    {users.map(u => <option key={u.id} value={u.id}>{u.nama} ({u.id})</option>)}
+                </select>
 
-            {activeUser && (
-            <div style={{ marginTop: '10px', padding: '10px 14px', background: 'white', borderRadius: '10px', border: '1px dashed #cbd5e1', display: 'flex', alignItems: 'center', gap: '12px' }}>
-                <div style={{ background: '#e0e7ff', padding: '8px', borderRadius: '8px', color: '#1e3a8a', display: 'flex' }}><IconCreditCardForm /></div>
+                {activeUser && (
+                    <div style={{ marginTop: '12px', padding: '10px 14px', background: 'white', borderRadius: '12px', border: '1px dashed #cbd5e1', display: 'flex', alignItems: 'center', gap: '10px' }}>
+                        <div style={{ background: '#f8fafc', padding: '6px', borderRadius: '8px', color: '#0f172a', border: '1px solid #e2e8f0', display: 'flex' }}><IconCreditCardForm /></div>
+                        <div style={{ overflow: 'hidden' }}>
+                            {activeUser.rekeningBank && activeUser.noRekening ? (
+                                <>
+                                    <div style={{ fontSize: '0.8rem', fontWeight: 850, color: '#0f172a' }}>{activeUser.rekeningBank} - {activeUser.noRekening}</div>
+                                    <div style={{ fontSize: '0.65rem', fontWeight: 700, color: '#64748b', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>A/N: {activeUser.namaRekening || activeUser.nama}</div>
+                                </>
+                            ) : (
+                                <div style={{ color: '#ef4444', fontSize: '0.65rem', fontWeight: 800 }}>Peringatan: Rekening Bank Belum Diatur!</div>
+                            )}
+                        </div>
+                    </div>
+                )}
+            </div>
+
+            {/* Section: Periode */}
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+                <div style={{ background: '#ffffff', padding: '16px', borderRadius: '18px', border: '1px solid #e2e8f0' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '10px' }}>
+                        <div style={{ color: '#64748b', display: 'flex' }}><IconCalendarForm /></div>
+                        <label style={{ fontSize: '0.7rem', fontWeight: 900, color: '#0f172a', textTransform: 'uppercase' }}>Bulan</label>
+                    </div>
+                    <select className={styles.filterPill} style={{ width: '100%', appearance: 'none', padding: '10px 12px', background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: '8px', fontSize: '0.85rem' }} name="bulan" required defaultValue={new Date().getMonth() + 1}>
+                        {bulanList.map(b => <option key={b.v} value={b.v}>{b.l}</option>)}
+                    </select>
+                </div>
+                <div style={{ background: '#ffffff', padding: '16px', borderRadius: '18px', border: '1px solid #e2e8f0' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '10px' }}>
+                        <div style={{ color: '#64748b', display: 'flex' }}><IconShieldForm /></div>
+                        <label style={{ fontSize: '0.7rem', fontWeight: 900, color: '#0f172a', textTransform: 'uppercase' }}>Tahun</label>
+                    </div>
+                    <select className={styles.filterPill} style={{ width: '100%', appearance: 'none', padding: '10px 12px', background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: '8px', fontSize: '0.85rem' }} name="tahun" required defaultValue={currentYear}>
+                        {tahunList.map(t => <option key={t} value={t}>{t}</option>)}
+                    </select>
+                </div>
+            </div>
+
+            {/* Section: Gaji Dasar */}
+            <div style={{ background: '#ffffff', padding: '16px', borderRadius: '20px', border: '1px solid #e2e8f0', display: 'flex', flexDirection: 'column', gap: '16px' }}>
                 <div>
-                {activeUser.rekeningBank && activeUser.noRekening ? (
-                    <>
-                        <div style={{ fontSize: '0.85rem', fontWeight: 850, color: '#1e3a8a' }}>{activeUser.rekeningBank} - {activeUser.noRekening}</div>
-                        <div style={{ fontSize: '0.7rem', fontWeight: 700, color: '#64748b' }}>A/N: {activeUser.namaRekening || activeUser.nama}</div>
-                    </>
-                ) : (
-                    <div style={{ color: '#ef4444', fontSize: '0.75rem', fontWeight: 800 }}>Peringatan: Rekening Bank Belum Diatur!</div>
-                )}
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '10px' }}>
+                        <div style={{ color: '#64748b', display: 'flex' }}><IconSettingsForm /></div>
+                        <label style={{ fontSize: '0.75rem', fontWeight: 900, color: '#0f172a', textTransform: 'uppercase' }}>Skema Gaji</label>
+                    </div>
+                    <select className={styles.filterPill} style={{ width: '100%', appearance: 'none', padding: '10px 14px', background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: '10px', fontSize: '0.85rem' }} name="tipeGaji" value={tipeGaji} onChange={(e) => setTipeGaji(e.target.value)} required>
+                        <option value="BULANAN">BULANAN (FIX)</option>
+                        <option value="HARIAN">HARIAN (PRO)</option>
+                    </select>
                 </div>
-            </div>
-            )}
-        </div>
+                
+                <div>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '10px' }}>
+                        <div style={{ color: '#16a34a', display: 'flex' }}><IconWalletForm /></div>
+                        <label style={{ fontSize: '0.75rem', fontWeight: 900, color: '#166534', textTransform: 'uppercase' }}>Gaji Dasar (Rp)</label>
+                    </div>
+                    <input className={styles.filterPill} style={{ width: '100%', border: '1px solid #bbf7d0', background: '#f0fdf4', padding: '10px 14px', borderRadius: '10px', fontWeight: 700, color: '#166534', fontSize: '0.9rem' }} type="number" name="gajiPokok" placeholder="4500000" required />
+                </div>
 
-        {/* Section: Periode & Gaji */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '14px' }}>
-            <div style={{ background: '#fff', padding: '14px', borderRadius: '12px', border: '1px solid #e2e8f0' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '10px' }}>
-                    <div style={{ color: '#1e3a8a', display: 'flex' }}><IconCalendarForm /></div>
-                    <label style={{ fontSize: '0.8rem', fontWeight: 850, color: '#0f172a' }}>Bulan</label>
-                </div>
-                <select className={styles.filterPill} style={{ width: '100%', appearance: 'none', padding: '10px 16px' }} name="bulan" required defaultValue={new Date().getMonth() + 1}>
-                    {bulanList.map(b => <option key={b.v} value={b.v}>{b.l}</option>)}
-                </select>
-            </div>
-            <div style={{ background: '#fff', padding: '14px', borderRadius: '12px', border: '1px solid #e2e8f0' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '10px' }}>
-                    <div style={{ color: '#1e3a8a', display: 'flex' }}><IconShieldForm /></div>
-                    <label style={{ fontSize: '0.8rem', fontWeight: 850, color: '#0f172a' }}>Tahun</label>
-                </div>
-                <select className={styles.filterPill} style={{ width: '100%', appearance: 'none', padding: '10px 16px' }} name="tahun" required defaultValue={currentYear}>
-                    {tahunList.map(t => <option key={t} value={t}>{t}</option>)}
-                </select>
-            </div>
-        </div>
-
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '14px' }}>
-            <div style={{ background: '#fff', padding: '14px', borderRadius: '12px', border: '1px solid #e2e8f0' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '10px' }}>
-                    <div style={{ color: '#1e3a8a', display: 'flex' }}><IconSettingsForm /></div>
-                    <label style={{ fontSize: '0.8rem', fontWeight: 850, color: '#0f172a' }}>Tipe</label>
-                </div>
-                <select className={styles.filterPill} style={{ width: '100%', appearance: 'none', padding: '10px 16px' }} name="tipeGaji" value={tipeGaji} onChange={(e) => setTipeGaji(e.target.value)} required>
-                    <option value="BULANAN">BULANAN (FIX)</option>
-                    <option value="HARIAN">HARIAN (PRO)</option>
-                </select>
-            </div>
-            <div style={{ background: '#f0fdf4', padding: '14px', borderRadius: '12px', border: '1px solid #bbf7d0' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '10px' }}>
-                    <div style={{ color: '#16a34a', display: 'flex' }}><IconWalletForm /></div>
-                    <label style={{ fontSize: '0.8rem', fontWeight: 850, color: '#166534' }}>Gapok (Rp)</label>
-                </div>
-                <input className={styles.filterPill} style={{ width: '100%', border: '1px solid #86efac', background: '#fff', padding: '10px 16px' }} type="number" name="gajiPokok" placeholder="Contoh: 4500000" required />
-            </div>
-        </div>
-
-        {/* Conditional: Harian Mode Compact */}
-        {tipeGaji === "HARIAN" && (
-          <div style={{ background: '#fffbeb', padding: '14px', borderRadius: '12px', border: '1px solid #fde68a' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '10px' }}>
-                <div style={{ color: '#d97706', display: 'flex' }}><IconFileTextForm /></div>
-                <label style={{ fontSize: '0.8rem', fontWeight: 900, color: '#92400e' }}>Kehadiran</label>
-            </div>
-            <div style={{ display: 'flex', gap: '10px' }}>
-               <select className={styles.filterPill} style={{ flex: 2, appearance: 'none', background: 'white', padding: '10px' }} name="modeAbsen" value={modeAbsen} onChange={(e) => setModeAbsen(e.target.value)}>
-                    <option value="AUTO">OTOMATIS</option>
-                    <option value="MANUAL">MANUAL</option>
-                </select>
-                {modeAbsen === "MANUAL" && (
-                    <input className={styles.filterPill} style={{ flex: 1, background: 'white', padding: '10px' }} type="number" name="jumlahAbsen" placeholder="Hari" min="0" />
+                {tipeGaji === "HARIAN" && (
+                    <div style={{ padding: '14px', background: '#fffbeb', borderRadius: '12px', border: '1px solid #fde68a' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '10px' }}>
+                            <div style={{ color: '#d97706', display: 'flex' }}><IconFileTextForm /></div>
+                            <label style={{ fontSize: '0.75rem', fontWeight: 900, color: '#92400e' }}>Kehadiran</label>
+                        </div>
+                        <div style={{ display: 'flex', gap: '10px' }}>
+                            <select className={styles.filterPill} style={{ flex: 1, appearance: 'none', background: 'white', padding: '10px', border: '1px solid #fde68a', borderRadius: '8px', fontSize: '0.8rem' }} name="modeAbsen" value={modeAbsen} onChange={(e) => setModeAbsen(e.target.value)}>
+                                <option value="AUTO">OTOMATIS</option>
+                                <option value="MANUAL">MANUAL</option>
+                            </select>
+                            {modeAbsen === "MANUAL" && (
+                                <input className={styles.filterPill} style={{ width: '80px', background: 'white', padding: '10px', border: '1px solid #fde68a', borderRadius: '8px', fontWeight: 800, textAlign: 'center', fontSize: '0.8rem' }} type="number" name="jumlahAbsen" placeholder="Hari" min="0" />
+                            )}
+                        </div>
+                    </div>
                 )}
             </div>
-          </div>
-        )}
 
-        {/* Section: Bonus Compact */}
-        <div style={{ display: 'flex', gap: '14px', background: '#f8fafc', padding: '14px', borderRadius: '12px', border: '1px solid #e2e8f0', flexWrap: 'wrap' }}>
-          <div style={{ flex: '1 1 120px' }}>
-            <label style={{ fontSize: '0.75rem', fontWeight: 800, color: '#475569', marginBottom: '6px', display: 'block' }}>Insentif (Rp)</label>
-            <input className={styles.filterPill} style={{ width: '100%', background: 'white', padding: '10px 16px' }} type="number" name="tunjangan" placeholder="Rp" defaultValue="0" />
-          </div>
-          <div style={{ flex: '2 1 180px' }}>
-            <label style={{ fontSize: '0.75rem', fontWeight: 800, color: '#475569', marginBottom: '6px', display: 'block' }}>Keterangan</label>
-            <input className={styles.filterPill} style={{ width: '100%', background: 'white', padding: '10px 16px' }} type="text" name="ketTunjangan" placeholder="Contoh: Bonus Target" />
-          </div>
+            {/* Section: Bonus */}
+            <div style={{ background: '#f8fafc', padding: '16px', borderRadius: '20px', border: '1px solid #e2e8f0', display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                <div>
+                    <label style={{ fontSize: '0.7rem', fontWeight: 900, color: '#64748b', marginBottom: '6px', display: 'block', textTransform: 'uppercase' }}>Insentif Tambahan (Rp)</label>
+                    <input className={styles.filterPill} style={{ width: '100%', background: 'white', padding: '10px 14px', borderRadius: '10px', border: '1px solid #e2e8f0', fontWeight: 700, fontSize: '0.85rem' }} type="number" name="tunjangan" placeholder="0" defaultValue="0" />
+                </div>
+                <div>
+                    <label style={{ fontSize: '0.7rem', fontWeight: 900, color: '#64748b', marginBottom: '6px', display: 'block', textTransform: 'uppercase' }}>Keterangan</label>
+                    <input className={styles.filterPill} style={{ width: '100%', background: 'white', padding: '10px 14px', borderRadius: '10px', border: '1px solid #e2e8f0', fontSize: '0.8rem' }} type="text" name="ketTunjangan" placeholder="Keterangan opsional" />
+                </div>
+            </div>
         </div>
         
-        <button 
-            type="submit" 
-            disabled={loading} 
-            className={styles.btnAction} 
-            style={{ 
-                marginTop: "10px", 
-                justifyContent: 'center', 
-                padding: '14px', 
-                fontSize: '1rem', 
-                borderRadius: '12px',
-                opacity: loading ? 0.7 : 1,
-                boxShadow: '0 8px 16px -4px rgba(30, 58, 138, 0.4)',
-                background: 'linear-gradient(135deg, #1e3a8a 0%, #1e40af 100%)'
-            }}
-        >
-          {loading ? "MENGHITUNG..." : "GENERATE PAYROLL"}
-        </button>
+        {/* STICKY FOOTER ACTION */}
+        <div style={{ 
+            position: 'sticky', 
+            bottom: '-24px', 
+            margin: '0 -24px -24px -24px', 
+            padding: '20px 24px', 
+            background: 'white', 
+            borderTop: '1px solid #f1f5f9',
+            zIndex: 10,
+            boxShadow: '0 -10px 20px -10px rgba(0,0,0,0.05)'
+        }}>
+            <button 
+                type="submit" 
+                disabled={loading} 
+                className={styles.btnAction} 
+                style={{ 
+                    justifyContent: 'center', 
+                    padding: '16px', 
+                    fontSize: '0.9rem', 
+                    borderRadius: '14px',
+                    background: '#0f172a',
+                    color: 'white',
+                    fontWeight: 900,
+                    width: '100%',
+                    boxShadow: '0 8px 16px -4px rgba(15, 23, 42, 0.2)',
+                    border: 'none',
+                    cursor: loading ? 'not-allowed' : 'pointer',
+                    opacity: loading ? 0.7 : 1,
+                    transition: 'all 0.2s'
+                }}
+            >
+                {loading ? "MEMPROSES..." : "TERBITKAN SLIP GAJI"}
+            </button>
+        </div>
       </form>
     </div>
   )

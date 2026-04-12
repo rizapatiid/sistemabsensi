@@ -39,89 +39,117 @@ export default function CreateAdminPage() {
   }
 
   return (
-    <div className={styles.pageContainer}>
-      <div style={{ maxWidth: '650px', margin: '0 auto', width: '100%' }}>
-            {/* Header Navy Style */}
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '32px', flexWrap: 'wrap', gap: '20px' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-                    <IconAdminPlus />
-                    <div>
-                        <h1 style={{ fontSize: '1.8rem', fontWeight: 900, color: '#0f172a', margin: 0, letterSpacing: '-0.02em' }}>Registrasi Admin</h1>
-                        <p style={{ color: '#64748b', fontWeight: 600, fontSize: '0.9rem', marginTop: '2px' }}>Berikan hak akses administratif baru.</p>
-                    </div>
-                </div>
-                <Link href="/admin/kelola-admin" className={styles.btnSm} style={{ 
-                    background: '#f1f5f9', 
-                    color: '#64748b', 
-                    display: 'flex', 
-                    alignItems: 'center', 
-                    gap: '8px',
-                    padding: '10px 18px',
-                    borderRadius: '12px',
-                    textDecoration: 'none',
-                    fontWeight: 800,
-                    fontSize: '0.85rem'
-                }}>
-                <IconChevronLeft /> BATAL
-                </Link>
-            </div>
+    <div className={styles.pageContainer} style={{ background: '#f8fafc', padding: '0px', minHeight: '100vh' }}>
+      
+      {/* 1. STATUS LINE - PROFESSIONAL */}
+      <div style={{ padding: 'clamp(12px, 2vw, 24px) clamp(16px, 4vw, 32px) 0 clamp(16px, 4vw, 32px)' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '20px', marginBottom: '32px' }}>
+              <div>
+                  <div style={{ 
+                      display: 'inline-flex', 
+                      alignItems: 'center', 
+                      gap: '6px', 
+                      marginBottom: '12px'
+                  }}>
+                      <div style={{ width: '6px', height: '6px', background: '#3b82f6', borderRadius: '50%' }}></div>
+                      <span style={{ fontSize: '0.65rem', fontWeight: 800, color: '#94a3b8', letterSpacing: '0.05em', textTransform: 'uppercase' }}>Keamanan Sistem • Otoritas Baru</span>
+                  </div>
+                  <h1 className={styles.pageTitle} style={{ fontSize: 'clamp(1.75rem, 5vw, 2.5rem)', fontWeight: 800, color: '#0f172a', margin: 0 }}>
+                      Registrasi Admin
+                  </h1>
+                  <p style={{ color: '#64748b', fontWeight: 600, fontSize: 'clamp(0.85rem, 2vw, 1rem)', marginTop: '8px', margin: 0 }}>
+                    Berikan hak akses administratif baru untuk kontrol operasional sistem.
+                  </p>
+              </div>
+          </div>
+      </div>
 
-            {/* Clean Registration Form */}
-            <div className={styles.card} style={{ padding: '32px', border: 'none', boxShadow: '0 4px 25px rgba(0,0,0,0.06)' }}>
+      <div style={{ padding: '0 clamp(16px, 4vw, 32px) clamp(16px, 4vw, 32px)' }}>
+            <div className={styles.card} style={{ maxWidth: '700px', padding: 'clamp(20px, 4vw, 40px)', borderRadius: '24px', border: '1px solid #e2e8f0', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.02)' }}>
                 {error && (
-                    <div style={{ background: '#fef2f2', border: '1px solid #fee2e2', color: '#dc2626', padding: '14px', borderRadius: '12px', marginBottom: '24px', fontWeight: 700, fontSize: '0.85rem' }}>
+                    <div style={{ background: '#fef2f2', border: '1px solid #fee2e2', color: '#dc2626', padding: '16px', borderRadius: '14px', marginBottom: '32px', fontWeight: 700, fontSize: '0.85rem' }}>
                         ⚠️ {error}
                     </div>
                 )}
                 
-                <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '28px' }}>
+                <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '32px' }}>
                     
                     <div className={styles.formGroup}>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '12px' }}>
-                            <div style={{ color: '#1e3a8a' }}><IconId /></div>
-                            <label style={{ fontSize: '0.85rem', fontWeight: 850, color: '#0f172a' }}>Username / ID Admin</label>
+                        <label style={{ display: 'block', fontSize: '0.7rem', fontWeight: 800, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '12px' }}>Username / ID Otoritas</label>
+                        <div className={styles.searchBox} style={{ background: '#f8fafc', borderRadius: '14px', border: '1px solid #e2e8f0' }}>
+                            <div className={styles.searchIcon}><IconId /></div>
+                            <input style={{ background: 'transparent', border: 'none', fontWeight: 700 }} className={styles.searchInput} type="text" name="id" placeholder="Misal: admin_ops_01" required />
                         </div>
-                        <input className={styles.filterPill} style={{ width: '100%', background: '#f8fafc' }} type="text" name="id" placeholder="Misal: superadmin_01" required />
                     </div>
 
                     <div className={styles.formGroup}>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '12px' }}>
-                            <div style={{ color: '#1e3a8a' }}><IconUser /></div>
-                            <label style={{ fontSize: '0.85rem', fontWeight: 850, color: '#0f172a' }}>Nama Lengkap Administrator</label>
+                        <label style={{ display: 'block', fontSize: '0.7rem', fontWeight: 800, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '12px' }}>Nama Lengkap Administrator</label>
+                        <div className={styles.searchBox} style={{ background: '#f8fafc', borderRadius: '14px', border: '1px solid #e2e8f0' }}>
+                            <div className={styles.searchIcon}><IconUser /></div>
+                            <input style={{ background: 'transparent', border: 'none', fontWeight: 700 }} className={styles.searchInput} type="text" name="nama" placeholder="Masukkan Nama Lengkap" required />
                         </div>
-                        <input className={styles.filterPill} style={{ width: '100%', background: '#f8fafc' }} type="text" name="nama" placeholder="Masukkan Nama Lengkap" required />
                     </div>
 
                     <div className={styles.formGroup}>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '12px' }}>
-                            <div style={{ color: '#a16207' }}><IconLock /></div>
-                            <label style={{ fontSize: '0.85rem', fontWeight: 850, color: '#854d0e' }}>Kata Sandi Akses</label>
+                        <label style={{ display: 'block', fontSize: '0.7rem', fontWeight: 800, color: '#854d0e', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '12px' }}>Kata Sandi Akses</label>
+                        <div className={styles.searchBox} style={{ background: '#fffbeb', borderRadius: '14px', border: '1px solid #fef08a' }}>
+                            <div className={styles.searchIcon} style={{ color: '#a16207' }}><IconLock /></div>
+                            <input style={{ background: 'transparent', border: 'none', fontWeight: 700, color: '#854d0e' }} className={styles.searchInput} type="text" name="password" defaultValue="admin123" required />
                         </div>
-                        <input className={styles.filterPill} style={{ width: '100%', background: '#fffbeb', border: '1px solid #fef08a' }} type="text" name="password" defaultValue="admin123" required />
                     </div>
 
-                    <div style={{ marginTop: '8px' }}>
+                    <div style={{ display: 'flex', gap: '12px', marginTop: '12px' }}>
+                        <Link href="/admin/kelola-admin" className={styles.btnAction} style={{ 
+                            flex: 1,
+                            background: '#f1f5f9', 
+                            color: '#64748b', 
+                            border: '1px solid #e2e8f0',
+                            justifyContent: 'center',
+                            padding: '16px 12px',
+                            borderRadius: '16px',
+                            fontWeight: 900,
+                            fontSize: '0.85rem',
+                            boxShadow: 'none'
+                        }}>
+                          BATAL
+                        </Link>
+
                         <button 
                             type="submit" 
                             disabled={loading} 
                             style={{ 
-                                width: '100%',
-                                padding: '20px', 
-                                fontSize: '1rem', 
+                                flex: 2,
+                                padding: '16px 12px', 
+                                fontSize: '0.85rem', 
                                 borderRadius: '16px',
-                                fontWeight: 850,
+                                fontWeight: 900,
                                 border: 'none',
                                 color: 'white',
                                 cursor: loading ? 'not-allowed' : 'pointer',
                                 opacity: loading ? 0.7 : 1,
-                                background: '#1e3a8a',
-                                transition: 'all 0.3s ease'
+                                background: '#0f172a',
+                                transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                                boxShadow: '0 10px 15px -3px rgba(15, 23, 42, 0.1)'
                             }}
                         >
-                            {loading ? "MENDAFTARKAN ADMIN..." : "KONFIRMASI AKSES ADMIN"}
+                            {loading ? "MENDAFTARKAN..." : "KONFIRMASI AKSES ADMIN"}
                         </button>
-                        <p style={{ textAlign: 'center', color: '#94a3b8', fontSize: '0.75rem', fontWeight: 700, marginTop: '24px', lineHeight: '1.5' }}>
-                           *Perhatian: Memberikan akses Admin berarti memberikan kontrol penuh terhadap sistem manajemen.
+                    </div>
+                    
+                    <div style={{ 
+                        background: '#eff6ff', 
+                        padding: '16px', 
+                        borderRadius: '16px', 
+                        display: 'flex', 
+                        gap: '12px', 
+                        alignItems: 'flex-start',
+                        border: '1px solid #dbeafe'
+                    }}>
+                        <div style={{ color: '#3b82f6', marginTop: '2px' }}>
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+                        </div>
+                        <p style={{ margin: 0, fontSize: '0.75rem', fontWeight: 600, color: '#1e40af', lineHeight: '1.5' }}>
+                            Pemberian hak akses Admin akan memberikan wewenang penuh untuk mengelola data karyawan, absensi, dan pengaturan sistem lainnya.
                         </p>
                     </div>
                 </form>

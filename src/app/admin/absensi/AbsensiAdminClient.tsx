@@ -73,165 +73,203 @@ export default function AbsensiAdminClient({ absensi }: { absensi: Absensi[] }) 
     return matchHari && matchBulan && matchTahun
   })
 
-  const countHadir = filteredAbsensi.filter(a => a.status === 'HADIR').length
-  const countIzin = filteredAbsensi.filter(a => a.status === 'IZIN').length
-  const currentMonthLabel = listBulan.find(b => b.v === filterBulan)?.l || "Semua"
-
   return (
-    <div className={styles.pageContainer} style={{ padding: '0px' }}>
-      {/* HEADER & STATS SECTION (RESPONSIVE) */}
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '24px', marginBottom: '32px' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '20px' }}>
-          <div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-              <IconCalendarHeader />
-              <h1 className={styles.pageTitle} style={{ fontSize: '1.8rem' }}>Rekap Absensi</h1>
+    <>
+      {/* 1. FILTER HEADER - SYNCED WITH KARYAWAN */}
+      <div className={styles.cardHeader} style={{ 
+        padding: '20px 24px', 
+        borderBottom: '1px solid #f1f5f9', 
+        background: 'white',
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        flexWrap: 'wrap',
+        gap: '16px'
+      }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#eff6ff', color: '#3b82f6', width: '32px', height: '32px', borderRadius: '10px' }}>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2" /><line x1="16" y1="2" x2="16" y2="6" /><line x1="8" y1="2" x2="8" y2="6" /><line x1="3" y1="10" x2="21" y2="10" /></svg>
             </div>
-            <p style={{ fontSize: '0.9rem', color: '#64748b', fontWeight: '500', marginTop: '10px' }}>
-              Laporan presensi periode {filterHari ? `${filterHari} ` : ""}{currentMonthLabel} {filterTahun}.
-            </p>
-          </div>
-
-          <div style={{ display: 'flex', gap: '12px', width: '100%', maxWidth: '380px' }}>
-            <div className={styles.statPill} style={{ flex: 1, padding: '12px' }}>
-              <div className={styles.statIcon} style={{ background: '#dcfce7', color: '#16a34a', width: '38px', height: '38px' }}><IconUserCheck /></div>
-              <div>
-                <div style={{ fontSize: '1.4rem', fontWeight: '900', color: '#0f172a' }}>{countHadir}</div>
-                <div style={{ fontSize: '0.6rem', fontWeight: '800', color: '#64748b', textTransform: 'uppercase' }}>Hadir</div>
-              </div>
-            </div>
-
-            <div className={styles.statPill} style={{ flex: 1, padding: '12px' }}>
-              <div className={styles.statIcon} style={{ background: '#dbeafe', color: '#2563eb', width: '38px', height: '38px' }}><IconUserX /></div>
-              <div>
-                <div style={{ fontSize: '1.4rem', fontWeight: '900', color: '#0f172a' }}>{countIzin}</div>
-                <div style={{ fontSize: '0.6rem', fontWeight: '800', color: '#64748b', textTransform: 'uppercase' }}>Izin</div>
-              </div>
-            </div>
-          </div>
+            <h3 className={styles.cardTitle} style={{ margin: 0, fontSize: '0.95rem', fontWeight: 900 }}>Log Kehadiran</h3>
         </div>
 
-        {/* FILTER BAR BOX (RESPONSIVE) */}
-        <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap', alignItems: 'center' }}>
-          <select
-            className={styles.filterPill}
-            style={{ flex: '1 1 120px' }}
-            value={tempHari}
-            onChange={(e) => setTempHari(e.target.value)}
-          >
-            <option value="">Semua Tanggal</option>
-            {listHari.map(h => <option key={h} value={h}>{h}</option>)}
-          </select>
+        <div style={{ 
+            display: 'flex', 
+            gap: '8px', 
+            flexWrap: 'nowrap', 
+            alignItems: 'center', 
+            background: '#f8fafc', 
+            padding: '4px 8px', 
+            borderRadius: '14px',
+            border: '1px solid #e2e8f0',
+            width: 'fit-content',
+            maxWidth: '100%',
+            overflowX: 'auto',
+            scrollbarWidth: 'none'
+        }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '6px', flexShrink: 0 }}>
+              <select
+                className={styles.filterPill}
+                style={{ padding: '8px 4px', borderRadius: '10px', fontSize: '0.75rem', fontWeight: 800, border: 'none', background: 'transparent', outline: 'none', color: '#0f172a', cursor: 'pointer', width: 'auto' }}
+                value={tempHari}
+                onChange={(e) => setTempHari(e.target.value)}
+              >
+                <option value="">Tgl</option>
+                {listHari.map(h => <option key={h} value={h}>{h}</option>)}
+              </select>
 
-          <select
-            className={styles.filterPill}
-            style={{ flex: '1 1 140px' }}
-            value={tempBulan}
-            onChange={(e) => setTempBulan(e.target.value)}
-          >
-            <option value="">Semua Bulan</option>
-            {listBulan.map(b => <option key={b.v} value={b.v}>{b.l}</option>)}
-          </select>
+              <select
+                className={styles.filterPill}
+                style={{ padding: '8px 4px', borderRadius: '10px', fontSize: '0.75rem', fontWeight: 800, border: 'none', background: 'transparent', outline: 'none', color: '#0f172a', cursor: 'pointer', width: 'auto' }}
+                value={tempBulan}
+                onChange={(e) => setTempBulan(e.target.value)}
+              >
+                {listBulan.map(b => <option key={b.v} value={b.v}>{b.l.substring(0,3)}</option>)}
+              </select>
 
-          <select
-            className={styles.filterPill}
-            style={{ flex: '1 1 120px' }}
-            value={tempTahun}
-            onChange={(e) => setTempTahun(e.target.value)}
-          >
-            <option value="">Semua Tahun</option>
-            {listTahun.map(t => <option key={t} value={t}>{t}</option>)}
-          </select>
+              <select
+                className={styles.filterPill}
+                style={{ padding: '8px 4px', borderRadius: '10px', fontSize: '0.75rem', fontWeight: 800, border: 'none', background: 'transparent', outline: 'none', color: '#0f172a', cursor: 'pointer', width: 'auto' }}
+                value={tempTahun}
+                onChange={(e) => setTempTahun(e.target.value)}
+              >
+                {listTahun.map(t => <option key={t} value={t}>{t}</option>)}
+              </select>
+
+              <div style={{ width: '1px', height: '20px', background: '#e2e8f0', margin: '0 4px' }}></div>
+          </div>
 
           <button
-            className={styles.filterBtn}
-            style={{ flex: '1 1 100%', justifyContent: 'center', marginTop: '4px' }}
             onClick={() => { setFilterHari(tempHari); setFilterBulan(tempBulan); setFilterTahun(tempTahun); }}
+            style={{ 
+                background: '#0f172a', 
+                color: 'white', 
+                border: 'none', 
+                borderRadius: '10px', 
+                padding: '8px 14px', 
+                fontSize: '0.65rem', 
+                fontWeight: 900, 
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '6px',
+                transition: 'all 0.2s ease',
+                letterSpacing: '0.04em',
+                flexShrink: 0
+            }}
+            onMouseOver={(e) => e.currentTarget.style.transform = 'translateY(-1px)'}
+            onMouseOut={(e) => e.currentTarget.style.transform = 'translateY(0)'}
           >
             <IconFilter />
-            Filter Data
+            FILTER
           </button>
         </div>
       </div>
 
-      {/* TABLE DATA */}
-      <div className={styles.card}>
-        <div className={styles.tableWrapper}>
-          <table className={styles.dataTable}>
-            <thead>
-              <tr>
-                <th>Waktu Presensi</th>
-                <th>Informasi Karyawan</th>
-                <th>Status</th>
-                <th>Berkas Bukti</th>
-                <th style={{ textAlign: 'right' }}>Keterangan</th>
+      {/* 2. TABLE DATA - SYNCED WITH KARYAWAN */}
+      <div className={styles.tableWrapper}>
+        <table className={styles.dataTable}>
+          <thead>
+            <tr>
+              <th>Waktu Presensi</th>
+              <th>Informasi Karyawan</th>
+              <th>Status</th>
+              <th>Berkas Bukti</th>
+              <th style={{ textAlign: 'right' }}>Keterangan</th>
+            </tr>
+          </thead>
+          <tbody>
+            {filteredAbsensi.map((a) => (
+              <tr key={a.id}>
+                <td>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <div style={{ color: '#3b82f6' }}><IconCalendarTable /></div>
+                    <div>
+                      <div style={{ fontWeight: '800', color: '#0f172a', fontSize: '0.8rem', whiteSpace: 'nowrap' }}>
+                        {formatIndonesianDate(a.tanggal, false).toUpperCase()}
+                      </div>
+                      <div style={{ color: '#64748b', fontSize: '0.7rem', fontWeight: '700' }}>
+                        {formatWIBTime(a.waktuMasuk)} WIB
+                      </div>
+                    </div>
+                  </div>
+                </td>
+                <td>
+                  <div className={styles.userCell}>
+                    <div className={styles.userAvatar} style={{ background: '#f1f5f9', color: '#1e3a8a', fontWeight: 800, width: '34px', height: '34px', fontSize: '0.85rem' }}>{a.user.nama.charAt(0)}</div>
+                    <div>
+                      <div style={{ fontWeight: '800', color: '#1e293b', fontSize: '0.85rem' }}>{a.user.nama.toUpperCase()}</div>
+                      <div style={{ fontSize: '0.7rem', color: '#94a3b8', fontWeight: '600' }}>{a.idKaryawan}</div>
+                    </div>
+                  </div>
+                </td>
+                <td style={{ verticalAlign: 'middle' }}>
+                    <div 
+                        className={`${styles.badge}`} 
+                        style={{ 
+                            background: a.status === 'HADIR' ? '#f0fdf4' : '#fef2f2', 
+                            color: a.status === 'HADIR' ? '#16a34a' : '#ef4444',
+                            border: 'none',
+                            fontSize: '0.65rem',
+                            fontWeight: 900,
+                            padding: '6px 12px',
+                            borderRadius: '100px',
+                            letterSpacing: '0.05em',
+                            textTransform: 'uppercase',
+                            display: 'inline-flex',
+                            alignItems: 'center',
+                            gap: '6px'
+                        }}
+                    >
+                        <div style={{ display: 'flex' }}>
+                            {a.status === 'HADIR' ? (
+                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                            ) : (
+                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" /></svg>
+                            )}
+                        </div>
+                        {a.status}
+                    </div>
+                </td>
+                <td>
+                  <div style={{ display: 'flex', gap: '6px' }}>
+                    {a.foto ? (
+                      <div className={styles.evidenceThumbnail} onClick={() => openModal(a.foto!)} style={{ width: '36px', height: '36px', borderRadius: '10px', border: '1px solid #e2e8f0' }}>
+                        <img src={a.foto} alt="Selfie" style={{ objectFit: 'cover' }} />
+                      </div>
+                    ) : null}
+                    {a.buktiApp ? (
+                      <div className={styles.evidenceThumbnail} onClick={() => openModal(a.buktiApp!)} style={{ width: '36px', height: '36px', borderRadius: '10px', border: '1px solid #e2e8f0' }}>
+                        <img src={a.buktiApp} alt="App" style={{ objectFit: 'cover' }} />
+                      </div>
+                    ) : null}
+                  </div>
+                </td>
+                <td style={{ textAlign: 'right', fontSize: '0.75rem', color: '#475569', fontWeight: '600' }}>
+                  {a.alasan ? a.alasan.toUpperCase() : "-"}
+                </td>
               </tr>
-            </thead>
-            <tbody>
-              {filteredAbsensi.map((a) => (
-                <tr key={a.id}>
-                  <td>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                      <IconCalendarTable />
-                      <div style={{ fontWeight: '800', color: '#0f172a', fontSize: '0.85rem', whiteSpace: 'nowrap' }}>
-                        {formatIndonesianDate(a.tanggal, false)}
-                      </div>
-                    </div>
-                    <div style={{ paddingLeft: '22px', color: '#64748b', fontSize: '0.75rem', fontWeight: '700', marginTop: '1px' }}>
-                      {formatWIBTime(a.waktuMasuk)}
-                    </div>
-                  </td>
-                  <td>
-                    <div className={styles.userCell}>
-                      <div className={styles.userAvatar} style={{ borderRadius: '50%', width: '38px', height: '38px', flexShrink: 0 }}>{a.user.nama.charAt(0)}</div>
-                      <div style={{ overflow: 'hidden' }}>
-                        <div style={{ fontWeight: '700', color: '#1e293b', fontSize: '0.9rem', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{a.user.nama.toUpperCase()}</div>
-                        <div style={{ fontSize: '0.75rem', color: '#94a3b8', fontWeight: '600' }}>{a.idKaryawan}</div>
-                      </div>
-                    </div>
-                  </td>
-                  <td>
-                    <span className={`${styles.badge} ${a.status === 'HADIR' ? styles.badgeHadir : styles.badgeIzin}`}>
-                      {a.status}
-                    </span>
-                  </td>
-                  <td>
-                    <div style={{ display: 'flex', gap: '8px' }}>
-                      {a.foto ? (
-                        <div className={styles.evidenceThumbnail} onClick={() => openModal(a.foto!)} style={{ width: '42px', height: '42px' }}>
-                          <img src={a.foto} alt="Selfie" />
-                        </div>
-                      ) : null}
-                      {a.buktiApp ? (
-                        <div className={styles.evidenceThumbnail} onClick={() => openModal(a.buktiApp!)} style={{ width: '42px', height: '42px' }}>
-                          <img src={a.buktiApp} alt="App" />
-                        </div>
-                      ) : null}
-                    </div>
-                  </td>
-                  <td style={{ textAlign: 'right', fontSize: '0.75rem', color: '#64748b', fontWeight: '500', minWidth: '150px' }}>
-                    {a.alasan ? a.alasan.toUpperCase() : "-"}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-          {filteredAbsensi.length === 0 && (
-            <div style={{ textAlign: "center", padding: "80px", color: "#94a3b8", fontWeight: "600" }}>
-              Belum ada data rekaman absensi.
+            ))}
+          </tbody>
+        </table>
+        {filteredAbsensi.length === 0 && (
+          <div style={{ textAlign: "center", padding: "100px 20px", color: "#94a3b8", fontWeight: "600", fontSize: '0.85rem' }}>
+            <div style={{ marginBottom: '16px', opacity: 0.3 }}>
+                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2" /><line x1="16" y1="2" x2="16" y2="6" /><line x1="8" y1="2" x2="8" y2="6" /><line x1="3" y1="10" x2="21" y2="10" /></svg>
             </div>
-          )}
-        </div>
+            Belum ada data rekaman absensi untuk periode ini.
+          </div>
+        )}
       </div>
 
       {modalImage && (
-        <div className={styles.imageModal} onClick={closeModal}>
-          <div className={styles.modalContent} onClick={e => e.stopPropagation()}>
-            <img src={modalImage} alt="Preview Full" className={styles.fullImage} />
-            <button className={styles.closeModal} onClick={closeModal}>×</button>
+        <div style={{ position: 'fixed', inset: 0, background: 'rgba(15, 23, 42, 0.4)', backdropFilter: 'blur(12px)', zIndex: 99999, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '20px' }} onClick={closeModal}>
+          <div style={{ position: 'relative', maxWidth: '90%', maxHeight: '90%', background: 'white', padding: '10px', borderRadius: '24px' }} onClick={e => e.stopPropagation()}>
+            <img src={modalImage} alt="Preview Full" style={{ maxWidth: '100%', maxHeight: '80vh', borderRadius: '16px', display: 'block' }} />
+            <button onClick={closeModal} style={{ position: 'absolute', top: '-15px', right: '-15px', width: '36px', height: '36px', borderRadius: '50%', background: '#0f172a', color: 'white', border: 'none', cursor: 'pointer', fontWeight: 900, fontSize: '1.2rem', boxShadow: '0 10px 15px -3px rgba(0,0,0,0.2)' }}>×</button>
           </div>
         </div>
       )}
-    </div>
+    </>
   )
 }

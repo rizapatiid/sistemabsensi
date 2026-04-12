@@ -3,7 +3,7 @@ import { getSession } from "@/actions/auth"
 import { redirect } from "next/navigation"
 import styles from "@/styles/profil_karyawan.module.css"
 import ProfileForm from "./ProfileForm"
-import CopyIdButton from "./CopyIdButton"
+import CopyIdButton from "@/components/CopyIdButton"
 import PushNotificationManager from "@/components/PushNotificationManager"
 import EmailNotificationSettings from "@/components/EmailNotificationSettings"
 

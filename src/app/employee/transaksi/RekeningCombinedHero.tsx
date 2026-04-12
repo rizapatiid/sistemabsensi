@@ -1,8 +1,9 @@
 "use client"
 
-import { useState, useTransition } from "react"
+import { useState, useTransition, useEffect } from "react"
 import { updateRekeningAction } from "@/actions/employeeUser"
 import styles from "@/styles/transaksi_karyawan.module.css"
+import { useSearchParams } from "next/navigation"
 
 interface RekeningSectionProps {
   initialBank: string
@@ -43,6 +44,14 @@ export default function RekeningCombinedHero({
   const [isPending, startTransition] = useTransition()
   const [showEdit, setShowEdit] = useState(false)
   const [message, setMessage] = useState<{ type: "success" | "error"; text: string } | null>(null)
+  
+  const searchParams = useSearchParams()
+
+  useEffect(() => {
+    if (searchParams.get("openValidasi") === "true") {
+      setShowEdit(true)
+    }
+  }, [searchParams])
 
   async function handleSubmit(formData: FormData) {
     setMessage(null)

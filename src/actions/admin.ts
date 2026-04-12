@@ -254,6 +254,16 @@ export async function generatePayrollAction(formData: FormData) {
   }
 }
 
+export async function deletePayrollAction(id: string) {
+  try {
+    await prisma.payroll.delete({ where: { id } })
+    revalidatePath("/admin/payroll")
+    return { success: true }
+  } catch (err) {
+    return { error: "Gagal menghapus data slip gaji" }
+  }
+}
+
 export async function togglePayrollStatusAction(id: string, currentStatus: string) {
   const newStatus = currentStatus === "DIBAYAR" ? "DIPROSES" : "DIBAYAR"
   

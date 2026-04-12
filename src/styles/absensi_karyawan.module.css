@@ -1,36 +1,46 @@
 .pageContainer {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 24px;
   max-width: 1200px;
   margin: 0 auto;
   width: 100%;
+  animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-/* 1. CLEAN HEADER SECTION */
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* 1. PREMIUM HEADER SECTION */
 .headerSection {
   background: white;
   border: 1px solid #e2e8f0;
-  border-radius: 24px;
-  padding: 24px;
+  border-radius: 28px;
+  padding: 32px 40px;
   display: flex;
-  flex-direction: column;
-  gap: 16px;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 24px;
+  box-shadow: 0 4px 6px -1px rgba(0,0,0,0.02);
 }
 
 .headerContent h1 {
-  font-size: 1.5rem;
-  font-weight: 800;
+  font-size: clamp(1.5rem, 4vw, 2.2rem);
+  font-weight: 900;
   color: #0f172a;
   margin: 0;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.04em;
+  line-height: 1.1;
 }
 
 .headerContent p {
   color: #64748b;
-  margin-top: 6px;
-  font-size: 0.9rem;
+  margin-top: 8px;
+  font-size: 1rem;
+  font-weight: 600;
   line-height: 1.5;
 }
 
@@ -38,121 +48,62 @@
 .statusCard {
   background: white;
   border: 1px solid #e2e8f0;
-  border-radius: 24px;
-  padding: 32px;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+  border-radius: 28px;
+  padding: 48px;
+  box-shadow: 0 4px 6px -1px rgba(0,0,0,0.02);
   display: flex;
   flex-direction: column;
   align-items: center;
   text-align: center;
 }
 
-.card {
-  background: white;
-  border: 1px solid #e2e8f0;
-  border-radius: 24px;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
-}
-
-.policyItem {
-  display: flex;
-  gap: 16px;
-  align-items: flex-start;
-}
-
-.policyNumber {
-  background: #f1f5f9;
-  color: #1a567e;
-  width: 32px;
-  height: 32px;
-  min-width: 32px;
-  border-radius: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 0.75rem;
-  font-weight: 800;
-}
-
-.policyTitle {
-  font-size: 0.9rem;
-  font-weight: 800;
-  color: #0f172a;
-  margin: 0 0 4px 0;
-}
-
-.policyText {
-  font-size: 0.8rem;
-  color: #64748b;
-  line-height: 1.5;
-  margin: 0;
-  font-weight: 500;
-  text-align: justify;
-}
-
 .successIcon {
-  width: 80px;
-  height: 80px;
-  border-radius: 50%;
-  background: #f0fdf4;
-  color: #16a34a;
+  width: 96px;
+  height: 96px;
+  border-radius: 32px;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: 24px;
-  border: 4px solid #dcfce7;
+  margin-bottom: 32px;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 10px 15px -3px rgba(0,0,0,0.05);
 }
 
-/* CAPTURE GRID */
+/* 3. CAPTURE ARCHITECTURE */
 .captureGrid {
   display: grid;
   grid-template-columns: 1fr;
-  gap: 20px;
+  gap: 32px;
   width: 100%;
-  margin: 32px 0;
+  margin: 40px 0;
+}
+
+.stepIndicator {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
 }
 
 .stepCircle {
-  width: 24px;
-  height: 24px;
-  background: #1e3a8a;
+  width: 28px;
+  height: 28px;
+  background: #0f172a;
   color: white;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 0.75rem;
-  font-weight: 800;
+  font-size: 0.8rem;
+  font-weight: 900;
 }
 
 .stepLabel {
-  font-size: 0.7rem;
-  font-weight: 800;
-  color: #64748b;
-  letter-spacing: 0.05em;
-}
-
-.actionIcon {
-  background: #f1f5f9;
-  padding: 18px;
-  border-radius: 50%;
-  color: #1e3a8a;
-  transition: all 0.2s;
-}
-
-.captureBox:hover .actionIcon {
-  background: #1e3a8a;
-  color: white;
-  transform: scale(1.1);
-}
-
-.stepTitle {
   font-size: 0.75rem;
-  font-weight: 800;
+  font-weight: 900;
   color: #94a3b8;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
-  margin-bottom: 12px;
+  letter-spacing: 0.1em;
 }
 
 .captureBox {
@@ -160,34 +111,42 @@
   aspect-ratio: 4/3;
   background: #f8fafc;
   border: 2px dashed #e2e8f0;
-  border-radius: 20px;
+  border-radius: 24px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   position: relative;
   overflow: hidden;
-  transition: all 0.2s;
-  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .captureBox:hover {
-  border-color: #cbd5e1;
+  border-color: #0f172a;
   background: #f1f5f9;
 }
 
 .activeCaptureBox {
-  border: 2px solid #1e3a8a;
-  background: #eff6ff;
+  border: 2px solid #0f172a;
+  background: white;
+  box-shadow: 0 20px 25px -5px rgba(0,0,0,0.05);
 }
 
-.videoElement {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+.actionIcon {
+  background: white;
+  width: 64px;
+  height: 64px;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #0f172a;
+  box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+  margin-bottom: 16px;
+  border: 1px solid #e2e8f0;
 }
 
-.previewImage {
+.videoElement, .previewImage {
   width: 100%;
   height: 100%;
   object-fit: cover;
@@ -195,113 +154,125 @@
 
 .snapBtn {
   position: absolute;
-  bottom: 16px;
-  left: 50%;
-  transform: translateX(-50%);
-  background: #1e3a8a;
+  bottom: 24px;
+  background: #0f172a;
   color: white;
   border: none;
-  padding: 10px 20px;
-  border-radius: 10px;
-  font-size: 0.75rem;
-  font-weight: 800;
+  padding: 12px 24px;
+  border-radius: 14px;
+  font-size: 0.8rem;
+  font-weight: 900;
   cursor: pointer;
-  box-shadow: 0 4px 12px rgba(30, 58, 138, 0.3);
+  box-shadow: 0 10px 15px -3px rgba(15, 23, 42, 0.25);
 }
 
 .reCaptureBtn {
   position: absolute;
-  top: 10px;
-  right: 10px;
+  top: 16px;
+  right: 16px;
   background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(8px);
   color: #ef4444;
-  border: none;
-  width: 26px;
-  height: 26px;
-  border-radius: 50%;
-  font-size: 1rem;
-  font-weight: 800;
+  border: 1px solid #fee2e2;
+  width: 32px;
+  height: 32px;
+  border-radius: 10px;
+  font-size: 1.2rem;
+  font-weight: 900;
   cursor: pointer;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  display: flex;
-  align-items: center;
-  justify-content: center;
 }
 
-/* BUTTONS */
+/* 4. BUTTON SYSTEMS */
 .actionArea {
   display: flex;
-  gap: 12px;
+  gap: 16px;
   width: 100%;
-  max-width: 480px;
+  max-width: 520px;
   margin: 0 auto;
 }
 
 .primaryBtn {
-  flex: 1;
-  background: #1e3a8a;
+  flex: 2;
+  background: #0f172a;
   color: white;
   border: none;
-  padding: 12px 20px;
-  border-radius: 10px;
-  font-size: 0.8rem;
-  font-weight: 800;
+  padding: 16px 24px;
+  border-radius: 16px;
+  font-size: 0.9rem;
+  font-weight: 900;
   cursor: pointer;
-  transition: all 0.2s;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 10px;
-}
-
-.primaryBtn:hover:not(:disabled) {
-  background: #1e40af;
-  transform: translateY(-2px);
-}
-
-.primaryBtn:disabled {
-  background: #94a3b8;
-  cursor: not-allowed;
+  box-shadow: 0 10px 15px -3px rgba(15, 23, 42, 0.15);
 }
 
 .secondaryBtn {
   flex: 1;
-  background: white;
+  background: #f8fafc;
   color: #64748b;
   border: 1px solid #e2e8f0;
-  padding: 12px 20px;
-  border-radius: 10px;
-  font-size: 0.8rem;
-  font-weight: 800;
-  cursor: pointer;
-  transition: all 0.2s;
-}
-
-.secondaryBtn:hover:not(:disabled) {
-  background: #f8fafc;
-  color: #0f172a;
-  border-color: #cbd5e1;
-}
-
-/* ALERTS */
-.alertBox {
-  padding: 16px;
-  border-radius: 12px;
+  padding: 16px 24px;
+  border-radius: 16px;
   font-size: 0.9rem;
-  font-weight: 700;
-  text-align: center;
-  border: 1px solid;
+  font-weight: 900;
+  cursor: pointer;
 }
 
-.successAlert { background: #f0fdf4; color: #166534; border-color: #dcfce7; }
-.errorAlert { background: #fef2f2; color: #991b1b; border-color: #fee2e2; }
+/* 5. POLICY GRID */
+.card {
+  background: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 28px;
+  padding: 40px;
+}
 
-/* MODAL */
+.policyItem {
+  display: flex;
+  gap: 20px;
+  padding: 12px;
+  border-radius: 20px;
+  transition: background 0.2s;
+}
+
+.policyItem:hover { background: #f8fafc; }
+
+.policyNumber {
+  background: #0f172a;
+  color: white;
+  width: 36px;
+  height: 36px;
+  min-width: 36px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.8rem;
+  font-weight: 900;
+}
+
+.policyTitle {
+  font-size: 1rem;
+  font-weight: 900;
+  color: #0f172a;
+  margin: 0 0 6px 0;
+}
+
+.policyText {
+  font-size: 0.85rem;
+  color: #64748b;
+  line-height: 1.6;
+  margin: 0;
+  font-weight: 500;
+}
+
+/* 6. MODAL & ALERTS */
 .modalOverlay {
   position: fixed;
-  top: 0; left: 0; right: 0; bottom: 0;
-  background-color: rgba(15, 23, 42, 0.85);
-  backdrop-filter: blur(8px);
+  inset: 0;
+  background: rgba(15, 23, 42, 0.4);
+  backdrop-filter: blur(12px);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -313,35 +284,44 @@
   background: white;
   width: 100%;
   max-width: 480px;
-  border-radius: 24px;
-  padding: 32px;
+  border-radius: 28px;
+  padding: 40px;
   box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
 }
 
 .textArea {
   width: 100%;
-  padding: 16px;
-  border-radius: 12px;
+  padding: 20px;
+  border-radius: 16px;
   border: 1px solid #e2e8f0;
   background: #f8fafc;
-  font-size: 0.95rem;
+  font-size: 1rem;
   color: #0f172a;
   font-weight: 600;
   margin-top: 12px;
   margin-bottom: 24px;
   outline: none;
   resize: none;
+  line-height: 1.6;
 }
 
-.textArea:focus {
-  border-color: #1e3a8a;
-  background: white;
+.alertBox {
+  padding: 20px;
+  border-radius: 16px;
+  font-size: 0.95rem;
+  font-weight: 900;
+  text-align: center;
+  border: 1px solid;
 }
 
-/* RESPONSIVE */
+.errorAlert { background: #fef2f2; color: #991b1b; border-color: #fee2e2; }
+
+/* 7. RESPONSIVE */
 @media (min-width: 769px) {
-  .headerSection { flex-direction: row; padding: 32px; align-items: center; }
-  .headerContent { flex: 1; }
   .captureGrid { grid-template-columns: 1fr 1fr; }
-  .headerContent h1 { font-size: 1.75rem; }
+}
+
+@media (max-width: 640px) {
+  .headerSection, .statusCard, .card { border-radius: 20px; padding: 32px 24px; }
+  .actionArea { flex-direction: column; }
 }

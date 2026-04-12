@@ -123,8 +123,13 @@ export default function RekeningForm({ initialBank, initialNoRek, initialNamaRek
               </div>
 
               <div style={{ display: "flex", gap: "12px", marginTop: "12px" }}>
-                <button type="submit" disabled={isPending} className={styles.submitBtn} style={{ flex: 2 }}>
-                  {isPending ? "MEMPROSES..." : "SIMPAN PERUBAHAN"}
+                <button type="submit" disabled={isPending} className={styles.submitBtn} style={{ flex: 2, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
+                  {isPending ? "MEMPROSES..." : (
+                    <>
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" /><polyline points="22 4 12 14.01 9 11.01" /></svg>
+                      SIMPAN VALIDASI
+                    </>
+                  )}
                 </button>
                 <button type="button" onClick={() => setShowEdit(false)} className={styles.submitBtn} style={{ flex: 1, background: 'white', color: '#64748b', border: '1px solid #e2e8f0' }}>
                   BATAL

@@ -10,7 +10,7 @@ const IconCheck = () => (
   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" style={{ color: '#166534' }}><polyline points="20 6 9 17 4 12"/></svg>
 )
 
-export default function CopyIdButton({ id }: { id: string }) {
+export default function CopyIdButton({ id, title = "Salin ID" }: { id: string, title?: string }) {
   const [copied, setCopied] = useState(false)
 
   const handleCopy = async () => {
@@ -19,14 +19,15 @@ export default function CopyIdButton({ id }: { id: string }) {
       setCopied(true)
       setTimeout(() => setCopied(false), 2000)
     } catch (err) {
-      console.error("Gagal menyalin ID", err)
+      console.error("Gagal menyalin", err)
     }
   }
 
   return (
     <button 
       onClick={handleCopy}
-      title="Salin ID Karyawan"
+      title={title}
+      type="button"
       style={{
         background: copied ? '#dcfce7' : '#f1f5f9',
         border: '1px solid',
@@ -38,7 +39,7 @@ export default function CopyIdButton({ id }: { id: string }) {
         justifyContent: 'center',
         cursor: 'pointer',
         transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)',
-        marginLeft: '8px'
+        marginLeft: '4px'
       }}
     >
       {copied ? <IconCheck /> : <IconCopy />}

@@ -35,128 +35,151 @@ export default function EditEmployeeForm({ user }: { user: any }) {
   }
 
   return (
-    <div className={styles.pageContainer}>
-      <div style={{ maxWidth: '850px', margin: '0 auto', width: '100%' }}>
-            {/* Header Navy Style */}
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '32px', flexWrap: 'wrap', gap: '20px' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-                    <IconEditUser />
-                    <div>
-                        <h1 style={{ fontSize: '1.8rem', fontWeight: 900, color: '#0f172a', margin: 0, letterSpacing: '-0.02em' }}>Edit Profil Karyawan</h1>
-                        <p style={{ color: '#64748b', fontWeight: 600, fontSize: '0.9rem', marginTop: '2px' }}>Modifikasi data personil dan akses staf RMP.</p>
-                    </div>
-                </div>
-                <Link href="/admin/karyawan" className={styles.btnSm} style={{ 
-                    background: '#f1f5f9', 
-                    color: '#64748b', 
-                    display: 'flex', 
-                    alignItems: 'center', 
-                    gap: '8px',
-                    padding: '10px 18px',
-                    borderRadius: '12px',
-                    textDecoration: 'none',
-                    fontWeight: 800,
-                    fontSize: '0.85rem'
-                }}>
-                <IconChevronLeft /> BATAL
-                </Link>
-            </div>
+    <div className={styles.pageContainer} style={{ background: '#f8fafc', padding: '0px', minHeight: '100vh' }}>
+      
+      {/* 1. STATUS LINE - PROFESSIONAL */}
+      <div style={{ padding: 'clamp(12px, 2vw, 24px) clamp(16px, 4vw, 32px) 0 clamp(16px, 4vw, 32px)' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '20px', marginBottom: '32px' }}>
+              <div>
+                  <div style={{ 
+                      display: 'inline-flex', 
+                      alignItems: 'center', 
+                      gap: '6px', 
+                      marginBottom: '12px'
+                  }}>
+                      <div style={{ width: '6px', height: '6px', background: '#3b82f6', borderRadius: '50%' }}></div>
+                      <span style={{ fontSize: '0.65rem', fontWeight: 800, color: '#94a3b8', letterSpacing: '0.05em', textTransform: 'uppercase' }}>Manajemen Personil • Update Data</span>
+                  </div>
+                  <h1 className={styles.pageTitle} style={{ fontSize: 'clamp(1.75rem, 5vw, 2.5rem)', fontWeight: 800, color: '#0f172a', margin: 0 }}>
+                      Edit Profil Karyawan
+                  </h1>
+                  <p style={{ color: '#64748b', fontWeight: 600, fontSize: 'clamp(0.85rem, 2vw, 1rem)', marginTop: '8px', margin: 0 }}>
+                    Modifikasi data personil dan akses staf RMP Digitals.
+                  </p>
+              </div>
+          </div>
+      </div>
 
-            {/* Clean Functional Card */}
-            <div className={styles.card} style={{ padding: '32px', border: 'none', boxShadow: '0 4px 20px rgba(0,0,0,0.05)' }}>
+      <div style={{ padding: '0 clamp(16px, 4vw, 32px) clamp(16px, 4vw, 32px)' }}>
+            <div className={styles.card} style={{ maxWidth: '900px', padding: 'clamp(20px, 4vw, 40px)', borderRadius: '24px', border: '1px solid #e2e8f0', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.02)' }}>
                 {error && (
-                    <div style={{ background: '#fef2f2', border: '1px solid #fee2e2', color: '#dc2626', padding: '14px', borderRadius: '12px', marginBottom: '24px', fontWeight: 700, fontSize: '0.9rem' }}>
+                    <div style={{ background: '#fef2f2', border: '1px solid #fee2e2', color: '#dc2626', padding: '16px', borderRadius: '14px', marginBottom: '32px', fontWeight: 700, fontSize: '0.85rem' }}>
                         ⚠️ {error}
                     </div>
                 )}
                 
-                <form action={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+                <form action={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '32px' }}>
                     <input type="hidden" name="idOriginal" value={user.id} />
 
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '24px' }}>
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 280px), 1fr))', gap: '24px' }}>
                         <div className={styles.formGroup}>
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '10px' }}>
-                                <div style={{ color: '#1e3a8a' }}><IconId /></div>
-                                <label style={{ fontSize: '0.85rem', fontWeight: 850, color: '#0f172a' }}>ID Karyawan</label>
+                            <label style={{ display: 'block', fontSize: '0.7rem', fontWeight: 800, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '12px' }}>ID Karyawan</label>
+                            <div className={styles.searchBox} style={{ background: '#f8fafc', borderRadius: '14px', border: '1px solid #e2e8f0' }}>
+                                <div className={styles.searchIcon}><IconId /></div>
+                                <input style={{ background: 'transparent', border: 'none', fontWeight: 700 }} className={styles.searchInput} type="text" name="id" defaultValue={user.id} required />
                             </div>
-                            <input className={styles.filterPill} style={{ width: '100%', background: '#f8fafc' }} type="text" name="id" defaultValue={user.id} required />
                         </div>
                         <div className={styles.formGroup}>
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '10px' }}>
-                                <div style={{ color: '#1e3a8a' }}><IconUser /></div>
-                                <label style={{ fontSize: '0.85rem', fontWeight: 850, color: '#0f172a' }}>Nama Lengkap</label>
+                            <label style={{ display: 'block', fontSize: '0.7rem', fontWeight: 800, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '12px' }}>Nama Lengkap</label>
+                            <div className={styles.searchBox} style={{ background: '#f8fafc', borderRadius: '14px', border: '1px solid #e2e8f0' }}>
+                                <div className={styles.searchIcon}><IconUser /></div>
+                                <input style={{ background: 'transparent', border: 'none', fontWeight: 700 }} className={styles.searchInput} type="text" name="nama" defaultValue={user.nama} required />
                             </div>
-                            <input className={styles.filterPill} style={{ width: '100%', background: '#f8fafc' }} type="text" name="nama" defaultValue={user.nama} required />
-                        </div>
-                    </div>
-
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '24px' }}>
-                        <div className={styles.formGroup}>
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '10px' }}>
-                                <div style={{ color: '#1e3a8a' }}><IconBriefcase /></div>
-                                <label style={{ fontSize: '0.85rem', fontWeight: 850, color: '#0f172a' }}>Jabatan / Posisi</label>
-                            </div>
-                            <input className={styles.filterPill} style={{ width: '100%', background: '#f8fafc' }} type="text" name="jabatan" defaultValue={user.jabatan || ""} required />
-                        </div>
-                        <div className={styles.formGroup}>
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '10px' }}>
-                                <div style={{ color: '#a16207' }}><IconLock /></div>
-                                <label style={{ fontSize: '0.85rem', fontWeight: 850, color: '#854d0e' }}>Perbarui Password</label>
-                            </div>
-                            <input className={styles.filterPill} style={{ width: '100%', background: '#fffbeb', border: '1px solid #fef08a' }} type="text" name="password" defaultValue={user.password} required />
                         </div>
                     </div>
 
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '24px' }}>
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 280px), 1fr))', gap: '24px' }}>
                         <div className={styles.formGroup}>
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '10px' }}>
-                                <div style={{ color: '#1e3a8a' }}><IconPhone /></div>
-                                <label style={{ fontSize: '0.85rem', fontWeight: 850, color: '#0f172a' }}>No. WhatsApp</label>
+                            <label style={{ display: 'block', fontSize: '0.7rem', fontWeight: 800, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '12px' }}>Jabatan / Posisi</label>
+                            <div className={styles.searchBox} style={{ background: '#f8fafc', borderRadius: '14px', border: '1px solid #e2e8f0' }}>
+                                <div className={styles.searchIcon}><IconBriefcase /></div>
+                                <input style={{ background: 'transparent', border: 'none', fontWeight: 700 }} className={styles.searchInput} type="text" name="jabatan" defaultValue={user.jabatan || ""} required />
                             </div>
-                            <input className={styles.filterPill} style={{ width: '100%', background: '#f8fafc' }} type="text" name="phone" defaultValue={user.phone || ""} />
                         </div>
                         <div className={styles.formGroup}>
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '10px' }}>
-                                <div style={{ color: '#1e3a8a' }}><IconMail /></div>
-                                <label style={{ fontSize: '0.85rem', fontWeight: 850, color: '#0f172a' }}>Email Aktif</label>
+                            <label style={{ display: 'block', fontSize: '0.7rem', fontWeight: 800, color: '#854d0e', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '12px' }}>Perbarui Password</label>
+                            <div className={styles.searchBox} style={{ background: '#fffbeb', borderRadius: '14px', border: '1px solid #fef08a' }}>
+                                <div className={styles.searchIcon} style={{ color: '#a16207' }}><IconLock /></div>
+                                <input style={{ background: 'transparent', border: 'none', fontWeight: 700, color: '#854d0e' }} className={styles.searchInput} type="text" name="password" defaultValue={user.password} required />
                             </div>
-                            <input className={styles.filterPill} style={{ width: '100%', background: '#f8fafc' }} type="email" name="email" defaultValue={user.email || ""} />
+                        </div>
+                    </div>
+
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 280px), 1fr))', gap: '24px' }}>
+                        <div className={styles.formGroup}>
+                            <label style={{ display: 'block', fontSize: '0.7rem', fontWeight: 800, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '12px' }}>No. WhatsApp</label>
+                            <div className={styles.searchBox} style={{ background: '#f8fafc', borderRadius: '14px', border: '1px solid #e2e8f0' }}>
+                                <div className={styles.searchIcon}><IconPhone /></div>
+                                <input style={{ background: 'transparent', border: 'none', fontWeight: 700 }} className={styles.searchInput} type="text" name="phone" defaultValue={user.phone || ""} />
+                            </div>
+                        </div>
+                        <div className={styles.formGroup}>
+                            <label style={{ display: 'block', fontSize: '0.7rem', fontWeight: 800, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '12px' }}>Email Aktif</label>
+                            <div className={styles.searchBox} style={{ background: '#f8fafc', borderRadius: '14px', border: '1px solid #e2e8f0' }}>
+                                <div className={styles.searchIcon}><IconMail /></div>
+                                <input style={{ background: 'transparent', border: 'none', fontWeight: 700 }} className={styles.searchInput} type="email" name="email" defaultValue={user.email || ""} />
+                            </div>
                         </div>
                     </div>
 
                     <div className={styles.formGroup}>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '12px' }}>
-                            <div style={{ color: '#1e3a8a' }}><IconMapPin /></div>
-                            <label style={{ fontSize: '0.85rem', fontWeight: 850, color: '#0f172a' }}>Alamat Domisili Lengkap</label>
-                        </div>
+                        <label style={{ display: 'block', fontSize: '0.7rem', fontWeight: 800, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '12px' }}>Alamat Domisili Lengkap</label>
                         <textarea 
                             name="alamat" 
                             defaultValue={user.alamat || ""} 
                             rows={3} 
-                            className={styles.filterPill}
-                            style={{ width: "100%", borderRadius: "14px", padding: '14px 18px', appearance: 'none', resize: 'none', background: '#f8fafc' }}
+                            style={{ 
+                                width: "100%", 
+                                borderRadius: "16px", 
+                                padding: '16px 20px', 
+                                background: '#f8fafc',
+                                border: '1px solid #e2e8f0',
+                                fontWeight: 700,
+                                fontSize: '0.85rem',
+                                color: '#1e293b',
+                                outline: 'none',
+                                transition: 'all 0.2s',
+                                resize: 'none',
+                                boxSizing: 'border-box'
+                            }}
                         ></textarea>
                     </div>
 
-                    <div style={{ marginTop: '12px' }}>
+                    <div style={{ display: 'flex', gap: '12px', marginTop: '12px' }}>
+                        <Link href="/admin/karyawan" className={styles.btnAction} style={{ 
+                            flex: 1,
+                            background: '#f1f5f9', 
+                            color: '#64748b', 
+                            border: '1px solid #e2e8f0',
+                            justifyContent: 'center',
+                            padding: '16px 12px',
+                            borderRadius: '16px',
+                            fontWeight: 900,
+                            fontSize: 'clamp(0.7rem, 2vw, 0.85rem)',
+                            boxShadow: 'none'
+                        }}>
+                          BATAL
+                        </Link>
+
                         <button 
                             type="submit" 
                             disabled={loading} 
                             style={{ 
-                                width: '100%',
-                                padding: '18px', 
-                                fontSize: '1rem', 
+                                flex: 1.5,
+                                padding: '16px 12px', 
+                                fontSize: 'clamp(0.7rem, 2vw, 0.85rem)', 
                                 borderRadius: '16px',
-                                fontWeight: 850,
+                                fontWeight: 900,
                                 border: 'none',
                                 color: 'white',
                                 cursor: loading ? 'not-allowed' : 'pointer',
                                 opacity: loading ? 0.7 : 1,
-                                background: '#1e3a8a',
-                                transition: 'all 0.3s ease'
+                                background: '#3b82f6',
+                                transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                                boxShadow: '0 10px 15px -3px rgba(59, 130, 246, 0.2)'
                             }}
                         >
-                            {loading ? "MENYIMPAN PERUBAHAN..." : "SIMPAN PERUBAHAN DATA"}
+                            {loading ? "PROSES..." : "SIMPAN"}
                         </button>
                     </div>
                 </form>

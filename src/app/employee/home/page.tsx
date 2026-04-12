@@ -5,30 +5,65 @@ import Link from "next/link"
 import AnnouncementClient from "./AnnouncementClient"
 import { getTodayJakarta, formatWIBTime, getJakartaDate, formatIndonesianDate } from "@/lib/date"
 
-// Unified High-End Icons
+// Institutional Icons
 const IconClock = () => (
-  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10" /><polyline points="12 6 12 12 16 14" /></svg>
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10" /><polyline points="12 6 12 12 16 14" /></svg>
 )
-const IconCreditCard = () => (
-  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><rect x="1" y="4" width="22" height="16" rx="2" ry="2" /><line x1="1" y1="10" x2="23" y2="10" /></svg>
+const IconMoney = () => (
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="6" width="20" height="12" rx="2" /><circle cx="12" cy="12" r="2" /><path d="M6 12h.01M18 12h.01" /></svg>
 )
-const IconAnnounce = () => (
-  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" /><line x1="12" y1="9" x2="12" y2="13" /><line x1="12" y1="17" x2="12.01" y2="17" /></svg>
+const IconMegaphone = () => (
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><path d="m3 11 18-5v12L3 13v-2z"/><path d="M11.6 16.8a3 3 0 1 1-5.8-1.6"/></svg>
 )
 const IconCalendar = () => (
-  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2" /><line x1="16" y1="2" x2="16" y2="6" /><line x1="8" y1="2" x2="8" y2="6" /><line x1="3" y1="10" x2="21" y2="10" /></svg>
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2" /><line x1="16" y1="2" x2="16" y2="6" /><line x1="8" y1="2" x2="8" y2="6" /><line x1="3" y1="10" x2="21" y2="10" /></svg>
 )
-const IconInfo = () => (
-  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10" /><line x1="12" y1="16" x2="12" y2="12" /><line x1="12" y1="8" x2="12.01" y2="8" /></svg>
+const IconShield = () => (
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
 )
+const IconChip = () => (
+    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" style={{ opacity: 0.3 }}><rect x="3" y="11" width="18" height="10" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+)
+
+const MOTIVATIONAL_QUOTES = [
+  "Semangat pagi! Langkah pertama hari ini menentukan kesuksesan hari esok.",
+  "Kedisiplinan adalah jembatan antara cita-cita dan pencapaian.",
+  "Fokuslah pada progres kecil setiap hari, itu adalah kunci keberhasilan.",
+  "Integritas adalah melakukan hal yang benar, bahkan ketika tidak ada yang melihat.",
+  "Kualitas kerja Anda adalah cerminan dari dedikasi dan profesionalisme Anda.",
+  "Teruslah belajar, teruslah tumbuh. Batasan Anda adalah apa yang Anda impikan.",
+  "Keberhasilan bukan tentang seberapa cepat Anda lari, tapi seberapa konsisten Anda melangkah.",
+  "Mari kita bangun masa depan perusahaan ini dengan kerja keras dan kolaborasi.",
+  "Setiap tantangan adalah peluang untuk membuktikan kemampuan terbaik Anda.",
+  "Mulailah hari ini dengan syukur dan selesaikan dengan kepuasan hasil kerja.",
+  "Kerja keras mengalahkan bakat ketika bakat tidak bekerja keras.",
+  "Hari ini adalah kesempatan baru untuk menjadi lebih baik dari kemarin.",
+  "Fokus pada solusi, bukan pada hambatan. Anda pasti bisa!",
+  "Profesionalisme dimulai dari hal terkecil yang kita lakukan secara konsisten.",
+  "Jadilah inspirasi bagi rekan kerja Anda melalui dedikasi yang tulus.",
+  "Waktu adalah aset berharga, gunakan setiap menit untuk produktivitas maksimal.",
+  "Keyakinan adalah modal utama untuk menaklukkan setiap target besar.",
+  "Jangan menunggu instruksi, jadilah inisiatif yang membawa perubahan positif.",
+  "Sinergi kita hari ini akan melahirkan prestasi besar di masa depan.",
+  "Kesehatan dan keselamatan kerja adalah prioritas utama kita bersama.",
+  "Setiap tetes keringat kerja keras akan membuahkan hasil yang manis.",
+  "Kesalahan adalah pelajaran berharga jika kita berani memperbaikinya.",
+  "Tetap positif, tetap produktif. Mari kita cetak skor tertinggi hari ini!",
+  "Keunggulan bukan sebuah tindakan, melainkan sebuah kebiasaan.",
+  "Visi tanpa aksi hanyalah mimpi, mari kita wujudkan visi perusahaan kita.",
+  "Ketekunan adalah rahasi dari setiap pencapaian yang luar biasa.",
+  "Semangat kolaborasi akan membuat pekerjaan berat terasa lebih ringan.",
+  "Jadikan hari ini sebagai capaian terbaik dalam karir profesional Anda.",
+  "Keberhasilan hari ini dimulai dari kedisiplinan absen di pagi hari.",
+  "Berikan yang terbaik untuk tim, maka tim akan memberikan yang terbaik untuk Anda.",
+  "Masa depan cerah menanti mereka yang bekerja dengan hati dan logika."
+]
 
 export default async function EmployeeHomePage({
   searchParams
 }: {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>
 }) {
-  const params = await searchParams
-  const announcementId = params.announcementId as string
   const session = await getSession()
   if (!session) return null
 
@@ -37,7 +72,7 @@ export default async function EmployeeHomePage({
 
   const user = await prisma.user.findUnique({ where: { id: session.id } })
   const firstDay = new Date(today.getFullYear(), today.getMonth(), 1)
-  const lastDay = new Date(today.getFullYear(), today.getMonth() + 1, 0)
+  const lastDay = new Date(today.getFullYear(), today.getMonth() + 1, 0, 23, 59, 59)
 
   const monthlyAttendances = await prisma.attendance.findMany({
     where: { idKaryawan: session.id, tanggal: { gte: firstDay, lte: lastDay } }
@@ -63,160 +98,188 @@ export default async function EmployeeHomePage({
   const upcomingHolidays = await prisma.calendar.findMany({
     where: { tanggal: { gte: today } },
     orderBy: { tanggal: "asc" },
-    take: 3
+    take: 4
   })
 
   const hadirCount = monthlyAttendances.filter(a => a.status === "HADIR").length
-  const izinCount = monthlyAttendances.filter(a => a.status === "IZIN").length
+  const izinCount = monthlyAttendances.filter(a => a.status === "IZIN" || a.status === "LAINNYA").length
+
+  // Select quote based on date (rotates through 31 quotes)
+  const quoteIndex = today.getDate() - 1
+  const dailyQuote = MOTIVATIONAL_QUOTES[quoteIndex] || MOTIVATIONAL_QUOTES[0]
 
   return (
     <div className={styles.pageContainer}>
 
-      {/* 1. Interactive Hero Banner (Blue) */}
-      <section className={styles.heroSection}>
-        <div className={styles.heroGreeting}>
-          <p>Selamat datang,</p>
-          <h1>{user?.nama?.toUpperCase()}</h1>
-        </div>
-
-        <div className={styles.heroInfoStack}>
-          <div className={styles.heroMeta}>
-            {user?.id} | {user?.jabatan || "Staff Officer"}
-          </div>
+      {/* 1. COMMAND CENTER HEADER */}
+      <section className={styles.headerSection}>
+        <div className={styles.headerContent}>
+          <h1>Halo, {user?.nama} 👋</h1>
+          <p>{dailyQuote}</p>
         </div>
       </section>
 
-      {/* 2. Professional Metrics Row */}
+      {/* 2. LUSH METRICS GRID */}
       <section className={styles.metricsGrid}>
+        
+        {/* CARD 1: STATUS PRESENSI */}
         <div className={styles.metricCard}>
-          <div className={styles.metricHead}>
-            <span className={styles.metricLabel}>STATUS ABSENSI HARI INI</span>
-            <div className={styles.metricIcon}><IconClock /></div>
-          </div>
-          {hasAbsenToday ? (
-            <div className={`${styles.attendanceStatus} ${hasAbsenToday.status === "HADIR" ? styles.statusHadir : styles.statusIzin}`}>
-              <h4>{hasAbsenToday.status === "HADIR" ? "SUDAH PRESENSI" : "IZIN TERCATAT"}</h4>
-              {hasAbsenToday.status === "HADIR" ? (
-                <span>{formatWIBTime(hasAbsenToday.waktuMasuk)}</span>
-              ) : (
-                <p style={{ fontSize: '0.7rem', color: '#1a567e', fontWeight: '800', margin: '4px 0 0', textTransform: 'uppercase' }}>
-                  {hasAbsenToday.alasan || "Alasan Izin"}
-                </p>
-              )}
+            <div className={styles.metricHeader}>
+                <div className={styles.metricTitleStack}>
+                    <span className={styles.metricLabel}>Status Presensi</span>
+                    <span className={styles.metricSublabel}>Hari In: {formatIndonesianDate(today, false)}</span>
+                </div>
+                <div className={styles.metricIconCircle}><IconClock /></div>
             </div>
-          ) : isWeekend || isHoliday ? (
-            <div className={`${styles.attendanceStatus} ${styles.statusLibur}`}>
-              <h4>HARI LIBUR</h4>
-              <p>{isHoliday?.keterangan || "Libur Pekan"}</p>
+            <div className={styles.metricBody}>
+                {hasAbsenToday ? (
+                    <div className={`${styles.statusBox} ${hasAbsenToday.status === "HADIR" ? styles.statusHadir : styles.statusAbsen}`}>
+                        <span className={styles.statusTitle}>{hasAbsenToday.status === "HADIR" ? "PRESENSI TERVERIFIKASI" : "IZIN TERCATAT"}</span>
+                        <div className={styles.statusValue}>{hasAbsenToday.status === "HADIR" ? formatWIBTime(hasAbsenToday.waktuMasuk) : "IZIN"}</div>
+                    </div>
+                ) : isWeekend || isHoliday ? (
+                    <div className={`${styles.statusBox} ${styles.statusLibur}`}>
+                        <span className={styles.statusTitle}>HARI LIBUR OPERASIONAL</span>
+                        <div className={styles.statusValue}>{isHoliday?.keterangan || "Libur Pekan"}</div>
+                    </div>
+                ) : (
+                    <div className={`${styles.statusBox} ${styles.statusAbsen}`} style={{ background: '#fef2f2', borderColor: '#fee2e2', color: '#991b1b' }}>
+                        <span className={styles.statusTitle}>BELUM MELAKUKAN PRESENSI</span>
+                        <Link href="/employee/absensi" style={{ fontSize: '1.25rem', fontWeight: 1000, color: '#991b1b', textDecoration: 'none' }}>Lapor Sekarang →</Link>
+                    </div>
+                )}
             </div>
-          ) : (
-            <div className={`${styles.attendanceStatus} ${styles.statusAbsen}`}>
-              <h4>BELUM PRESENSI</h4>
-              <Link href="/employee/absensi">Lapor Sekarang →</Link>
-            </div>
-          )}
         </div>
 
+        {/* CARD 2: RINGKASAN KEHADIRAN */}
         <div className={styles.metricCard}>
-          <div className={styles.metricHead}>
-            <div style={{ display: 'flex', flexDirection: 'column' }}>
-              <span className={styles.metricLabel}>RINGKASAN KEHADIRAN</span>
-              <span style={{ fontSize: '0.65rem', fontWeight: '800', color: '#1a567e', textTransform: 'uppercase', letterSpacing: '0.05em', marginTop: '4px' }}>
-                PERIODE: {formatIndonesianDate(today).split(' ')[1].toUpperCase()}
-              </span>
+            <div className={styles.metricHeader}>
+                <div className={styles.metricTitleStack}>
+                    <span className={styles.metricLabel}>Ringkasan Kehadiran</span>
+                    <span className={styles.metricSublabel}>Periode: {formatIndonesianDate(today, false).split(' ').slice(1).join(' ').toUpperCase()}</span>
+                </div>
+                <div className={styles.metricIconCircle}><IconCalendar /></div>
             </div>
-            <div className={styles.metricIcon}><IconCalendar /></div>
-          </div>
-          <div style={{ display: 'flex', gap: '8px', marginTop: '10px' }}>
-            <div style={{ flex: 1, padding: '14px', background: '#f0fdf4', borderRadius: '14px', border: '1px solid #dcfce7' }}>
-              <h4 style={{ fontSize: '0.6rem', fontWeight: '900', color: '#166534', opacity: 0.7, margin: 0, letterSpacing: '0.05em' }}>HADIR</h4>
-              <span style={{ fontSize: '1.5rem', fontWeight: '900', color: '#166534', letterSpacing: '-0.5px' }}>{hadirCount}</span>
-              <span style={{ fontSize: '0.75rem', color: '#166534', marginLeft: '4px', fontWeight: '800' }}>Hari</span>
+            <div className={styles.metricBody}>
+                <div className={styles.attendanceSummaryGrid}>
+                    <div className={styles.summaryBox}>
+                        <div className={styles.summaryVal}>{hadirCount}<span className={styles.summaryUnit}>Hari</span></div>
+                        <div className={styles.summaryLabel}>HADIR</div>
+                    </div>
+                    <div className={styles.summaryBox}>
+                        <div className={styles.summaryVal} style={{ color: '#ef4444' }}>{izinCount}<span className={styles.summaryUnit}>Hari</span></div>
+                        <div className={styles.summaryLabel}>IZIN/ABSEN</div>
+                    </div>
+                </div>
             </div>
-            <div style={{ flex: 1, padding: '14px', background: '#fef2f2', borderRadius: '14px', border: '1px solid #fee2e2' }}>
-              <h4 style={{ fontSize: '0.6rem', fontWeight: '900', color: '#991b1b', opacity: 0.7, margin: 0, letterSpacing: '0.05em' }}>IZIN/ABSEN</h4>
-              <span style={{ fontSize: '1.5rem', fontWeight: '900', color: '#991b1b', letterSpacing: '-0.5px' }}>{izinCount}</span>
-              <span style={{ fontSize: '0.75rem', color: '#991b1b', marginLeft: '4px', fontWeight: '800' }}>Hari</span>
-            </div>
-          </div>
         </div>
 
+        {/* CARD 3: PAYROLL TERAKHIR */}
         <div className={styles.metricCard}>
-          <div className={styles.metricHead}>
-            <span className={styles.metricLabel}>PAYROLL TERAKHIR</span>
-            <div className={styles.metricIcon}><IconCreditCard /></div>
-          </div>
-          <div className={styles.metricValue}>
-            Rp {lastPayroll?.totalGaji.toLocaleString("id-ID") || "0"}
-          </div>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '8px' }}>
-            <p style={{ fontSize: '0.75rem', color: '#64748b', margin: 0 }}>Status: <span style={{ fontWeight: '700', color: lastPayroll?.statusPembayaran === "DIBAYAR" ? "#166534" : "#991b1b" }}>{lastPayroll?.statusPembayaran === "DIBAYAR" ? "DIBAYAR" : "DIPROSES"}</span></p>
-            <Link href="/employee/transaksi" style={{ fontSize: '0.75rem', fontWeight: '800', color: '#1a567e', textDecoration: 'none' }}>Lihat Detail →</Link>
-          </div>
+            <div className={styles.metricHeader}>
+                <div className={styles.metricTitleStack}>
+                    <span className={styles.metricLabel}>Payroll Terakhir</span>
+                    <span className={styles.metricSublabel}>Transper Berhasil</span>
+                </div>
+                <div className={styles.metricIconCircle}><IconMoney /></div>
+            </div>
+            <div className={styles.metricBody}>
+                <div className={styles.payrollAmount}>
+                    Rp {lastPayroll?.totalGaji.toLocaleString("id-ID") || "0"}
+                </div>
+                <div className={styles.payrollStatus}>
+                    <div className={styles.statusIndicator} style={{ background: lastPayroll?.statusPembayaran === "DIBAYAR" ? '#22c55e' : '#f59e0b' }}></div>
+                    <span style={{ color: lastPayroll?.statusPembayaran === "DIBAYAR" ? '#166534' : '#9a3412' }}>
+                        {lastPayroll?.statusPembayaran === "DIBAYAR" ? "DIBAYAR" : "SEDANG DIPROSES"}
+                    </span>
+                    <Link href="/employee/transaksi" style={{ marginLeft: 'auto', color: '#3b82f6', textDecoration: 'none' }}>Slip Gaji →</Link>
+                </div>
+            </div>
         </div>
+
       </section>
 
-      {/* 3. Main Split Layout */}
+      {/* 3. MAIN HUB GRID */}
       <main className={styles.mainContent}>
-
-        {/* Left Column: Interactive Announcements List */}
-        <div className={styles.announceCol}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
-            <h2 className={styles.sectionTitle} style={{ margin: 0 }}><IconAnnounce /> Pengumuman Terbaru</h2>
-            <Link href="/employee/pengumuman" style={{ fontSize: '0.75rem', fontWeight: 850, color: '#1a567e', textDecoration: 'none' }}>LIHAT SEMUA →</Link>
-          </div>
-          <AnnouncementClient announcements={announcements} />
+        
+        {/* FEED COLL */}
+        <div className={styles.feedCol}>
+            <div className={styles.card}>
+                <div className={styles.cardHeader}>
+                    <h2 className={styles.cardTitle}><IconMegaphone /> Feed Pengumuman</h2>
+                    <Link href="/employee/pengumuman" className={styles.seeAllLink}>SELENGKAPNYA →</Link>
+                </div>
+                <AnnouncementClient announcements={announcements} />
+            </div>
         </div>
 
-        {/* Right Column: Sidebar Blocks */}
+        {/* SIDEBAR HUB */}
         <aside className={styles.sidebar}>
+            
+            {/* ELITE BANK CARD */}
+            <div className={styles.bankWidget}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                    <label style={{ fontSize: '0.65rem', color: '#94a3b8' }}>Institutional Payroll Account</label>
+                    <IconChip />
+                </div>
+                <div className={styles.bankId}>
+                    {user?.noRekening ? user.noRekening.replace(/(\d{4})/g, '$1 ') : "RESTRICTED"}
+                </div>
+                
+                <div style={{ marginBottom: '20px' }}>
+                    <span style={{ fontSize: '0.65rem', color: '#64748b', fontWeight: 900, textTransform: 'uppercase', letterSpacing: '0.05em' }}>Atas Nama (a.n)</span>
+                    <div style={{ fontSize: '0.95rem', fontWeight: 1000, color: 'white', marginTop: '2px' }}>{user?.namaRekening || user?.nama || "Restricted Access"}</div>
+                </div>
 
-          <div className={styles.sidebarCard}>
-            <h2 className={styles.sectionTitle} style={{ fontSize: '1rem', marginBottom: '20px' }}>Kalender Libur</h2>
-            <div className={styles.holidayList}>
-              {upcomingHolidays.length === 0 ? (
-                <p style={{ fontSize: '0.85rem', color: '#94a3b8' }}>Tidak ada jadwal libur.</p>
-              ) : (
-                upcomingHolidays.map((h) => (
-                  <div key={h.id} className={styles.holidayItem}>
-                    <div className={styles.holidayDate}>
-                      <span className={styles.holidayMonth}>{formatIndonesianDate(h.tanggal, false).split(' ')[1].toUpperCase()}</span>
-                      <span className={styles.holidayDay}>{h.tanggal.getDate()}</span>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingTop: '20px', borderTop: '1px solid rgba(255,255,255,0.05)' }}>
+                    <div style={{ fontSize: '0.8rem', fontWeight: 800, color: '#94a3b8' }}>
+                        {user?.rekeningBank || "Bank Transfer"}
                     </div>
-                    <div>
-                      <h4 style={{ fontSize: '0.9rem', fontWeight: '800', color: '#0f172a' }}>{h.keterangan}</h4>
-                      <p style={{ fontSize: '0.75rem', color: '#64748b' }}>{new Intl.DateTimeFormat("id-ID", { weekday: "long" }).format(h.tanggal)}</p>
-                    </div>
-                  </div>
-                ))
-              )}
+                    <Link href="/employee/transaksi?openValidasi=true" className={styles.bankAction} style={{ margin: 0, padding: '8px 16px' }}>PERBARUI</Link>
+                </div>
             </div>
-          </div>
 
-          <div className={styles.bankCard}>
-            <label>REKENING PAYROLL</label>
-            {user?.noRekening ? (
-              <>
-                <div style={{ fontWeight: '800', fontSize: '0.9rem', marginTop: '8px' }}>{user.rekeningBank}</div>
-                <div className={styles.bankNumber}>{user.noRekening.replace(/(\d{4})/g, '$1 ')}</div>
-                <p className={styles.bankOwner}>A.N. {user?.namaRekening}</p>
-              </>
-            ) : (
-              <p style={{ fontSize: '0.85rem', opacity: 0.6, marginTop: '12px' }}>Belum diatur.</p>
-            )}
-            <Link href="/employee/profil" className={styles.actionBtn}>PENGATURAN DATA</Link>
-          </div>
+            {/* UPCOMING HOLIDAYS */}
+            <div className={styles.card} style={{ padding: '32px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '24px' }}>
+                    <div style={{ color: '#0f172a' }}><IconCalendar /></div>
+                    <h3 className={styles.cardTitle} style={{ fontSize: '1.1rem', border: 'none', padding: 0, margin: 0 }}>Kalender Hari Libur</h3>
+                </div>
+                <div className={styles.holidayList}>
+                    {upcomingHolidays.map(h => (
+                        <div key={h.id} className={styles.holidayItem}>
+                            <div className={styles.holidayDateBlock}>
+                                <span className={styles.holidayMonth}>{formatIndonesianDate(h.tanggal, false).split(' ')[1].slice(0, 3).toUpperCase()}</span>
+                                <span className={styles.holidayDay}>{h.tanggal.getDate()}</span>
+                            </div>
+                            <div style={{ flex: 1 }}>
+                                <div style={{ fontSize: '1rem', fontWeight: 1000, color: '#0f172a', letterSpacing: '-0.02em' }}>{h.keterangan}</div>
+                                <div style={{ fontSize: '0.78rem', color: '#64748b', fontWeight: 800, marginTop: '2px' }}>
+                                    Hari {new Intl.DateTimeFormat("id-ID", { weekday: 'long' }).format(h.tanggal)}
+                                </div>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+                <div style={{ marginTop: '24px', paddingTop: '20px', borderTop: '1px solid #f1f5f9', textAlign: 'center' }}>
+                    <span style={{ fontSize: '0.65rem', fontWeight: 900, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.1em' }}>Data Kalender Operasional 2026</span>
+                </div>
+            </div>
 
-          <div className={styles.sidebarCard} style={{ background: '#f8fafc', borderStyle: 'dashed' }}>
-            <h3 style={{ fontSize: '0.9rem', fontWeight: '900', color: '#0f172a', display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <IconInfo /> Protokol Pelaporan
-            </h3>
-            <p style={{ fontSize: '0.8rem', color: '#475569', lineHeight: '1.6', marginTop: '12px' }}>
-              <strong>Presensi: 07.00 - 09.00 WIB.</strong> Keterlambatan tanpa konfirmasi akan otomatis tercatat oleh sistem.
-            </p>
-          </div>
+            {/* PROTOCOL BLOCK */}
+            <div className={styles.infoBlock}>
+                <div style={{ color: '#0f172a', flexShrink: 0 }}><IconShield /></div>
+                <div>
+                   <h4 style={{ margin: 0, fontSize: '1rem', fontWeight: 1000, color: '#0f172a' }}>Pemberitahuan Sistem</h4>
+                   <p style={{ margin: '12px 0 0', fontSize: '0.85rem', color: '#64748b', lineHeight: '1.6', fontWeight: 600 }}>
+                      Sistem presensi digital mewajibkan verifikasi wajah dan screenshot aplikasi sebagai bukti sah. Keterlambatan akan tercatat secara otomatis pada server pusat.
+                   </p>
+                </div>
+            </div>
+
         </aside>
       </main>
+
     </div>
   )
 }

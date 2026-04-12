@@ -26,11 +26,22 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+import { getSession } from "@/actions/auth";
+import { getSystemSettings } from "@/lib/settings";
+import MaintenancePage from "@/components/MaintenancePage";
+
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const session = await getSession();
+  const settings = await getSystemSettings();
+  
+  // Bypass maintenance mode for admins
+  const isAdmin = session?.role === "ADMIN";
+  const isMaintenance = settings.maintenance && !isAdmin;
+
   return (
     <html lang="id">
       <head>
@@ -42,7 +53,7 @@ export default function RootLayout({
       <body>
         <RegisterServiceWorker />
         <PreventZoom />
-        {children}
+        {isMaintenance ? <MaintenancePage /> : children}
       </body>
     </html>
   );
