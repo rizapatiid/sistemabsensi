@@ -67,7 +67,7 @@ export async function deleteHolidayAction(id: string) {
 export async function createAnnouncementAction(formData: FormData) {
   const judul = formData.get("judul") as string
   const konten = formData.get("konten") as string
-  const image = formData.get("image") as string 
+  const image = formData.get("image") as string
   const scheduleStr = formData.get("scheduleDate") as string
   const scheduleDate = scheduleStr ? new Date(scheduleStr) : null
 
@@ -76,7 +76,7 @@ export async function createAnnouncementAction(formData: FormData) {
   const newAnnouncement = await prisma.announcement.create({
     data: { judul, konten, image: image || null, scheduleDate }
   })
-  
+
   revalidatePath("/admin/kalender")
   revalidatePath("/employee/home")
 
@@ -125,7 +125,7 @@ export async function getUnreadAnnouncementCount(userId: string) {
       where: { id: userId },
       select: { lastSeenAnnouncement: true }
     })
-    
+
     if (!user) return { success: false, count: 0 }
 
     const count = await prisma.announcement.count({
@@ -166,7 +166,7 @@ export async function generatePayrollAction(formData: FormData) {
   const bulan = parseInt(formData.get("bulan") as string)
   const tahun = parseInt(formData.get("tahun") as string)
   const gajiPokok = parseFloat(formData.get("gajiPokok") as string)
-  
+
   const tipeGaji = formData.get("tipeGaji") as string || "BULANAN"
   const tunjangan = parseFloat(formData.get("tunjangan") as string) || 0
   const ketTunjangan = formData.get("ketTunjangan") as string || ""
@@ -201,29 +201,29 @@ export async function generatePayrollAction(formData: FormData) {
     jumlahAbsen = count
   }
 
-  const totalGaji = tipeGaji === "HARIAN" 
+  const totalGaji = tipeGaji === "HARIAN"
     ? (gajiPokok * jumlahAbsen) + tunjangan
     : gajiPokok + tunjangan;
 
   try {
     const newPayroll = await prisma.payroll.create({
-      data: { 
-        idKaryawan, 
-        bulan, 
-        tahun, 
-        gajiPokok, 
+      data: {
+        idKaryawan,
+        bulan,
+        tahun,
+        gajiPokok,
         tipeGaji,
         jumlahAbsen,
         tunjangan,
         keteranganTunjangan: ketTunjangan,
-        totalGaji, 
+        totalGaji,
         statusPembayaran: "BELUM_LUNAS",
         bankSnapshot: user.rekeningBank,
         noRekeningSnapshot: user.noRekening,
         namaRekeningSnapshot: user.namaRekening
       }
     })
-    
+
     // Kirim Notifikasi Email Otomatis Jika Email Tersedia
     if (user.email && user.emailNotifEnabled) {
       try {
@@ -266,7 +266,7 @@ export async function deletePayrollAction(id: string) {
 
 export async function togglePayrollStatusAction(id: string, currentStatus: string) {
   const newStatus = currentStatus === "DIBAYAR" ? "DIPROSES" : "DIBAYAR"
-  
+
   const payroll = await prisma.payroll.update({
     where: { id },
     data: { statusPembayaran: newStatus },
@@ -335,5 +335,88 @@ export async function markPayrollsAsRead(userId: string) {
     return { success: true }
   } catch (error) {
     return { success: false }
+  }
+}
+
+// -- ABSENSI MANAGEMENT ACTIONS --
+// This action handles the secure deletion/rejection of attendance records.
+export async function rejectAttendanceAction(id: string) {
+  try {
+    const att = await prisma.attendance.findUnique({
+      where: { id },
+      include: { user: true }
+    })
+
+    if (!att) return { error: "Data absensi tidak ditemukan" }
+
+    await prisma.attendance.delete({ where: { id } })
+
+    revalidatePath("/admin/absensi")
+    revalidatePath("/employee/absensi")
+    revalidatePath("/employee/home")
+
+    try {
+      await sendNotificationToUser(
+        att.idKaryawan,
+        "Presensi Ditolak",
+        `Presensi Anda pada tanggal ${att.tanggal.toLocaleDateString("id-ID")} ditolak. Silakan lakukan presensi ulang.`,
+        "/employee/absensi"
+      )
+    } catch (e) {
+      console.error("Gagal mengirim notifikasi penolakan absensi:", e)
+    }
+
+    return { success: true }
+  } catch (err) {
+    console.error("Reject Attendance Error:", err)
+    return { error: "Gagal menolak data absensi" }
+  }
+}
+
+export async function manualAttendanceAction(formData: FormData) {
+  const idKaryawan = formData.get("idKaryawan") as string
+  const tanggalStr = formData.get("tanggal") as string
+  const waktuStr = formData.get("waktu") as string
+  const status = formData.get("status") as string
+
+  if (!idKaryawan || !tanggalStr || !waktuStr || !status) {
+    return { error: "Semua data harus diisi" }
+  }
+
+  const tanggal = new Date(tanggalStr)
+  tanggal.setHours(0, 0, 0, 0)
+
+  const [hours, minutes] = waktuStr.split(':').map(Number)
+  const waktuMasuk = new Date(tanggal)
+  waktuMasuk.setHours(hours, minutes, 0, 0)
+
+  // Check if already exists
+  const existing = await prisma.attendance.findUnique({
+    where: { idKaryawan_tanggal: { idKaryawan, tanggal } }
+  })
+
+  if (existing) {
+    return { error: "Karyawan sudah memiliki rekaman absensi pada tanggal tersebut." }
+  }
+
+  try {
+    await prisma.attendance.create({
+      data: {
+        idKaryawan,
+        tanggal,
+        waktuMasuk,
+        status,
+        alasan: status === "IZIN" ? "Input Manual oleh Admin" : null
+      }
+    })
+
+    revalidatePath("/admin/absensi")
+    revalidatePath("/employee/absensi")
+    revalidatePath("/employee/home")
+
+    return { success: true }
+  } catch (error) {
+    console.error("Manual Attendance Error:", error)
+    return { error: "Gagal menyimpan absensi manual" }
   }
 }

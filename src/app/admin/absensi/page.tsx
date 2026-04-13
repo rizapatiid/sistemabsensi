@@ -3,6 +3,12 @@ import styles from "@/styles/admin.module.css"
 import AbsensiAdminClient from "./AbsensiAdminClient"
 
 export default async function AdminAbsensiPage() {
+  const employees = await prisma.user.findMany({
+    where: { role: "KARYAWAN" },
+    select: { id: true, nama: true },
+    orderBy: { nama: "asc" }
+  })
+
   const absensi = await prisma.attendance.findMany({
     include: {
       user: true
@@ -66,7 +72,7 @@ export default async function AdminAbsensiPage() {
 
       <div style={{ padding: '0 clamp(16px, 4vw, 32px) clamp(16px, 4vw, 32px)' }}>
           <div className={styles.card} style={{ borderRadius: '24px', overflow: 'hidden', padding: 0 }}>
-            <AbsensiAdminClient absensi={absensi} />
+            <AbsensiAdminClient absensi={absensi} initialEmployees={employees} />
           </div>
       </div>
     </div>
