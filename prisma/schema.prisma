@@ -23,6 +23,7 @@ model User {
   namaRekening String?
   emailNotifEnabled Boolean @default(true)
   lastSeenAnnouncement DateTime     @default(now())
+  absensiEnabled Boolean @default(true)
   createdAt    DateTime     @default(now())
   updatedAt    DateTime     @updatedAt
 

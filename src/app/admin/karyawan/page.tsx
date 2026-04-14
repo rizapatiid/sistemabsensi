@@ -7,10 +7,6 @@ const IconPlus = () => (
     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
 )
 
-const IconUsers = () => (
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ color: '#1e3a8a' }}><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-)
-
 const IconUserCheck = () => (
     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><polyline points="17 11 19 13 23 9"/></svg>
 )
@@ -20,10 +16,10 @@ const IconUserX = () => (
 )
 
 export default async function AdminKaryawanPage() {
-  const karyawan = await prisma.user.findMany({
-    where: { role: "KARYAWAN" },
-    orderBy: { createdAt: "desc" }
-  })
+  // Gunakan queryRaw karena prisma generate gagal akibat file lock di Windows (EPERM)
+  const karyawan = await prisma.$queryRaw<any[]>`
+    SELECT * FROM "User" WHERE role = 'KARYAWAN' ORDER BY "createdAt" DESC
+  `
 
   const countTotal = karyawan.length
   const countAktif = karyawan.filter(k => k.status === 'AKTIF').length
@@ -40,20 +36,15 @@ export default async function AdminKaryawanPage() {
     rekeningBank: k.rekeningBank,
     noRekening: k.noRekening,
     namaRekening: k.namaRekening,
-    status: k.status
+    status: k.status,
+    absensiEnabled: k.absensiEnabled ?? true
   }))
 
   return (
     <div className={styles.pageContainer} style={{ background: '#f8fafc', padding: '0px', minHeight: '100vh' }}>
       
-      {/* 1. STATUS LINE - PROFESSIONAL */}
       <div style={{ padding: 'clamp(12px, 2vw, 24px) clamp(16px, 4vw, 32px) 0 clamp(16px, 4vw, 32px)' }}>
-          <div style={{ 
-              display: 'inline-flex', 
-              alignItems: 'center', 
-              gap: '6px', 
-              marginBottom: '12px'
-          }}>
+          <div style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', marginBottom: '12px' }}>
               <div style={{ width: '6px', height: '6px', background: '#3b82f6', borderRadius: '50%' }}></div>
               <span style={{ fontSize: '0.65rem', fontWeight: 800, color: '#94a3b8', letterSpacing: '0.05em', textTransform: 'uppercase' }}>Database Karyawan • Real-time Sync</span>
           </div>
@@ -70,7 +61,6 @@ export default async function AdminKaryawanPage() {
                 <div style={{ marginTop: '24px' }}>
                     <Link 
                       href="/admin/karyawan/tambah" 
-                      className={styles.btnAction}
                       style={{ 
                           padding: '12px 28px', 
                           borderRadius: '14px', 
@@ -78,7 +68,10 @@ export default async function AdminKaryawanPage() {
                           color: 'white', 
                           fontWeight: 900,
                           fontSize: '0.85rem',
-                          boxShadow: '0 10px 15px -3px rgba(15, 23, 42, 0.1)'
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          gap: '8px',
+                          textDecoration: 'none'
                       }}
                     >
                       <IconPlus />

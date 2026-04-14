@@ -165,3 +165,12 @@ export async function updateAdminAction(formData: FormData) {
   revalidatePath("/admin/kelola-admin")
   return { success: true }
 }
+
+export async function toggleAbsensiAccessAction(id: string, currentStatus: boolean) {
+  // Gunakan executeRaw karena prisma client belum terupdate (EPERM file lock)
+  const newVal = !currentStatus
+  await prisma.$executeRaw`
+    UPDATE "User" SET "absensiEnabled" = ${newVal} WHERE id = ${id}
+  `
+  revalidatePath("/admin/karyawan")
+}

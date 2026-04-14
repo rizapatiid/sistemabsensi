@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { deleteEmployeeAction, toggleBlockEmployeeAction } from "@/actions/employee"
+import { deleteEmployeeAction, toggleBlockEmployeeAction, toggleAbsensiAccessAction } from "@/actions/employee"
 import Link from "next/link"
 import styles from "@/styles/admin.module.css"
 
@@ -25,6 +25,10 @@ const IconTrash = () => (
     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>
 )
 
+const IconPower = () => (
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M18.36 6.64a9 9 0 1 1-12.73 0"/><line x1="12" y1="2" x2="12" y2="12"/></svg>
+)
+
 interface Karyawan {
   id: string
   nama: string
@@ -36,6 +40,7 @@ interface Karyawan {
   namaRekening: string | null
   alamat: string | null
   status: string
+  absensiEnabled: boolean
 }
 
 const IconEye = () => (
@@ -58,7 +63,7 @@ export default function KaryawanTableClient({ karyawanInitial }: { karyawanIniti
 
   return (
     <>
-      {/* MODAL DETAIL - COMPACT HIGH END */}
+      {/* MODAL DETAIL */}
       {selectedKaryawan && (
           <div style={{ position: 'fixed', inset: 0, background: 'rgba(15, 23, 42, 0.25)', backdropFilter: 'blur(8px)', zIndex: 9999, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '16px' }}>
               <div style={{ background: 'white', width: '100%', maxWidth: '380px', borderRadius: '28px', overflow: 'hidden', boxShadow: '0 20px 40px -10px rgba(0,0,0,0.15)' }}>
@@ -73,15 +78,16 @@ export default function KaryawanTableClient({ karyawanInitial }: { karyawanIniti
                       <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginBottom: '24px' }}>
                           <div style={{ width: '64px', height: '64px', background: '#f1f5f9', borderRadius: '20px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.5rem', fontWeight: 900, color: '#1e3a8a', marginBottom: '12px' }}>{selectedKaryawan.nama.charAt(0)}</div>
                           <h4 style={{ margin: '0 0 4px 0', fontSize: '1.1rem', fontWeight: 900, color: '#0f172a', textAlign: 'center' }}>{selectedKaryawan.nama}</h4>
-                          <span style={{ 
-                              background: selectedKaryawan.status === 'AKTIF' ? '#f0fdf4' : '#fef2f2', 
-                              color: selectedKaryawan.status === 'AKTIF' ? '#16a34a' : '#ef4444',
-                              padding: '3px 10px',
-                              borderRadius: '100px',
-                              fontSize: '0.6rem',
-                              fontWeight: 900,
-                              textTransform: 'uppercase'
-                          }}>{selectedKaryawan.status}</span>
+                          <div style={{ display: 'flex', gap: '8px' }}>
+                            <span style={{ 
+                                background: selectedKaryawan.status === 'AKTIF' ? '#f0fdf4' : '#fef2f2', color: selectedKaryawan.status === 'AKTIF' ? '#16a34a' : '#ef4444',
+                                padding: '3px 10px', borderRadius: '100px', fontSize: '0.6rem', fontWeight: 900, textTransform: 'uppercase'
+                            }}>{selectedKaryawan.status}</span>
+                            <span style={{ 
+                                background: selectedKaryawan.absensiEnabled ? '#eff6ff' : '#fff7ed', color: selectedKaryawan.absensiEnabled ? '#3b82f6' : '#f97316',
+                                padding: '3px 10px', borderRadius: '100px', fontSize: '0.6rem', fontWeight: 900, textTransform: 'uppercase'
+                            }}>{selectedKaryawan.absensiEnabled ? 'PORTAL BUKA' : 'PORTAL TUTUP'}</span>
+                          </div>
                       </div>
 
                       <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
@@ -100,18 +106,6 @@ export default function KaryawanTableClient({ karyawanInitial }: { karyawanIniti
                                   <div style={{ fontSize: '0.75rem', fontWeight: 600, color: '#64748b' }}>{selectedKaryawan.email || '-'}</div>
                               </div>
                           </div>
-                          <div style={{ display: 'grid', gridTemplateColumns: '80px 1fr', gap: '8px' }}>
-                              <span style={{ fontSize: '0.65rem', fontWeight: 800, color: '#94a3b8', textTransform: 'uppercase' }}>Rekening</span>
-                              <div>
-                                  <div style={{ fontSize: '0.8rem', fontWeight: 700, color: '#1e293b' }}>{selectedKaryawan.namaRekening || '-'}</div>
-                                  <div style={{ fontSize: '0.75rem', fontWeight: 700, color: '#0f172a' }}>{selectedKaryawan.rekeningBank || '-'}</div>
-                                  <div style={{ fontSize: '0.75rem', fontWeight: 600, color: '#64748b' }}>{selectedKaryawan.noRekening || '-'}</div>
-                              </div>
-                          </div>
-                          <div style={{ display: 'grid', gridTemplateColumns: '80px 1fr', gap: '8px' }}>
-                              <span style={{ fontSize: '0.65rem', fontWeight: 800, color: '#94a3b8', textTransform: 'uppercase' }}>Alamat</span>
-                              <span style={{ fontSize: '0.75rem', fontWeight: 600, color: '#475569', lineHeight: '1.4' }}>{selectedKaryawan.alamat || '-'}</span>
-                          </div>
                       </div>
                   </div>
 
@@ -122,30 +116,35 @@ export default function KaryawanTableClient({ karyawanInitial }: { karyawanIniti
               </div>
           </div>
       )}
+
+      {/* HEADER */}
       <div className={styles.cardHeader} style={{ 
-        padding: '20px 24px', 
+        padding: '24px', 
         borderBottom: '1px solid #f1f5f9', 
         background: 'white',
         display: 'flex',
         justifyContent: 'space-between',
         alignItems: 'center',
         flexWrap: 'wrap',
-        gap: '16px'
+        gap: '20px'
       }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#eff6ff', color: '#3b82f6', width: '32px', height: '32px', borderRadius: '10px' }}>
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#eff6ff', color: '#3b82f6', width: '38px', height: '38px', borderRadius: '12px', border: '1px solid #dbeafe' }}>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
             </div>
-            <h3 className={styles.cardTitle} style={{ margin: 0, fontSize: '0.95rem', fontWeight: 900 }}>Daftar Personil</h3>
+            <div>
+                <h3 className={styles.cardTitle} style={{ margin: 0, fontSize: '1rem', fontWeight: 950, color: '#0f172a' }}>Daftar Personil</h3>
+                <p style={{ margin: 0, fontSize: '0.7rem', color: '#64748b', fontWeight: 600 }}>Kelola akses dan data profil karyawan</p>
+            </div>
         </div>
-        <div className={styles.searchBox} style={{ background: '#f8fafc', borderRadius: '12px', border: '1px solid #e2e8f0', maxWidth: '300px', flex: '1 1 250px' }}>
+        <div className={styles.searchBox} style={{ background: '#f8fafc', borderRadius: '14px', border: '1px solid #e2e8f0', maxWidth: '300px', flex: '1 1 250px' }}>
           <div className={styles.searchIcon} style={{ color: '#94a3b8' }}><IconSearch /></div>
           <input 
             type="text" 
             placeholder="Cari ID atau Nama..." 
             className={styles.searchInput}
             value={searchTerm}
-            style={{ fontWeight: 600, fontSize: '0.85rem', height: '42px' }}
+            style={{ fontWeight: 600, fontSize: '0.85rem', height: '42px', color: '#0f172a' }}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
         </div>
@@ -157,8 +156,8 @@ export default function KaryawanTableClient({ karyawanInitial }: { karyawanIniti
             <tr>
               <th>Identitas Pengguna</th>
               <th>Informasi Kontak</th>
-              <th>Informasi Rekening</th>
               <th>Status Akses</th>
+              <th>Portal Absensi</th>
               <th style={{ textAlign: 'right' }}>Opsi Kelola</th>
             </tr>
           </thead>
@@ -167,43 +166,21 @@ export default function KaryawanTableClient({ karyawanInitial }: { karyawanIniti
               <tr key={k.id}>
                 <td>
                   <div className={styles.userCell}>
-                    <div className={styles.userAvatar} style={{ background: '#f1f5f9', color: '#1e3a8a', fontWeight: 800 }}>{k.nama.charAt(0)}</div>
+                    <div className={styles.userAvatar} style={{ background: '#f1f5f9', color: '#1e3a8a', fontWeight: 900 }}>{k.nama.charAt(0)}</div>
                     <div>
                       <span className={styles.userName} style={{ fontSize: '0.85rem', fontWeight: 800 }}>{k.nama}</span>
-                      <span className={styles.userSub} style={{ fontSize: '0.7rem', fontWeight: 600 }}>ID: {k.id} • {k.jabatan || 'Staf'}</span>
+                      <span className={styles.userSub} style={{ fontSize: '0.7rem', fontWeight: 700, color: '#94a3b8' }}>ID: {k.id} • {k.jabatan || 'Staf'}</span>
                     </div>
                   </div>
                 </td>
                 <td>
                   <div style={{ lineHeight: '1.4' }}>
-                    <div style={{ fontSize: '0.8rem', fontWeight: '700', color: '#1e293b' }}>{k.phone || '-'}</div>
-                    <div style={{ fontSize: '0.7rem', fontWeight: '600', color: '#64748b' }}>{k.email || '-'}</div>
+                    <div style={{ fontSize: '0.8rem', fontWeight: '800', color: '#1e293b' }}>{k.phone || '-'}</div>
+                    <div style={{ fontSize: '0.7rem', fontWeight: '600', color: '#94a3b8' }}>{k.email || '-'}</div>
                   </div>
                 </td>
                 <td>
-                  <div style={{ lineHeight: '1.4' }}>
-                    <div style={{ fontSize: '0.8rem', fontWeight: '800', color: '#0f172a' }}>{k.rekeningBank || '-'}</div>
-                    <div style={{ fontSize: '0.7rem', fontWeight: '600', color: '#64748b' }}>{k.noRekening || '-'}</div>
-                  </div>
-                </td>
-                <td>
-                  <div 
-                    className={`${styles.badge}`} 
-                    style={{ 
-                        background: k.status === 'AKTIF' ? '#f0fdf4' : '#fef2f2', 
-                        color: k.status === 'AKTIF' ? '#16a34a' : '#ef4444',
-                        border: 'none',
-                        fontSize: '0.65rem',
-                        fontWeight: 900,
-                        padding: '6px 12px',
-                        borderRadius: '100px',
-                        letterSpacing: '0.05em',
-                        textTransform: 'uppercase',
-                        display: 'inline-flex',
-                        alignItems: 'center',
-                        gap: '6px'
-                    }}
-                  >
+                  <div className={`${styles.badge}`} style={{ background: k.status === 'AKTIF' ? '#f0fdf4' : '#fef2f2', color: k.status === 'AKTIF' ? '#16a34a' : '#ef4444', border: 'none', fontSize: '0.65rem', fontWeight: 900, padding: '6px 12px', borderRadius: '100px', letterSpacing: '0.05em', textTransform: 'uppercase', display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
                     <div style={{ display: 'flex' }}>
                         {k.status === 'AKTIF' ? (
                             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
@@ -214,64 +191,39 @@ export default function KaryawanTableClient({ karyawanInitial }: { karyawanIniti
                     {k.status}
                   </div>
                 </td>
+                <td>
+                  <div className={`${styles.badge}`} style={{ background: k.absensiEnabled ? '#eff6ff' : '#fff7ed', color: k.absensiEnabled ? '#3b82f6' : '#f97316', border: 'none', fontSize: '0.65rem', fontWeight: 900, padding: '6px 12px', borderRadius: '100px', letterSpacing: '0.05em', textTransform: 'uppercase', display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
+                    <div style={{ display: 'flex' }}>
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><path d="M18.36 6.64a9 9 0 1 1-12.73 0"/><line x1="12" y1="2" x2="12" y2="12"/></svg>
+                    </div>
+                    {k.absensiEnabled ? 'TERBUKA' : 'TERTUTUP'}
+                  </div>
+                </td>
                 <td style={{ textAlign: 'right' }}>
                   <div style={{ display: 'flex', gap: '8px', justifyContent: 'flex-end' }}>
-                    <button 
-                      onClick={() => setSelectedKaryawan(k)}
-                      className={styles.btnSm} 
-                      style={{ background: '#f8fafc', color: '#64748b', border: 'none', borderRadius: '8px', cursor: 'pointer' }}
-                      title="Lihat Detail"
-                    >
+                    <button onClick={() => setSelectedKaryawan(k)} className={styles.btnSm} style={{ background: '#f8fafc', color: '#64748b', border: 'none', borderRadius: '10px', cursor: 'pointer' }} title="Detail">
                       <IconEye />
                     </button>
-                    <Link 
-                      href={`/admin/karyawan/edit/${k.id}`} 
-                      className={styles.btnSm} 
-                      style={{ background: '#eff6ff', color: '#2563eb', border: 'none', borderRadius: '8px' }}
-                      title="Edit Data"
-                    >
-                      <IconEdit />
-                    </Link>
                     
+                    <form action={async () => { await toggleAbsensiAccessAction(k.id, k.absensiEnabled) }}>
+                      <button type="submit" className={styles.btnSm} style={{ background: k.absensiEnabled ? '#eff6ff' : '#fff7ed', color: k.absensiEnabled ? '#3b82f6' : '#f97316', border: 'none', borderRadius: '10px' }} title={k.absensiEnabled ? 'Tutup Akses Absensi' : 'Buka Akses Absensi'}>
+                        <IconPower />
+                      </button>
+                    </form>
+
                     <form action={async () => { await toggleBlockEmployeeAction(k.id, k.status) }}>
-                      <button 
-                        type="submit" 
-                        className={styles.btnSm} 
-                        style={{ background: k.status === 'AKTIF' ? '#f5f3ff' : '#ecfdf5', color: k.status === 'AKTIF' ? '#7c3aed' : '#10b981', border: 'none', borderRadius: '8px' }}
-                        title={k.status === 'AKTIF' ? 'Blokir' : 'Aktifkan'}
-                      >
+                      <button type="submit" className={styles.btnSm} style={{ background: k.status === 'AKTIF' ? '#f5f3ff' : '#ecfdf5', color: k.status === 'AKTIF' ? '#7c3aed' : '#10b981', border: 'none', borderRadius: '10px' }} title={k.status === 'AKTIF' ? 'Blokir' : 'Aktifkan'}>
                         {k.status === 'AKTIF' ? <IconLock /> : <IconUnlock />}
                       </button>
                     </form>
-                    
-                    <form action={async () => {
-                      if (confirm(`Hapus permanen karyawan ${k.nama}? Tindakan ini tidak dapat dibatalkan.`)) {
-                        await deleteEmployeeAction(k.id)
-                      }
-                    }}>
-                      <button 
-                        type="submit" 
-                        className={styles.btnSm} 
-                        style={{ background: '#fff1f2', color: '#e11d48', border: 'none', borderRadius: '8px' }}
-                        title="Hapus Permanen"
-                      >
-                        <IconTrash />
-                      </button>
-                    </form>
+
+                    <Link href={`/admin/karyawan/edit/${k.id}`} className={styles.btnSm} style={{ background: '#f1f5f9', color: '#0f172a', border: 'none', borderRadius: '10px', display: 'flex', alignItems: 'center', justifyContent: 'center' }} title="Edit">
+                      <IconEdit />
+                    </Link>
                   </div>
                 </td>
               </tr>
             ))}
-            {filteredKaryawan.length === 0 && (
-              <tr>
-                <td colSpan={4} style={{ textAlign: "center", padding: "80px 20px", color: "#94a3b8", fontWeight: "600", fontSize: "0.85rem" }}>
-                  <div style={{ marginBottom: "16px", opacity: 0.5 }}>
-                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-                  </div>
-                  Data karyawan tidak ditemukan dalam database.
-                </td>
-              </tr>
-            )}
           </tbody>
         </table>
       </div>

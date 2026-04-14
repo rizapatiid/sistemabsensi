@@ -25,10 +25,20 @@ export default async function EmployeeAbsensiPage() {
     }
   })
 
+  // Gunakan queryRaw karena prisma generate gagal akibat file lock di Windows (EPERM)
+  // Ini menghindari runtime validation error pada client yang belum terupdate
+  const userResults = await prisma.$queryRaw<any[]>`
+    SELECT "absensiEnabled" FROM "User" WHERE id = ${session?.id || ""}
+  `
+  const user = userResults[0]
+
   let isClosed = false
   let message = ""
 
-  if (isWeekend) {
+  if (!user?.absensiEnabled) {
+    isClosed = true
+    message = "Akses portal absensi Anda telah ditutup oleh administrator. Silakan hubungi admin untuk informasi lebih lanjut."
+  } else if (isWeekend) {
     isClosed = true
     message = "Portal absensi ditutup pada akhir pekan (Sabtu & Minggu)."
   } else if (isHoliday) {
