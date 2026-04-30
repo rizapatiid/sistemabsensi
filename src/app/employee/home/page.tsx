@@ -255,7 +255,7 @@ export default async function EmployeeHomePage({
                             <div style={{ flex: 1 }}>
                                 <div style={{ fontSize: '1rem', fontWeight: 1000, color: '#0f172a', letterSpacing: '-0.02em' }}>{h.keterangan}</div>
                                 <div style={{ fontSize: '0.78rem', color: '#64748b', fontWeight: 800, marginTop: '2px' }}>
-                                    Hari {new Intl.DateTimeFormat("id-ID", { weekday: 'long' }).format(h.tanggal)}
+                                    Hari {new Intl.DateTimeFormat("id-ID", { weekday: 'long', timeZone: 'Asia/Jakarta' }).format(h.tanggal)}
                                 </div>
                             </div>
                         </div>
