@@ -8,8 +8,9 @@ import { sendNotificationToUser, sendNotificationToAllUsers } from "@/actions/pu
 
 // -- KALENDER / HARI LIBUR --
 export async function createHolidayAction(formData: FormData) {
-  const tanggal = new Date(formData.get("tanggal") as string)
-  tanggal.setHours(0, 0, 0, 0)
+  const dateStr = formData.get("tanggal") as string
+  const [year, month, day] = dateStr.split('-').map(Number)
+  const tanggal = new Date(Date.UTC(year, month - 1, day))
   const keterangan = formData.get("keterangan") as string
 
   if (isNaN(tanggal.getTime()) || !keterangan) {

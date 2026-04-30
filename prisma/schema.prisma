@@ -3,35 +3,34 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
   directUrl = env("DIRECT_URL")
 }
 
 model User {
-  id           String       @id // ID Karyawan
-  nama         String
-  role         String       // ADMIN or KARYAWAN
-  password     String
-  status       String       @default("AKTIF") // AKTIF / BLOKIR
-  jabatan      String?
-  phone        String?
-  email        String?
-  alamat       String?
-  rekeningBank String?
-  noRekening   String?
-  namaRekening String?
-  emailNotifEnabled Boolean @default(true)
-  lastSeenAnnouncement DateTime     @default(now())
-  absensiEnabled Boolean @default(true)
-  createdAt    DateTime     @default(now())
-  updatedAt    DateTime     @updatedAt
-
-  attendances  Attendance[]
-  payrolls     Payroll[]
-  pushSubscriptions PushSubscription[]
-  sentMessages Message[] @relation("SentMessages")
-  receivedMessages Message[] @relation("ReceivedMessages")
+  id                   String             @id
+  nama                 String
+  role                 String
+  password             String
+  status               String             @default("AKTIF")
+  jabatan              String?
+  phone                String?
+  email                String?
+  alamat               String?
+  rekeningBank         String?
+  noRekening           String?
+  namaRekening         String?
+  createdAt            DateTime           @default(now())
+  updatedAt            DateTime           @updatedAt
+  emailNotifEnabled    Boolean            @default(true)
+  lastSeenAnnouncement DateTime           @default(now())
+  absensiEnabled       Boolean            @default(true)
+  attendances          Attendance[]
+  receivedMessages     Message[]          @relation("ReceivedMessages")
+  sentMessages         Message[]          @relation("SentMessages")
+  payrolls             Payroll[]
+  pushSubscriptions    PushSubscription[]
 }
 
 model PushSubscription {
@@ -40,8 +39,8 @@ model PushSubscription {
   endpoint  String   @unique
   p256dh    String
   auth      String
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model Attendance {
@@ -49,10 +48,10 @@ model Attendance {
   idKaryawan String
   tanggal    DateTime
   waktuMasuk DateTime
-  status     String   // HADIR / IZIN
-  foto       String?  // Base64 string dari foto selfie
-  buktiApp   String?  // Base64 string dari bukti screenshot aplikasi
-  alasan     String?  // Alasan jika status IZIN
+  status     String
+  foto       String?
+  buktiApp   String?
+  alasan     String?
   user       User     @relation(fields: [idKaryawan], references: [id], onDelete: Cascade)
 
   @@unique([idKaryawan, tanggal])
@@ -63,20 +62,17 @@ model Payroll {
   idKaryawan           String
   bulan                Int
   tahun                Int
-  tipeGaji             String   @default("BULANAN") // BULANAN / HARIAN
-  jumlahAbsen          Int      @default(0)         // Digunakan jika tipeGaji HARIAN
-  gajiPokok            Float                        // Nominal per hari atau per bulan
+  tipeGaji             String   @default("BULANAN")
+  jumlahAbsen          Int      @default(0)
+  gajiPokok            Float
   tunjangan            Float    @default(0)
   keteranganTunjangan  String?
   totalGaji            Float
-  
-  // Snapshot rekening saat payroll dibuat
   bankSnapshot         String?
   noRekeningSnapshot   String?
   namaRekeningSnapshot String?
-
   createdAt            DateTime @default(now())
-  statusPembayaran     String   @default("DIPROSES") // DIBAYAR / DIPROSES
+  statusPembayaran     String   @default("DIPROSES")
   isRead               Boolean  @default(false)
   user                 User     @relation(fields: [idKaryawan], references: [id], onDelete: Cascade)
 
@@ -91,12 +87,12 @@ model Calendar {
 }
 
 model Announcement {
-  id           String   @id @default(cuid())
+  id           String    @id @default(cuid())
   judul        String
   konten       String
-  image        String?  // Base64 string dari gambar pengumuman (opsional)
-  scheduleDate DateTime? // Tanggal jadwal pengumuman (jika null, langsung tampil)
-  tanggal      DateTime @default(now())
+  image        String?
+  scheduleDate DateTime?
+  tanggal      DateTime  @default(now())
 }
 
 model PasswordReset {
@@ -110,18 +106,18 @@ model PasswordReset {
 model Message {
   id         String   @id @default(cuid())
   senderId   String
-  receiverId String?  // Optional: null means global or system broadcast
+  receiverId String?
   content    String
   isRead     Boolean  @default(false)
   createdAt  DateTime @default(now())
-
+  receiver   User?    @relation("ReceivedMessages", fields: [receiverId], references: [id])
   sender     User     @relation("SentMessages", fields: [senderId], references: [id], onDelete: Cascade)
-  receiver   User?    @relation("ReceivedMessages", fields: [receiverId], references: [id], onDelete: SetNull)
 }
+
 model SystemSetting {
-  id              String   @id @default("global")
-  maintenance     Boolean  @default(false)
-  maintenanceReason String? 
+  id                String   @id @default("global")
+  maintenance       Boolean  @default(false)
+  updatedAt         DateTime @updatedAt
+  maintenanceReason String?
   maintenanceUntil  String?
-  updatedAt       DateTime @updatedAt
 }

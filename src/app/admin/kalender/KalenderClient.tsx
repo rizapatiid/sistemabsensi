@@ -79,7 +79,7 @@ export default function KalenderClient({ holidays, announcements }: { holidays: 
                   
                   <div style={{ marginTop: '24px', display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
                       <Link 
-                        href="/admin/kalender/set-libur" 
+                        href="/admin/kalender/tambah-libur" 
                         className={styles.btnAction}
                         style={{ 
                             flex: '1 1 auto',

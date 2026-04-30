@@ -250,7 +250,7 @@ export default async function EmployeeHomePage({
                         <div key={h.id} className={styles.holidayItem}>
                             <div className={styles.holidayDateBlock}>
                                 <span className={styles.holidayMonth}>{formatIndonesianDate(h.tanggal, false).split(' ')[1].slice(0, 3).toUpperCase()}</span>
-                                <span className={styles.holidayDay}>{h.tanggal.getDate()}</span>
+                                <span className={styles.holidayDay}>{formatIndonesianDate(h.tanggal, false).split(' ')[0]}</span>
                             </div>
                             <div style={{ flex: 1 }}>
                                 <div style={{ fontSize: '1rem', fontWeight: 1000, color: '#0f172a', letterSpacing: '-0.02em' }}>{h.keterangan}</div>
