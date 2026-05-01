@@ -43,7 +43,7 @@ export default async function EmployeeAbsensiPage() {
     message = "Sistem presensi tidak beroperasi pada akhir pekan. Selamat menikmati waktu istirahat Anda."
   } else if (isHoliday) {
     isClosed = true
-    message = `Layanan presensi dihentikan sementara sehubungan dengan libur operasional: ${isHoliday.keterangan}.`
+    message = `Layanan presensi dihentikan sementara sehubungan dengan libur operasional: <u style="text-decoration-thickness: 2px; text-underline-offset: 4px; color: #0f172a;">${isHoliday.keterangan}</u>.`
   }
 
   return <AbsensiClient 
