@@ -182,22 +182,41 @@ export default function AbsensiClient({
       {/* 2. MAIN INTERACTIVE AREA */}
       <div className={styles.statusCard}>
         {isClosed ? (
-          <div style={{ padding: "16px 12px", textAlign: 'center' }}>
+          <div style={{ padding: "clamp(16px, 4vw, 32px)", textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
             {!holidayImage && (
-              <div className={styles.successIcon} style={{ background: '#fef2f2', color: '#ef4444', margin: '0 auto 24px' }}>
+              <div className={styles.successIcon} style={{ background: '#fef2f2', color: '#ef4444', margin: '0 auto 24px', width: '80px', height: '80px' }}>
                 <IconAlert />
               </div>
             )}
             
             {holidayImage && (
-              <div style={{ marginBottom: '32px', borderRadius: '24px', overflow: 'hidden', border: '1px solid #e2e8f0', boxShadow: '0 10px 25px -5px rgba(0,0,0,0.05)', background: '#f8fafc' }}>
-                  <img src={holidayImage} alt="Pengumuman Libur" style={{ width: '100%', height: 'auto', display: 'block', objectFit: 'cover' }} />
+              <div style={{ 
+                marginBottom: 'clamp(24px, 5vw, 40px)', 
+                borderRadius: 'clamp(16px, 4vw, 24px)', 
+                overflow: 'hidden', 
+                border: '1px solid rgba(0,0,0,0.05)', 
+                boxShadow: '0 20px 25px -5px rgba(0,0,0,0.05), 0 8px 10px -6px rgba(0,0,0,0.01)', 
+                background: '#f8fafc',
+                width: '100%',
+                maxWidth: '600px'
+              }}>
+                  <img src={holidayImage} alt="Pengumuman Libur" style={{ width: '100%', maxHeight: '400px', objectFit: 'cover', display: 'block' }} />
               </div>
             )}
 
-            <h2 style={{ fontSize: "2rem", fontWeight: 950, color: "#0f172a", margin: 0, letterSpacing: '-0.02em' }}>Terminal Terkunci</h2>
-            <div style={{ display: 'inline-block', marginTop: "20px", padding: '16px 24px', background: '#f1f5f9', borderRadius: '16px', border: '1px solid #e2e8f0', maxWidth: '480px' }}>
-                <p style={{ color: "#334155", fontSize: '0.95rem', fontWeight: 700, margin: 0, lineHeight: 1.6 }}>{message}</p>
+            <h2 style={{ fontSize: "clamp(1.75rem, 5vw, 2.5rem)", fontWeight: 950, color: "#0f172a", margin: 0, letterSpacing: '-0.03em', lineHeight: 1.2 }}>
+                HARI LIBUR OPERASIONAL
+            </h2>
+            <div style={{ 
+                marginTop: "clamp(16px, 4vw, 24px)", 
+                padding: 'clamp(16px, 4vw, 24px)', 
+                background: 'linear-gradient(to bottom right, #f8fafc, #f1f5f9)', 
+                borderRadius: '20px', 
+                border: '1px solid #e2e8f0', 
+                maxWidth: '500px',
+                width: '100%'
+            }}>
+                <p style={{ color: "#475569", fontSize: 'clamp(0.9rem, 2.5vw, 1rem)', fontWeight: 700, margin: 0, lineHeight: 1.6 }}>{message}</p>
             </div>
           </div>
         ) : hasAttendance || submittedStatus ? (
