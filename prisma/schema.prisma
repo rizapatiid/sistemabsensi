@@ -84,6 +84,7 @@ model Calendar {
   tanggal    DateTime @unique
   keterangan String
   isHoliday  Boolean  @default(false)
+  image      String?
 }
 
 model Announcement {

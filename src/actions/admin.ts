@@ -31,7 +31,8 @@ export async function createHolidayAction(formData: FormData) {
       data: {
         tanggal,
         keterangan,
-        isHoliday: true
+        isHoliday: true,
+        image: formData.get("image") as string || null
       }
     })
 

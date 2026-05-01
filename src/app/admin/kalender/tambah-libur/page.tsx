@@ -1,5 +1,7 @@
 "use client"
 
+import { useState } from "react"
+import { useRouter } from "next/navigation"
 import { createHolidayAction } from "@/actions/admin"
 import styles from "@/styles/admin.module.css"
 import Link from "next/link"
@@ -15,6 +17,39 @@ const IconInfo = () => <svg width="18" height="18" viewBox="0 0 24 24" fill="non
 const IconChevronLeft = () => <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
 
 export default function CreateHolidayPage() {
+  const router = useRouter()
+  const [loading, setLoading] = useState(false)
+  const [imagePreview, setImagePreview] = useState<string | null>(null)
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (file) {
+      const reader = new FileReader()
+      reader.onloadend = () => {
+        setImagePreview(reader.result as string)
+      }
+      reader.readAsDataURL(file)
+    }
+  }
+
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault()
+    setLoading(true)
+    
+    const formData = new FormData(e.currentTarget)
+    if (imagePreview) {
+      formData.set("image", imagePreview)
+    }
+
+    const res = await createHolidayAction(formData)
+    if (res?.error) {
+      alert(res.error)
+      setLoading(false)
+    }
+    // redirect is handled in the server action if success, but wait we need to handle it properly if the action uses redirect().
+    // Actually, Server Actions that call redirect() will throw a specific error that Next.js catches.
+  }
+
   return (
     <div className={styles.pageContainer}>
       <div style={{ maxWidth: '600px', margin: '0 auto', width: '100%' }}>
@@ -48,7 +83,7 @@ export default function CreateHolidayPage() {
                    <IconInfo /> Pada tanggal libur, Karyawan tidak dapat absen di portal.
                 </div>
 
-                <form action={(formData) => { createHolidayAction(formData); }} style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+                <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
                     <div className={styles.formGroup}>
                         <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '10px' }}>
                             <div style={{ color: '#1e3a8a' }}><IconCalendar /></div>
@@ -63,6 +98,19 @@ export default function CreateHolidayPage() {
                             <label style={{ fontSize: '0.85rem', fontWeight: 850, color: '#0f172a' }}>Nama Hari / Keterangan</label>
                         </div>
                         <input className={styles.filterPill} style={{ width: '100%', background: '#f8fafc' }} type="text" name="keterangan" placeholder="Contoh: Libur Nasional, Cuti Bersama" required />
+                    </div>
+
+                    <div className={styles.formGroup}>
+                        <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 850, color: '#0f172a', marginBottom: '10px' }}>Banner / Gambar (Opsional)</label>
+                        <div style={{ background: '#f8fafc', padding: '16px', borderRadius: '16px', border: '1px dashed #cbd5e1' }}>
+                            <input type="file" accept="image/*" onChange={handleFileChange} style={{ fontSize: '0.75rem', fontWeight: 700, color: '#64748b' }} />
+                            {imagePreview && (
+                                <div style={{ marginTop: "16px", position: "relative", width: "100%", maxHeight: "200px", overflow: "hidden", borderRadius: "14px", border: '1px solid #e2e8f0' }}>
+                                    <img src={imagePreview} alt="Preview" style={{ width: "100%", height: "auto", display: "block" }} />
+                                    <button type="button" onClick={() => setImagePreview(null)} style={{ position: "absolute", top: "10px", right: "10px", backgroundColor: "#ef4444", color: "white", border: "none", borderRadius: "8px", padding: "6px 12px", cursor: "pointer", fontWeight: 800, fontSize: '0.7rem' }}>HAPUS</button>
+                                </div>
+                            )}
+                        </div>
                     </div>
 
                     <div style={{ marginTop: '8px' }}>
@@ -81,7 +129,7 @@ export default function CreateHolidayPage() {
                                 transition: 'all 0.3s ease'
                             }}
                         >
-                            SIMPAN HARI LIBUR
+                            {loading ? "MEMPROSES..." : "SIMPAN HARI LIBUR"}
                         </button>
                     </div>
                 </form>

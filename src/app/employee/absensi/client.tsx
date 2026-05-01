@@ -34,12 +34,14 @@ export default function AbsensiClient({
   isClosed, 
   message, 
   hasAttendance,
-  existingStatus
+  existingStatus,
+  holidayImage
 }: { 
   isClosed: boolean, 
   message: string, 
   hasAttendance: boolean,
-  existingStatus?: string
+  existingStatus?: string,
+  holidayImage?: string | null
 }) {
   const compressImage = (dataUrl: string, maxWidth = 800, maxHeight = 800): Promise<string> => {
     return new Promise((resolve) => {
@@ -184,6 +186,11 @@ export default function AbsensiClient({
             <div className={styles.successIcon} style={{ background: '#fef2f2', color: '#ef4444', margin: '0 auto 32px' }}><IconAlert /></div>
             <h2 style={{ fontSize: "1.75rem", fontWeight: 900, color: "#0f172a", margin: 0 }}>Terminal Terkunci</h2>
             <p style={{ marginTop: "16px", color: "#64748b", fontWeight: 600, maxWidth: '400px', margin: '16px auto', lineHeight: 1.6 }}>{message}</p>
+            {holidayImage && (
+              <div style={{ marginTop: '24px', borderRadius: '16px', overflow: 'hidden', border: '1px solid #f1f5f9', boxShadow: '0 4px 12px rgba(0,0,0,0.05)' }}>
+                  <img src={holidayImage} alt="Pengumuman Libur" style={{ width: '100%', height: 'auto', display: 'block' }} />
+              </div>
+            )}
           </div>
         ) : hasAttendance || submittedStatus ? (
           <div style={{ padding: "12px" }}>
