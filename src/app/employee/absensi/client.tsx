@@ -186,8 +186,10 @@ export default function AbsensiClient({
             
             {/* IMAGE HEADER */}
             {holidayImage ? (
-              <div style={{ width: "100%", borderRadius: "24px", overflow: "hidden", marginBottom: "32px", boxShadow: "0 20px 25px -5px rgba(0,0,0,0.05), 0 8px 10px -6px rgba(0,0,0,0.01)", border: "1px solid rgba(0,0,0,0.05)" }}>
-                <img src={holidayImage} alt="Banner Libur" style={{ width: "100%", height: "clamp(200px, 35vw, 320px)", objectFit: "cover", display: "block" }} />
+              <div style={{ width: "100%", position: "relative", marginBottom: "24px", borderRadius: "24px", overflow: "hidden" }}>
+                <img src={holidayImage} alt="Banner Libur" style={{ width: "100%", height: "clamp(200px, 40vw, 350px)", objectFit: "cover", display: "block" }} />
+                {/* Efek Memudar (Fade Effect) */}
+                <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, height: "120px", background: "linear-gradient(to top, rgba(255,255,255,1), rgba(255,255,255,0))" }}></div>
               </div>
             ) : (
               <div className={styles.successIcon} style={{ background: '#fef2f2', color: '#ef4444', margin: '0 auto 32px', width: '88px', height: '88px' }}>
