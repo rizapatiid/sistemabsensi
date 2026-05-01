@@ -10,7 +10,8 @@ export default async function AdminKalenderPage() {
   const formattedHolidays = holidays.map(h => ({
     id: h.id,
     tanggal: h.tanggal.toISOString(),
-    keterangan: h.keterangan
+    keterangan: h.keterangan,
+    image: h.image
   }))
 
   const formattedAnnouncements = announcements.map(a => ({

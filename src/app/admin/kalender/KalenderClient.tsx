@@ -10,6 +10,7 @@ interface Holiday {
   id: string
   tanggal: string
   keterangan: string
+  image?: string | null
 }
 
 interface Announcement {
@@ -193,7 +194,14 @@ export default function KalenderClient({ holidays, announcements }: { holidays: 
                                   {holidays.map(h => (
                                       <tr key={h.id}>
                                           <td style={{ fontWeight: 800, color: '#1e3a8a', paddingLeft: '0' }}>{formatIndonesianDate(h.tanggal)}</td>
-                                          <td style={{ fontWeight: 700, color: '#475569' }}>{h.keterangan}</td>
+                                          <td style={{ fontWeight: 700, color: '#475569' }}>
+                                              <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
+                                                  {h.image && (
+                                                      <img src={h.image} alt="thumb" style={{ width: '40px', height: '40px', borderRadius: '10px', objectFit: 'cover', border: '1px solid #e2e8f0', flexShrink: 0 }} />
+                                                  )}
+                                                  <span>{h.keterangan}</span>
+                                              </div>
+                                          </td>
                                           <td style={{ textAlign: 'right' }}>
                                               <div style={{ display: 'flex', gap: '8px', justifyContent: 'flex-end' }}>
                                                   <Link href={`/admin/kalender/edit-libur/${h.id}`} className={styles.btnSm} style={{ background: '#eff6ff', color: '#2563eb', border: 'none', borderRadius: '8px' }} title="Edit"><IconEdit /></Link>
@@ -273,7 +281,12 @@ export default function KalenderClient({ holidays, announcements }: { holidays: 
                                         <button onClick={() => handleDeleteHoliday(h.id)} style={{ padding: '6px', borderRadius: '8px', background: '#fee2e2', color: '#dc2626', border: 'none', display: 'flex', alignItems: 'center' }} title="Hapus"><IconTrash /></button>
                                       </div>
                                   </div>
-                                  <p style={{ margin: 0, fontSize: '0.8rem', fontWeight: 700, color: '#475569' }}>{h.keterangan}</p>
+                                  <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
+                                      {h.image && (
+                                          <img src={h.image} alt="thumb" style={{ width: '40px', height: '40px', borderRadius: '8px', objectFit: 'cover', flexShrink: 0 }} />
+                                      )}
+                                      <p style={{ margin: 0, fontSize: '0.8rem', fontWeight: 700, color: '#475569' }}>{h.keterangan}</p>
+                                  </div>
                               </div>
                           ))
                       ) : (
