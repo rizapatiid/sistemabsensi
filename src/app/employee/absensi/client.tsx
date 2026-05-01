@@ -182,15 +182,23 @@ export default function AbsensiClient({
       {/* 2. MAIN INTERACTIVE AREA */}
       <div className={styles.statusCard}>
         {isClosed ? (
-          <div style={{ padding: "12px" }}>
-            <div className={styles.successIcon} style={{ background: '#fef2f2', color: '#ef4444', margin: '0 auto 32px' }}><IconAlert /></div>
-            <h2 style={{ fontSize: "1.75rem", fontWeight: 900, color: "#0f172a", margin: 0 }}>Terminal Terkunci</h2>
-            <p style={{ marginTop: "16px", color: "#64748b", fontWeight: 600, maxWidth: '400px', margin: '16px auto', lineHeight: 1.6 }}>{message}</p>
-            {holidayImage && (
-              <div style={{ marginTop: '24px', borderRadius: '16px', overflow: 'hidden', border: '1px solid #f1f5f9', boxShadow: '0 4px 12px rgba(0,0,0,0.05)' }}>
-                  <img src={holidayImage} alt="Pengumuman Libur" style={{ width: '100%', height: 'auto', display: 'block' }} />
+          <div style={{ padding: "16px 12px", textAlign: 'center' }}>
+            {!holidayImage && (
+              <div className={styles.successIcon} style={{ background: '#fef2f2', color: '#ef4444', margin: '0 auto 24px' }}>
+                <IconAlert />
               </div>
             )}
+            
+            {holidayImage && (
+              <div style={{ marginBottom: '32px', borderRadius: '24px', overflow: 'hidden', border: '1px solid #e2e8f0', boxShadow: '0 10px 25px -5px rgba(0,0,0,0.05)', background: '#f8fafc' }}>
+                  <img src={holidayImage} alt="Pengumuman Libur" style={{ width: '100%', height: 'auto', display: 'block', objectFit: 'cover' }} />
+              </div>
+            )}
+
+            <h2 style={{ fontSize: "2rem", fontWeight: 950, color: "#0f172a", margin: 0, letterSpacing: '-0.02em' }}>Terminal Terkunci</h2>
+            <div style={{ display: 'inline-block', marginTop: "20px", padding: '16px 24px', background: '#f1f5f9', borderRadius: '16px', border: '1px solid #e2e8f0', maxWidth: '480px' }}>
+                <p style={{ color: "#334155", fontSize: '0.95rem', fontWeight: 700, margin: 0, lineHeight: 1.6 }}>{message}</p>
+            </div>
           </div>
         ) : hasAttendance || submittedStatus ? (
           <div style={{ padding: "12px" }}>
