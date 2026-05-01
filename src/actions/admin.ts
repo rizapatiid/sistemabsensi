@@ -59,6 +59,54 @@ export async function createHolidayAction(formData: FormData) {
   redirect("/admin/kalender")
 }
 
+export async function updateHolidayAction(id: string, formData: FormData) {
+  const dateStr = formData.get("tanggal") as string
+  const [year, month, day] = dateStr.split('-').map(Number)
+  const tanggal = new Date(Date.UTC(year, month - 1, day))
+  const keterangan = formData.get("keterangan") as string
+
+  if (isNaN(tanggal.getTime()) || !keterangan) {
+    return { error: "Data tidak valid" }
+  }
+
+  // Check if holiday already exists for this date, but exclude the current holiday
+  const existing = await prisma.calendar.findFirst({
+    where: { 
+      tanggal,
+      id: { not: id }
+    }
+  })
+
+  if (existing) {
+    return { error: "Hari libur untuk tanggal tersebut sudah terdaftar!" }
+  }
+
+  try {
+    const data: any = {
+      tanggal,
+      keterangan,
+    }
+
+    const image = formData.get("image") as string
+    if (image !== null) {
+      data.image = image // will update image if a new one is set, or if explicitly removed.
+    }
+
+    await prisma.calendar.update({
+      where: { id },
+      data
+    })
+
+    revalidatePath("/admin/kalender")
+    revalidatePath("/employee/absensi")
+  } catch (error) {
+    console.error("Update Holiday Error:", error)
+    return { error: "Gagal mengupdate data hari libur ke database" }
+  }
+
+  redirect("/admin/kalender")
+}
+
 export async function deleteHolidayAction(id: string) {
   await prisma.calendar.delete({ where: { id } })
   revalidatePath("/admin/kalender")

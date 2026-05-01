@@ -195,13 +195,17 @@ export default function KalenderClient({ holidays, announcements }: { holidays: 
                                           <td style={{ fontWeight: 800, color: '#1e3a8a', paddingLeft: '0' }}>{formatIndonesianDate(h.tanggal)}</td>
                                           <td style={{ fontWeight: 700, color: '#475569' }}>{h.keterangan}</td>
                                           <td style={{ textAlign: 'right' }}>
-                                              <button 
-                                                  onClick={() => handleDeleteHoliday(h.id)} 
-                                                  className={styles.btnSm} 
-                                                  style={{ background: '#fee2e2', color: '#dc2626', border: 'none', borderRadius: '8px' }}
-                                              >
-                                                  <IconTrash />
-                                              </button>
+                                              <div style={{ display: 'flex', gap: '8px', justifyContent: 'flex-end' }}>
+                                                  <Link href={`/admin/kalender/edit-libur/${h.id}`} className={styles.btnSm} style={{ background: '#eff6ff', color: '#2563eb', border: 'none', borderRadius: '8px' }} title="Edit"><IconEdit /></Link>
+                                                  <button 
+                                                      onClick={() => handleDeleteHoliday(h.id)} 
+                                                      className={styles.btnSm} 
+                                                      style={{ background: '#fee2e2', color: '#dc2626', border: 'none', borderRadius: '8px' }}
+                                                      title="Hapus"
+                                                  >
+                                                      <IconTrash />
+                                                  </button>
+                                              </div>
                                           </td>
                                       </tr>
                                   ))}
@@ -264,7 +268,10 @@ export default function KalenderClient({ holidays, announcements }: { holidays: 
                               <div key={h.id} style={{ background: '#fcfcfd', padding: '16px', borderRadius: '16px', border: '1px solid #f1f5f9' }}>
                                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '8px' }}>
                                       <span style={{ fontSize: '0.9rem', fontWeight: 900, color: '#1e3a8a' }}>{formatIndonesianDate(h.tanggal)}</span>
-                                      <button onClick={() => handleDeleteHoliday(h.id)} style={{ padding: '6px', borderRadius: '8px', background: '#fee2e2', color: '#dc2626', border: 'none' }}><IconTrash /></button>
+                                      <div style={{ display: 'flex', gap: '8px' }}>
+                                        <Link href={`/admin/kalender/edit-libur/${h.id}`} style={{ padding: '6px', borderRadius: '8px', background: '#eff6ff', color: '#2563eb', border: 'none', display: 'flex', alignItems: 'center' }} title="Edit"><IconEdit /></Link>
+                                        <button onClick={() => handleDeleteHoliday(h.id)} style={{ padding: '6px', borderRadius: '8px', background: '#fee2e2', color: '#dc2626', border: 'none', display: 'flex', alignItems: 'center' }} title="Hapus"><IconTrash /></button>
+                                      </div>
                                   </div>
                                   <p style={{ margin: 0, fontSize: '0.8rem', fontWeight: 700, color: '#475569' }}>{h.keterangan}</p>
                               </div>
