@@ -182,64 +182,47 @@ export default function AbsensiClient({
       {/* 2. MAIN INTERACTIVE AREA */}
       <div className={styles.statusCard}>
         {isClosed ? (
-          <div style={{ padding: "clamp(16px, 3vw, 24px)", width: "100%", display: "flex", justifyContent: "center" }}>
-            <div style={{
-              width: "100%",
-              maxWidth: "540px",
-              background: "#ffffff",
-              borderRadius: "clamp(20px, 4vw, 32px)",
-              overflow: "hidden",
-              border: "1px solid rgba(226, 232, 240, 0.8)",
-              boxShadow: "0 25px 50px -12px rgba(15, 23, 42, 0.08), 0 0 0 1px rgba(255,255,255,0.5) inset",
-              display: "flex",
-              flexDirection: "column",
-              animation: "fadeIn 0.5s cubic-bezier(0.16, 1, 0.3, 1)"
-            }}>
-              {/* IMAGE HEADER */}
-              {holidayImage ? (
-                <div style={{ width: "100%", height: "clamp(200px, 40vw, 300px)", position: "relative", background: "#f8fafc" }}>
-                  <img src={holidayImage} alt="Banner Libur" style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "center" }} />
-                  {/* Subtle Gradient Overlay */}
-                  <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, height: "100px", background: "linear-gradient(to top, rgba(255,255,255,1), rgba(255,255,255,0))" }}></div>
-                </div>
-              ) : (
-                <div style={{ width: "100%", height: "140px", background: "linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%)", display: "flex", alignItems: "center", justifyContent: "center", position: "relative", overflow: "hidden" }}>
-                  {/* Decorative circles */}
-                  <div style={{ position: "absolute", top: "-20px", right: "-20px", width: "100px", height: "100px", borderRadius: "50%", background: "rgba(239, 68, 68, 0.1)" }}></div>
-                  <div style={{ position: "absolute", bottom: "-30px", left: "20px", width: "80px", height: "80px", borderRadius: "50%", background: "rgba(239, 68, 68, 0.1)" }}></div>
-                  <div style={{ color: "#ef4444", background: "white", padding: "16px", borderRadius: "20px", boxShadow: "0 10px 15px -3px rgba(239,68,68,0.2)" }}>
-                    <IconAlert />
-                  </div>
-                </div>
-              )}
-
-              {/* CONTENT BODY */}
-              <div style={{ padding: "clamp(24px, 5vw, 40px)", textAlign: "center", position: "relative", zIndex: 1, marginTop: holidayImage ? "-40px" : "0" }}>
-                <div style={{ display: "inline-flex", alignItems: "center", gap: "6px", background: holidayImage ? "#ffffff" : "#fef2f2", padding: "6px 14px", borderRadius: "20px", border: `1px solid ${holidayImage ? '#e2e8f0' : '#fecdd3'}`, marginBottom: "20px", boxShadow: holidayImage ? "0 4px 6px rgba(0,0,0,0.05)" : "none" }}>
-                  <div style={{ width: "6px", height: "6px", borderRadius: "50%", background: "#ef4444", animation: "pulse 2s infinite" }}></div>
-                  <span style={{ fontSize: "0.65rem", fontWeight: 900, letterSpacing: "0.1em", color: holidayImage ? "#64748b" : "#dc2626", textTransform: "uppercase" }}>INFORMASI SISTEM</span>
-                </div>
-
-                <h2 style={{ fontSize: "clamp(1.5rem, 4vw, 2.25rem)", fontWeight: 950, color: "#0f172a", margin: "0 0 16px", letterSpacing: "-0.03em", lineHeight: 1.1 }}>
-                  HARI LIBUR OPERASIONAL
-                </h2>
-
-                <div style={{
-                  background: "#f8fafc",
-                  padding: "clamp(16px, 4vw, 24px)",
-                  borderRadius: "16px",
-                  borderLeft: "4px solid #3b82f6",
-                  textAlign: "left",
-                  display: "flex",
-                  gap: "16px",
-                  alignItems: "flex-start"
-                }}>
-                  <div style={{ color: "#3b82f6", flexShrink: 0, marginTop: "2px" }}><IconFileText /></div>
-                  <p style={{ color: "#334155", fontSize: "clamp(0.9rem, 2vw, 0.95rem)", fontWeight: 600, margin: 0, lineHeight: 1.6 }}>
-                    {message}
-                  </p>
-                </div>
+          <div style={{ width: "100%", maxWidth: "640px", margin: "0 auto", display: "flex", flexDirection: "column", alignItems: "center", animation: "fadeIn 0.5s cubic-bezier(0.16, 1, 0.3, 1)" }}>
+            
+            {/* IMAGE HEADER */}
+            {holidayImage ? (
+              <div style={{ width: "100%", borderRadius: "24px", overflow: "hidden", marginBottom: "32px", boxShadow: "0 20px 25px -5px rgba(0,0,0,0.05), 0 8px 10px -6px rgba(0,0,0,0.01)", border: "1px solid rgba(0,0,0,0.05)" }}>
+                <img src={holidayImage} alt="Banner Libur" style={{ width: "100%", height: "clamp(200px, 35vw, 320px)", objectFit: "cover", display: "block" }} />
               </div>
+            ) : (
+              <div className={styles.successIcon} style={{ background: '#fef2f2', color: '#ef4444', margin: '0 auto 32px', width: '88px', height: '88px' }}>
+                <IconAlert />
+              </div>
+            )}
+
+            {/* BADGE */}
+            <div style={{ display: "inline-flex", alignItems: "center", gap: "8px", background: holidayImage ? "#f8fafc" : "#fef2f2", padding: "8px 16px", borderRadius: "20px", border: `1px solid ${holidayImage ? '#e2e8f0' : '#fecdd3'}`, marginBottom: "24px" }}>
+              <div style={{ width: "6px", height: "6px", borderRadius: "50%", background: "#ef4444", animation: "pulse 2s infinite" }}></div>
+              <span style={{ fontSize: "0.7rem", fontWeight: 900, letterSpacing: "0.1em", color: holidayImage ? "#64748b" : "#dc2626", textTransform: "uppercase" }}>INFORMASI SISTEM</span>
+            </div>
+
+            {/* TITLE */}
+            <h2 style={{ fontSize: "clamp(1.75rem, 5vw, 2.5rem)", fontWeight: 950, color: "#0f172a", margin: "0 0 32px", letterSpacing: "-0.03em", lineHeight: 1.1 }}>
+              HARI LIBUR OPERASIONAL
+            </h2>
+
+            {/* MESSAGE BLOCK */}
+            <div style={{
+              background: "linear-gradient(145deg, #ffffff, #f8fafc)",
+              padding: "clamp(20px, 4vw, 32px)",
+              borderRadius: "24px",
+              border: "1px solid #e2e8f0",
+              boxShadow: "0 10px 15px -3px rgba(0,0,0,0.02)",
+              textAlign: "left",
+              display: "flex",
+              gap: "20px",
+              alignItems: "flex-start",
+              width: "100%"
+            }}>
+              <div style={{ color: "#3b82f6", flexShrink: 0, marginTop: "4px" }}><IconFileText /></div>
+              <p style={{ color: "#334155", fontSize: "clamp(0.95rem, 2vw, 1.05rem)", fontWeight: 600, margin: 0, lineHeight: 1.6 }}>
+                {message}
+              </p>
             </div>
           </div>
         ) : hasAttendance || submittedStatus ? (
