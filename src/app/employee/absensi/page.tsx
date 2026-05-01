@@ -37,13 +37,13 @@ export default async function EmployeeAbsensiPage() {
 
   if (!user?.absensiEnabled) {
     isClosed = true
-    message = "Akses portal absensi Anda telah ditutup oleh administrator. Silakan hubungi admin untuk informasi lebih lanjut."
+    message = "Akses otorisasi presensi Anda sedang ditangguhkan. Silakan hubungi Administrator HRD untuk informasi lebih lanjut."
   } else if (isWeekend) {
     isClosed = true
-    message = "Portal absensi ditutup pada akhir pekan (Sabtu & Minggu)."
+    message = "Sistem presensi tidak beroperasi pada akhir pekan. Selamat menikmati waktu istirahat Anda."
   } else if (isHoliday) {
     isClosed = true
-    message = `Portal absensi ditutup. Hari libur: ${isHoliday.keterangan}`
+    message = `Layanan presensi dihentikan sementara sehubungan dengan libur operasional: ${isHoliday.keterangan}.`
   }
 
   return <AbsensiClient 
