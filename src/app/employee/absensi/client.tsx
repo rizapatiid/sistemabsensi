@@ -187,7 +187,7 @@ export default function AbsensiClient({
             {/* IMAGE HEADER */}
             {holidayImage ? (
               <div style={{ width: "100%", position: "relative", marginBottom: "24px", borderRadius: "24px", overflow: "hidden" }}>
-                <img src={holidayImage} alt="Banner Libur" style={{ width: "100%", height: "clamp(200px, 40vw, 350px)", objectFit: "cover", display: "block" }} />
+                <img src={holidayImage} alt="Banner Libur" style={{ width: "100%", height: "auto", display: "block" }} />
                 {/* Efek Memudar (Fade Effect) */}
                 <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, height: "120px", background: "linear-gradient(to top, rgba(255,255,255,1), rgba(255,255,255,0))" }}></div>
               </div>
