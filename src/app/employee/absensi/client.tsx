@@ -197,12 +197,6 @@ export default function AbsensiClient({
               </div>
             )}
 
-            {/* BADGE */}
-            <div style={{ display: "inline-flex", alignItems: "center", gap: "8px", background: holidayImage ? "#f8fafc" : "#fef2f2", padding: "8px 16px", borderRadius: "20px", border: `1px solid ${holidayImage ? '#e2e8f0' : '#fecdd3'}`, marginBottom: "24px" }}>
-              <div style={{ width: "6px", height: "6px", borderRadius: "50%", background: "#ef4444", animation: "pulse 2s infinite" }}></div>
-              <span style={{ fontSize: "0.7rem", fontWeight: 900, letterSpacing: "0.1em", color: holidayImage ? "#64748b" : "#dc2626", textTransform: "uppercase" }}>INFORMASI SISTEM</span>
-            </div>
-
             {/* TITLE */}
             <h2 style={{ fontSize: "clamp(1.75rem, 5vw, 2.5rem)", fontWeight: 950, color: "#0f172a", margin: "0 0 32px", letterSpacing: "-0.03em", lineHeight: 1.1 }}>
               HARI LIBUR OPERASIONAL
