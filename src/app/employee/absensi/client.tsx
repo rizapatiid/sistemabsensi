@@ -205,30 +205,30 @@ export default function AbsensiClient({
             {/* MESSAGE BLOCK */}
             <div style={{
               background: "#f8fafc",
-              padding: "16px 20px",
-              borderRadius: "16px",
+              padding: "12px 16px",
+              borderRadius: "12px",
               border: "1px solid #e2e8f0",
               display: "flex",
               alignItems: "center",
-              gap: "16px",
+              gap: "12px",
               width: "100%",
-              maxWidth: "480px",
+              maxWidth: "420px",
               margin: "0 auto",
               boxShadow: "0 2px 4px rgba(0,0,0,0.02)"
             }}>
               <div style={{ 
-                width: "44px", height: "44px", 
+                width: "36px", height: "36px", 
                 flexShrink: 0,
                 background: "#eff6ff", 
                 color: "#3b82f6", 
-                borderRadius: "12px", 
+                borderRadius: "10px", 
                 display: "flex", alignItems: "center", justifyContent: "center",
                 border: "1px solid #bfdbfe"
               }}>
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
               </div>
               <p 
-                style={{ color: "#334155", fontSize: "0.9rem", fontWeight: 700, margin: 0, lineHeight: 1.5, textAlign: "left" }}
+                style={{ color: "#334155", fontSize: "0.85rem", fontWeight: 700, margin: 0, lineHeight: 1.4, textAlign: "left" }}
                 dangerouslySetInnerHTML={{ __html: message }}
               />
             </div>
