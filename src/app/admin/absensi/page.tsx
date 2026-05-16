@@ -9,7 +9,19 @@ export default async function AdminAbsensiPage() {
     orderBy: { nama: "asc" }
   })
 
+  const now = new Date()
+  const currentMonth = now.getMonth()
+  const currentYear = now.getFullYear()
+  const startOfMonth = new Date(currentYear, currentMonth, 1)
+  const endOfMonth = new Date(currentYear, currentMonth + 1, 0, 23, 59, 59)
+
   const absensi = await prisma.attendance.findMany({
+    where: {
+      tanggal: {
+        gte: startOfMonth,
+        lte: endOfMonth
+      }
+    },
     include: {
       user: true
     },
@@ -20,6 +32,9 @@ export default async function AdminAbsensiPage() {
 
   const countHadir = absensi.filter(a => a.status === 'HADIR').length
   const countIzin = absensi.filter(a => a.status === 'IZIN').length
+
+  const monthNames = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"]
+  const currentMonthName = monthNames[currentMonth]
 
   return (
     <div className={styles.pageContainer} style={{ background: '#f8fafc', padding: '0px', minHeight: '100vh' }}>
@@ -33,7 +48,9 @@ export default async function AdminAbsensiPage() {
               marginBottom: '12px'
           }}>
               <div style={{ width: '6px', height: '6px', background: '#3b82f6', borderRadius: '50%' }}></div>
-              <span style={{ fontSize: '0.65rem', fontWeight: 800, color: '#94a3b8', letterSpacing: '0.05em', textTransform: 'uppercase' }}>Rekapitulasi Kehadiran • Real-time Sync</span>
+              <span style={{ fontSize: '0.65rem', fontWeight: 800, color: '#94a3b8', letterSpacing: '0.05em', textTransform: 'uppercase' }}>
+                Rekapitulasi {currentMonthName} {currentYear} • Real-time Sync
+              </span>
           </div>
 
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', flexWrap: 'wrap', gap: '24px', marginBottom: '32px' }}>
@@ -42,7 +59,7 @@ export default async function AdminAbsensiPage() {
                     Monitor Absensi
                 </h1>
                 <p style={{ color: '#64748b', fontWeight: 600, fontSize: 'clamp(0.85rem, 2vw, 1rem)', marginTop: '8px', margin: 0 }}>
-                    Pantau absensi harian dan berkas bukti dari seluruh personil.
+                    Ringkasan kehadiran personil untuk periode {currentMonthName} {currentYear}.
                 </p>
             </div>
 

@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react"
 import { loginAction, requestPasswordResetAction, verifyOtpAction, resetPasswordAction } from "@/actions/auth"
+import { useRouter } from "next/navigation"
 import styles from "./login.module.css"
 
 const IconMail = ({ size = 20 }: { size?: number }) => (
@@ -22,12 +23,19 @@ const IconCheck = ({ size = 20 }: { size?: number }) => (
 )
 
 export default function LoginPage() {
+  const router = useRouter()
   const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
   const [showPassword, setShowPassword] = useState(false)
   const [forgotMode, setForgotMode] = useState<null | "FORGOT" | "OTP" | "RESET" | "SUCCESS">(null)
   const [resetEmail, setResetEmail] = useState("")
   const [otp, setOtp] = useState("")
+
+  useEffect(() => {
+    // Prefetch dashboards to make redirect feel instant
+    router.prefetch("/admin/home")
+    router.prefetch("/employee/home")
+  }, [router])
 
   async function handleAction(formData: FormData) {
     setLoading(true)
@@ -136,6 +144,7 @@ export default function LoginPage() {
                         placeholder="Contoh: k001 atau email@anda.com" 
                         className={styles.inputField}
                         autoComplete="username"
+                        autoFocus
                         required 
                     />
                 </div>

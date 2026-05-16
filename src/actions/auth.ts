@@ -13,27 +13,37 @@ export async function loginAction(formData: FormData) {
     return { error: "ID Karyawan dan Password harus diisi." }
   }
 
-  // Seed initial Admin if no users exist
-  const count = await prisma.user.count()
-  if (count === 0 && idKaryawan === "admin" && password === "admin") {
-    await prisma.user.create({
-      data: {
-        id: "admin",
-        nama: "Administrator",
-        role: "ADMIN",
-        password: "admin", // in production, hash this!
+  // EXTREME OPTIMIZATION: Try findUnique by ID first (Indexed & Fastest)
+  let user = await prisma.user.findUnique({
+    where: { id: idKaryawan }
+  })
+
+  // Fallback to case-insensitive lookup only if ID fails
+  if (!user) {
+    user = await prisma.user.findFirst({
+      where: {
+        OR: [
+          { id: { equals: idKaryawan, mode: 'insensitive' } },
+          { email: { equals: idKaryawan, mode: 'insensitive' } }
+        ]
       }
     })
   }
 
-  const user = await prisma.user.findFirst({
-    where: {
-      OR: [
-        { id: { equals: idKaryawan, mode: 'insensitive' } },
-        { email: { equals: idKaryawan, mode: 'insensitive' } }
-      ]
+  // Fallback for initial setup (Seed only if no user found and using admin:admin)
+  if (!user && idKaryawan === "admin" && password === "admin") {
+    const count = await prisma.user.count()
+    if (count === 0) {
+      user = await prisma.user.create({
+        data: {
+          id: "admin",
+          nama: "Administrator",
+          role: "ADMIN",
+          password: "admin",
+        }
+      })
     }
-  })
+  }
 
   if (!user || user.password !== password) {
     return { error: "ID Karyawan/Email atau Password salah." }
@@ -43,8 +53,9 @@ export async function loginAction(formData: FormData) {
     return { error: "Akun Anda telah diblokir. Hubungi Admin." }
   }
 
+  const sessionData = { id: user.id, role: user.role }
   const cookieStore = await cookies()
-  cookieStore.set("auth_session", JSON.stringify({ id: user.id, role: user.role }), {
+  cookieStore.set("auth_session", JSON.stringify(sessionData), {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
     path: "/",

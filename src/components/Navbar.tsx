@@ -30,24 +30,6 @@ export default function Navbar({ user, onMobileMenuToggle, isSidebarCollapsed }:
             className="navbar-logo-desktop"
           />
         )}
-
-        <button
-          className="navbar-mobile-toggle"
-          onClick={onMobileMenuToggle}
-        >
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-            <line x1="3" y1="12" x2="21" y2="12"></line>
-            <line x1="3" y1="6" x2="21" y2="6"></line>
-            <line x1="3" y1="18" x2="21" y2="18"></line>
-          </svg>
-        </button>
-
-        {/* For mobile view, always show logo next to toggle */}
-        <img
-          src="/logositus.png"
-          alt="RMP Digitals"
-          className="navbar-logo-mobile"
-        />
       </div>
       <div className="navbar-right">
         <div className="user-profile" onClick={() => setIsDropdownOpen(!isDropdownOpen)}>
@@ -113,8 +95,9 @@ export default function Navbar({ user, onMobileMenuToggle, isSidebarCollapsed }:
       <style jsx>{`
         .navbar {
           height: 70px;
-          background-color: white;
-          border-bottom: 1px solid #eef2f6;
+          background: rgba(255, 255, 255, 0.8);
+          backdrop-filter: blur(12px);
+          border-bottom: 1px solid rgba(238, 242, 246, 0.5);
           display: flex;
           align-items: center;
           justify-content: space-between;
@@ -139,20 +122,11 @@ export default function Navbar({ user, onMobileMenuToggle, isSidebarCollapsed }:
           display: none;
         }
         @media (max-width: 1024px) {
-          .navbar-logo-desktop {
+          .navbar {
             display: none;
           }
-          .navbar-logo-mobile {
-            display: block;
-            height: 38px;
-          }
-          .navbar-mobile-toggle {
-            display: flex !important;
-            background: white;
-            border: 1px solid #eef2f6;
-            color: #1e40af;
-            padding: 8px;
-            border-radius: 10px;
+          .navbar-logo-desktop {
+            display: none;
           }
         }
         .welcome-text {
