@@ -13,36 +13,43 @@ export async function loginAction(formData: FormData) {
     return { error: "ID Karyawan dan Password harus diisi." }
   }
 
-  // EXTREME OPTIMIZATION: Try findUnique by ID first (Indexed & Fastest)
-  let user = await prisma.user.findUnique({
-    where: { id: idKaryawan }
-  })
+  let user: any = null
 
-  // Fallback to case-insensitive lookup only if ID fails
-  if (!user) {
-    user = await prisma.user.findFirst({
-      where: {
-        OR: [
-          { id: { equals: idKaryawan } },
-          { email: { equals: idKaryawan } }
-        ]
-      }
+  try {
+    // EXTREME OPTIMIZATION: Try findUnique by ID first (Indexed & Fastest)
+    user = await prisma.user.findUnique({
+      where: { id: idKaryawan }
     })
-  }
 
-  // Fallback for initial setup (Seed only if no user found and using admin:admin)
-  if (!user && idKaryawan === "admin" && password === "admin") {
-    const count = await prisma.user.count()
-    if (count === 0) {
-      user = await prisma.user.create({
-        data: {
-          id: "admin",
-          nama: "Administrator",
-          role: "ADMIN",
-          password: "admin",
+    // Fallback to lookup by email only if ID fails
+    if (!user) {
+      user = await prisma.user.findFirst({
+        where: {
+          OR: [
+            { id: { equals: idKaryawan } },
+            { email: { equals: idKaryawan } }
+          ]
         }
       })
     }
+
+    // Fallback for initial setup (Seed only if no user found and using admin:admin)
+    if (!user && idKaryawan === "admin" && password === "admin") {
+      const count = await prisma.user.count()
+      if (count === 0) {
+        user = await prisma.user.create({
+          data: {
+            id: "admin",
+            nama: "Administrator",
+            role: "ADMIN",
+            password: "admin",
+          }
+        })
+      }
+    }
+  } catch (dbError: any) {
+    console.error("DATABASE ERROR saat login:", dbError)
+    return { error: `Koneksi database gagal. Silakan hubungi Administrator. (${dbError?.message?.slice(0, 80) || 'Unknown error'})` }
   }
 
   if (!user || user.password !== password) {
