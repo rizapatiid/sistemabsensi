@@ -71,6 +71,10 @@ body {
   body {
     touch-action: auto;
   }
+  
+  .hidden-on-mobile {
+    display: none !important;
+  }
 }
 
 /* Glassmorphism Util Classes */

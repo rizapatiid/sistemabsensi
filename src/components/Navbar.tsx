@@ -20,7 +20,7 @@ export default function Navbar({ user, onMobileMenuToggle, isSidebarCollapsed }:
   const router = useRouter();
 
   return (
-    <header className={`navbar ${isSidebarCollapsed ? 'sidebar-state-collapsed' : ''}`}>
+    <header className={`navbar hidden-on-mobile ${isSidebarCollapsed ? 'sidebar-state-collapsed' : ''}`}>
       <div className="navbar-left">
         {/* Shown conditionally on Desktop (only when sidebar is collapsed) and always on Mobile Toggle */}
         {isSidebarCollapsed && (
