@@ -104,7 +104,7 @@ async function main() {
   await importTable('Calendar', (row) =>
     prisma.calendar.upsert({
       where: { tanggal: new Date(row.tanggal) },
-      update: {},
+      update: { image: row.image ?? null, keterangan: row.keterangan, isHoliday: row.isHoliday },
       create: parseDates(row, ['tanggal']),
     })
   );
@@ -113,7 +113,7 @@ async function main() {
   await importTable('Announcement', (row) =>
     prisma.announcement.upsert({
       where: { id: row.id },
-      update: {},
+      update: { image: row.image ?? null, judul: row.judul, konten: row.konten },
       create: parseDates(row, ['scheduleDate', 'tanggal']),
     })
   );
