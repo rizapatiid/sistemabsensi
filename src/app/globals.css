@@ -60,6 +60,19 @@ body {
   touch-action: none; /* Prevent browser handling of touch gestures at body level */
 }
 
+/* Enable native scrolling on mobile for pull-to-refresh */
+@media (max-width: 1024px) {
+  html, body {
+    height: auto;
+    overflow: visible;
+    overscroll-behavior: auto;
+    position: static;
+  }
+  body {
+    touch-action: auto;
+  }
+}
+
 /* Glassmorphism Util Classes */
 .glass {
   background: rgba(255, 255, 255, 0.7);

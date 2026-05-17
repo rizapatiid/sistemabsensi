@@ -193,16 +193,27 @@
 }
 
 @media (max-width: 1024px) {
+  .layoutContainer {
+    height: auto;
+    min-height: 100vh;
+    overflow: visible;
+  }
+
+  .mainWrapper {
+    width: 100%;
+    overflow: visible;
+  }
+
+  .mainContent {
+    overflow: visible;
+  }
+
   .sidebar {
     display: none !important; /* Hide sidebar completely on mobile */
   }
 
   .sidebarOverlay {
     display: none !important; /* Hide overlay on mobile */
-  }
-
-  .mainWrapper {
-    width: 100%;
   }
 }
 
