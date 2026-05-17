@@ -57,7 +57,7 @@ export async function createHolidayAction(formData: FormData) {
 
     // Kirim Broadcast WA
     try {
-      broadcastWhatsApp(`*INFO LIBUR BARU*\n\nTanggal: ${tanggal.toLocaleDateString("id-ID", { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}\nKeterangan: ${keterangan}\n\nTerima kasih,\nSistem HRIS RMP Digitals.`)
+      broadcastWhatsApp(`*INFO LIBUR BARU*\n\nTanggal: ${tanggal.toLocaleDateString("id-ID", { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}\nKeterangan: ${keterangan}\n\nCek kalender selengkapnya di: https://app.rmpid.com/employee/absensi\n\nTerima kasih,\nSistem HRIS RMP Digitals.`)
     } catch(e) {
       console.error("Gagal WA libur:", e)
     }
@@ -162,7 +162,7 @@ export async function createAnnouncementAction(formData: FormData) {
   // Kirim Broadcast WA
   try {
     const briefContent = konten.length > 150 ? konten.substring(0, 150) + "..." : konten;
-    broadcastWhatsApp(`*PENGUMUMAN BARU*\n\n*${judul}*\n\n${briefContent}\n\nBuka aplikasi RMP Digitals untuk informasi selengkapnya.`)
+    broadcastWhatsApp(`*PENGUMUMAN BARU*\n\n*${judul}*\n\n${briefContent}\n\nBuka aplikasi untuk info selengkapnya: https://app.rmpid.com/employee/home`)
   } catch(e) {
     console.error("Gagal WA pengumuman:", e)
   }
@@ -382,7 +382,7 @@ export async function togglePayrollStatusAction(id: string, currentStatus: strin
       const nominalStr = new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(payroll.totalGaji);
       await sendWhatsAppMessage(
         payroll.user.phone,
-        `Halo *${payroll.user.nama}*,\n\nSlip Gaji untuk periode *${payroll.bulan} ${payroll.tahun}* sebesar *${nominalStr}* telah berstatus *DIBAYARKAN*.\n\nSilakan cek rekening Anda dan buka aplikasi RMP Digitals untuk melihat rincian slip gaji.\n\nTerima kasih.`
+        `Halo *${payroll.user.nama}*,\n\nSlip Gaji untuk periode *${payroll.bulan} ${payroll.tahun}* sebesar *${nominalStr}* telah berstatus *DIBAYARKAN*.\n\nSilakan cek rekening Anda dan buka aplikasi untuk melihat rincian slip gaji: https://app.rmpid.com/employee/transaksi\n\nTerima kasih.`
       )
     } catch (waErr) {
       console.error("Gagal mengirim WA konfirmasi gaji:", waErr)
