@@ -109,6 +109,7 @@ export default function LoginPage() {
                 <img 
                     src="/logositus.png" 
                     alt="RMP Digitals Logo" 
+                    height="95"
                     className={styles.brandLogo}
                 />
             </div>

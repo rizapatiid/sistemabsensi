@@ -27,6 +27,7 @@ export default function Navbar({ user, onMobileMenuToggle, isSidebarCollapsed }:
           <img
             src="/logositus.png"
             alt="RMP Digitals"
+            height="48"
             className="navbar-logo-desktop"
           />
         )}
