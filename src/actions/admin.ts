@@ -318,6 +318,19 @@ export async function generatePayrollAction(formData: FormData) {
       }
     }
 
+    // Kirim Notifikasi WA Slip Gaji Terbit
+    if (user.phone) {
+      try {
+        const nominalStr = new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(totalGaji);
+        await sendWhatsAppMessage(
+          user.phone,
+          `Halo *${user.nama}*,\n\nSlip Gaji untuk periode *${bulan} ${tahun}* sebesar *${nominalStr}* telah *DITERBITKAN* oleh Admin.\n\nSilakan cek rincian slip gaji Anda di aplikasi: https://app.rmpid.com/employee/transaksi\n\nTerima kasih.`
+        )
+      } catch (e) {
+        console.error("Gagal mengirim WA Slip Terbit:", e)
+      }
+    }
+
     revalidatePath("/admin/payroll")
 
     // Kirim Notifikasi Push Slip Gaji
