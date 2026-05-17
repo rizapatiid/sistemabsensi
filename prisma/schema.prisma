@@ -3,24 +3,23 @@ generator client {
 }
 
 datasource db {
-  provider  = "postgresql"
-  url       = env("DATABASE_URL")
-  directUrl = env("DIRECT_URL")
+  provider = "mysql"
+  url      = env("DATABASE_URL")
 }
 
 model User {
-  id                   String             @id
-  nama                 String
-  role                 String
-  password             String
-  status               String             @default("AKTIF")
-  jabatan              String?
-  phone                String?
-  email                String?
-  alamat               String?
-  rekeningBank         String?
-  noRekening           String?
-  namaRekening         String?
+  id                   String             @id @db.VarChar(191)
+  nama                 String             @db.VarChar(255)
+  role                 String             @db.VarChar(50)
+  password             String             @db.VarChar(255)
+  status               String             @default("AKTIF") @db.VarChar(50)
+  jabatan              String?            @db.VarChar(255)
+  phone                String?            @db.VarChar(50)
+  email                String?            @db.VarChar(255)
+  alamat               String?            @db.Text
+  rekeningBank         String?            @db.VarChar(100)
+  noRekening           String?            @db.VarChar(100)
+  namaRekening         String?            @db.VarChar(255)
   createdAt            DateTime           @default(now())
   updatedAt            DateTime           @updatedAt
   emailNotifEnabled    Boolean            @default(true)
@@ -34,45 +33,45 @@ model User {
 }
 
 model PushSubscription {
-  id        String   @id @default(cuid())
-  userId    String
-  endpoint  String   @unique
-  p256dh    String
-  auth      String
+  id        String   @id @default(cuid()) @db.VarChar(191)
+  userId    String   @db.VarChar(191)
+  endpoint  String   @unique @db.VarChar(500)
+  p256dh    String   @db.VarChar(255)
+  auth      String   @db.VarChar(255)
   createdAt DateTime @default(now())
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model Attendance {
-  id         String   @id @default(cuid())
-  idKaryawan String
-  tanggal    DateTime
+  id         String   @id @default(cuid()) @db.VarChar(191)
+  idKaryawan String   @db.VarChar(191)
+  tanggal    DateTime @db.Date
   waktuMasuk DateTime
-  status     String
-  foto       String?
-  buktiApp   String?
-  alasan     String?
+  status     String   @db.VarChar(50)
+  foto       String?  @db.VarChar(500)
+  buktiApp   String?  @db.VarChar(500)
+  alasan     String?  @db.Text
   user       User     @relation(fields: [idKaryawan], references: [id], onDelete: Cascade)
 
   @@unique([idKaryawan, tanggal])
 }
 
 model Payroll {
-  id                   String   @id @default(cuid())
-  idKaryawan           String
+  id                   String   @id @default(cuid()) @db.VarChar(191)
+  idKaryawan           String   @db.VarChar(191)
   bulan                Int
   tahun                Int
-  tipeGaji             String   @default("BULANAN")
+  tipeGaji             String   @default("BULANAN") @db.VarChar(50)
   jumlahAbsen          Int      @default(0)
   gajiPokok            Float
   tunjangan            Float    @default(0)
-  keteranganTunjangan  String?
+  keteranganTunjangan  String?  @db.Text
   totalGaji            Float
-  bankSnapshot         String?
-  noRekeningSnapshot   String?
-  namaRekeningSnapshot String?
+  bankSnapshot         String?  @db.VarChar(100)
+  noRekeningSnapshot   String?  @db.VarChar(100)
+  namaRekeningSnapshot String?  @db.VarChar(255)
   createdAt            DateTime @default(now())
-  statusPembayaran     String   @default("DIPROSES")
+  statusPembayaran     String   @default("DIPROSES") @db.VarChar(50)
   isRead               Boolean  @default(false)
   user                 User     @relation(fields: [idKaryawan], references: [id], onDelete: Cascade)
 
@@ -80,35 +79,35 @@ model Payroll {
 }
 
 model Calendar {
-  id         String   @id @default(cuid())
-  tanggal    DateTime @unique
-  keterangan String
+  id         String   @id @default(cuid()) @db.VarChar(191)
+  tanggal    DateTime @unique @db.Date
+  keterangan String   @db.VarChar(500)
   isHoliday  Boolean  @default(false)
-  image      String?
+  image      String?  @db.VarChar(500)
 }
 
 model Announcement {
-  id           String    @id @default(cuid())
-  judul        String
-  konten       String
-  image        String?
+  id           String    @id @default(cuid()) @db.VarChar(191)
+  judul        String    @db.VarChar(500)
+  konten       String    @db.LongText
+  image        String?   @db.VarChar(500)
   scheduleDate DateTime?
   tanggal      DateTime  @default(now())
 }
 
 model PasswordReset {
-  id        String   @id @default(cuid())
-  email     String
-  otp       String
+  id        String   @id @default(cuid()) @db.VarChar(191)
+  email     String   @db.VarChar(255)
+  otp       String   @db.VarChar(10)
   expiresAt DateTime
   createdAt DateTime @default(now())
 }
 
 model Message {
-  id         String   @id @default(cuid())
-  senderId   String
-  receiverId String?
-  content    String
+  id         String   @id @default(cuid()) @db.VarChar(191)
+  senderId   String   @db.VarChar(191)
+  receiverId String?  @db.VarChar(191)
+  content    String   @db.Text
   isRead     Boolean  @default(false)
   createdAt  DateTime @default(now())
   receiver   User?    @relation("ReceivedMessages", fields: [receiverId], references: [id])
@@ -116,9 +115,9 @@ model Message {
 }
 
 model SystemSetting {
-  id                String   @id @default("global")
+  id                String   @id @default("global") @db.VarChar(191)
   maintenance       Boolean  @default(false)
   updatedAt         DateTime @updatedAt
-  maintenanceReason String?
-  maintenanceUntil  String?
+  maintenanceReason String?  @db.Text
+  maintenanceUntil  String?  @db.VarChar(100)
 }

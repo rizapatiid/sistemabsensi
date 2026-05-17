@@ -46,3 +46,6 @@ next-env.d.ts
 
 # prisma
 /src/generated/prisma
+
+# migration data exports (contains large base64 images)
+/scripts/data-export/
