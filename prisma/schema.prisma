@@ -49,8 +49,8 @@ model Attendance {
   tanggal    DateTime @db.Date
   waktuMasuk DateTime
   status     String   @db.VarChar(50)
-  foto       String?  @db.VarChar(500)
-  buktiApp   String?  @db.VarChar(500)
+  foto       String?  @db.LongText
+  buktiApp   String?  @db.LongText
   alasan     String?  @db.Text
   user       User     @relation(fields: [idKaryawan], references: [id], onDelete: Cascade)
 
@@ -84,14 +84,14 @@ model Calendar {
   tanggal    DateTime @unique @db.Date
   keterangan String   @db.VarChar(500)
   isHoliday  Boolean  @default(false)
-  image      String?  @db.VarChar(500)
+  image      String?  @db.LongText
 }
 
 model Announcement {
   id           String    @id @default(cuid()) @db.VarChar(191)
   judul        String    @db.VarChar(500)
   konten       String    @db.LongText
-  image        String?   @db.VarChar(500)
+  image        String?   @db.LongText
   scheduleDate DateTime?
   tanggal      DateTime  @default(now())
 }

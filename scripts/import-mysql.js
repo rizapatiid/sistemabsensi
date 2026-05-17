@@ -86,7 +86,7 @@ async function main() {
   await importTable('Attendance', (row) =>
     prisma.attendance.upsert({
       where: { idKaryawan_tanggal: { idKaryawan: row.idKaryawan, tanggal: new Date(row.tanggal) } },
-      update: {},
+      update: { foto: row.foto ?? null, buktiApp: row.buktiApp ?? null, status: row.status, alasan: row.alasan ?? null },
       create: parseDates(row, ['tanggal', 'waktuMasuk']),
     })
   );
