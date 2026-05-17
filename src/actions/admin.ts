@@ -520,7 +520,6 @@ export async function manualAttendanceAction(formData: FormData) {
 }
 
 // -- WHATSAPP API --
-import { sendWhatsAppMessage } from "@/lib/whatsapp"
 
 export async function sendTestWhatsAppAction(noHp: string, message: string) {
   if (!noHp) return { error: "Nomor HP tujuan wajib diisi" }
