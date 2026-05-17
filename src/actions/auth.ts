@@ -23,8 +23,8 @@ export async function loginAction(formData: FormData) {
     user = await prisma.user.findFirst({
       where: {
         OR: [
-          { id: { equals: idKaryawan, mode: 'insensitive' } },
-          { email: { equals: idKaryawan, mode: 'insensitive' } }
+          { id: { equals: idKaryawan } },
+          { email: { equals: idKaryawan } }
         ]
       }
     })
@@ -89,10 +89,7 @@ export async function requestPasswordResetAction(email: string) {
   try {
     const user = await prisma.user.findFirst({
       where: { 
-        email: {
-          equals: email.toLowerCase().trim(),
-          mode: 'insensitive' 
-        } 
+        email: email.toLowerCase().trim()
       }
     })
 
