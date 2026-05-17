@@ -27,8 +27,10 @@ export default function AdminLayoutClient({ children, user }: AdminLayoutClientP
       setIsSidebarOpen(true)
     }
 
-    // Fetch total unread count
+    // Fetch unread counts - combined query untuk efisiensi
     const fetchData = async () => {
+      // Jangan poll jika tab tidak aktif (hemat resources)
+      if (document.hidden) return
       const [chatRes, annRes] = await Promise.all([
         getTotalUnreadCount(user.id),
         getUnreadAnnouncementCount(user.id)
@@ -38,7 +40,8 @@ export default function AdminLayoutClient({ children, user }: AdminLayoutClientP
     }
 
     fetchData()
-    const interval = setInterval(fetchData, 10000)
+    // Poll setiap 60 detik (sebelumnya 10 detik = 6x lebih ringan)
+    const interval = setInterval(fetchData, 60000)
     return () => clearInterval(interval)
   }, [user.id])
 

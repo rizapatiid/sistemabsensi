@@ -1,30 +1,39 @@
+import { cache } from "react"
+import { unstable_cache } from "next/cache"
 import prisma from "./prisma"
 
-export async function getSystemSettings() {
-    try {
+// Cache per-request dengan React cache() agar tidak dipanggil berkali-kali dalam satu request
+// Tambahan unstable_cache agar hasil di-cache 60 detik antar request (tidak perlu hit DB setiap halaman)
+export const getSystemSettings = cache(
+  unstable_cache(
+    async () => {
+      try {
         const result: any = await prisma.$queryRawUnsafe(
-            "SELECT * FROM `SystemSetting` WHERE `id` = 'global' LIMIT 1"
+          "SELECT * FROM `SystemSetting` WHERE `id` = 'global' LIMIT 1"
         )
 
         let settings = result[0]
 
         if (!settings) {
-            // MySQL: INSERT IGNORE untuk handle race condition (tidak error kalau sudah ada)
-            await prisma.$queryRawUnsafe(
-                "INSERT IGNORE INTO `SystemSetting` (`id`, `maintenance`, `updatedAt`) VALUES ('global', false, NOW())"
-            )
-            const retry: any = await prisma.$queryRawUnsafe(
-                "SELECT * FROM `SystemSetting` WHERE `id` = 'global' LIMIT 1"
-            )
-            settings = retry[0] || { maintenance: false }
+          await prisma.$queryRawUnsafe(
+            "INSERT IGNORE INTO `SystemSetting` (`id`, `maintenance`, `updatedAt`) VALUES ('global', false, NOW())"
+          )
+          const retry: any = await prisma.$queryRawUnsafe(
+            "SELECT * FROM `SystemSetting` WHERE `id` = 'global' LIMIT 1"
+          )
+          settings = retry[0] || { maintenance: false }
         }
 
         return settings
-    } catch (error) {
+      } catch (error) {
         console.error("Gagal mengambil pengaturan sistem:", error)
         return { maintenance: false }
-    }
-}
+      }
+    },
+    ["system-settings"],
+    { revalidate: 60 } // Cache 60 detik — settings jarang berubah
+  )
+)
 
 export async function toggleMaintenanceMode(value: boolean, reason?: string, until?: string) {
     const reasonValue = reason ? `'${reason.replace(/'/g, "''")}'` : 'NULL'
