@@ -26,8 +26,8 @@ export const metadata: Metadata = {
   title: "RMP DIGITALS - Sistem Pegawai Profesional",
   description: "Sistem Manajemen Kepegawaian, Absensi, dan Payroll Profesional",
   icons: {
-    icon: "/logositus.png",
-    apple: "/logositus.png",
+    icon: "/faficon.jpg",
+    apple: "/faficon.jpg",
   },
   appleWebApp: {
     capable: true,
@@ -57,8 +57,8 @@ export default async function RootLayout({
       <head>
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-        <link rel="icon" href="/logositus.png" />
-        <link rel="apple-touch-icon" href="/logositus.png" />
+        <link rel="icon" href="/faficon.jpg" />
+        <link rel="apple-touch-icon" href="/faficon.jpg" />
       </head>
       <body>
         <RegisterServiceWorker />
