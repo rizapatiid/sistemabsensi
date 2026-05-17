@@ -489,3 +489,18 @@ export async function manualAttendanceAction(formData: FormData) {
     return { error: "Gagal menyimpan absensi manual" }
   }
 }
+
+// -- WHATSAPP API --
+import { sendWhatsAppMessage } from "@/lib/whatsapp"
+
+export async function sendTestWhatsAppAction(noHp: string, message: string) {
+  if (!noHp) return { error: "Nomor HP tujuan wajib diisi" }
+  
+  const result = await sendWhatsAppMessage(noHp, message)
+  
+  if (!result.success) {
+    return { error: result.error || "Gagal mengirim pesan" }
+  }
+  
+  return { success: true, detail: result.response }
+}
