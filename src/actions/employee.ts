@@ -5,6 +5,7 @@ import { revalidatePath } from "next/cache"
 import { redirect } from "next/navigation"
 import { z } from "zod"
 import { getSession } from "@/actions/auth"
+import { sendWhatsAppMessage } from "@/lib/whatsapp"
 
 const EmployeeSchema = z.object({
   id: z.string().min(1, "ID Karyawan Wajib diisi"),
@@ -36,7 +37,7 @@ export async function createEmployeeAction(formData: FormData) {
     return { error: "ID Karyawan sudah terdaftar!" }
   }
 
-  await prisma.user.create({
+  const newEmp = await prisma.user.create({
     data: {
       id: result.data.id,
       nama: result.data.nama,
@@ -49,6 +50,17 @@ export async function createEmployeeAction(formData: FormData) {
       status: "AKTIF"
     }
   })
+
+  if (newEmp.phone) {
+    try {
+      await sendWhatsAppMessage(
+        newEmp.phone,
+        `Halo *${newEmp.nama}*,\n\nAkun Sistem Pegawai Profesional RMP Digitals Anda telah berhasil didaftarkan oleh Admin.\n\n*Informasi Login Anda:*\n👤 ID Karyawan: *${newEmp.id}*\n🔑 Password: *${newEmp.password}*\n\nSilakan login melalui website resmi perusahaan untuk mengakses menu absensi dan informasi penting lainnya.\n\n_Pesan otomatis dari Sistem HRIS RMP Digitals._`
+      )
+    } catch (e) {
+      console.error("Gagal mengirim WA Info Login", e);
+    }
+  }
 
   revalidatePath("/admin/karyawan")
   redirect("/admin/karyawan")

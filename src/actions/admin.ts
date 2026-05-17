@@ -2,6 +2,7 @@
 
 import prisma from "@/lib/prisma"
 import { revalidatePath } from "next/cache"
+import { broadcastWhatsApp, sendWhatsAppMessage } from "@/lib/whatsapp"
 import { redirect } from "next/navigation"
 import { z } from "zod"
 import { sendNotificationToUser, sendNotificationToAllUsers } from "@/actions/push"
@@ -52,6 +53,13 @@ export async function createHolidayAction(formData: FormData) {
       )
     } catch (e) {
       console.error("Gagal broadcast notifikasi libur:", e)
+    }
+
+    // Kirim Broadcast WA
+    try {
+      broadcastWhatsApp(`*INFO LIBUR BARU*\n\nTanggal: ${tanggal.toLocaleDateString("id-ID", { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}\nKeterangan: ${keterangan}\n\nTerima kasih,\nSistem HRIS RMP Digitals.`)
+    } catch(e) {
+      console.error("Gagal WA libur:", e)
     }
     // redirect inside try-catch with Server Actions can be tricky, 
     // but in Next.js 14/15 it works if it's the last statement.
@@ -149,6 +157,14 @@ export async function createAnnouncementAction(formData: FormData) {
     )
   } catch (e) {
     console.error("Gagal broadcast notifikasi pengumuman:", e)
+  }
+
+  // Kirim Broadcast WA
+  try {
+    const briefContent = konten.length > 150 ? konten.substring(0, 150) + "..." : konten;
+    broadcastWhatsApp(`*PENGUMUMAN BARU*\n\n*${judul}*\n\n${briefContent}\n\nBuka aplikasi RMP Digitals untuk informasi selengkapnya.`)
+  } catch(e) {
+    console.error("Gagal WA pengumuman:", e)
   }
 
   return { success: true }
@@ -357,6 +373,19 @@ export async function togglePayrollStatusAction(id: string, currentStatus: strin
       )
     } catch (emailErr) {
       console.error("Gagal mengirim email konfirmasi, tapi status tetap diupdate:", emailErr)
+    }
+  }
+
+  // Jika status berubah menjadi DIBAYAR, kirim WA konfirmasi
+  if (newStatus === "DIBAYAR" && payroll.user.phone) {
+    try {
+      const nominalStr = new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(payroll.totalGaji);
+      await sendWhatsAppMessage(
+        payroll.user.phone,
+        `Halo *${payroll.user.nama}*,\n\nSlip Gaji untuk periode *${payroll.bulan} ${payroll.tahun}* sebesar *${nominalStr}* telah berstatus *DIBAYARKAN*.\n\nSilakan cek rekening Anda dan buka aplikasi RMP Digitals untuk melihat rincian slip gaji.\n\nTerima kasih.`
+      )
+    } catch (waErr) {
+      console.error("Gagal mengirim WA konfirmasi gaji:", waErr)
     }
   }
 

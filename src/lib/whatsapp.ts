@@ -46,3 +46,50 @@ export async function sendWhatsAppMessage(target: string, message: string) {
     return { success: false, error: "Terjadi kesalahan jaringan" };
   }
 }
+
+// Format mata uang rupiah
+const formatRupiah = (angka: number) => {
+  return new Intl.NumberFormat('id-ID', {
+    style: 'currency',
+    currency: 'IDR',
+    minimumFractionDigits: 0
+  }).format(angka)
+}
+
+/**
+ * Helper: Broadcast pesan ke semua karyawan aktif yang memiliki nomor HP
+ */
+export async function broadcastWhatsApp(message: string) {
+  // Hanya eksekusi jika token tersedia untuk menghemat query DB
+  if (!process.env.FONNTE_TOKEN) {
+    console.log(`[MOCK BROADCAST WA]:\n${message}`);
+    return;
+  }
+
+  try {
+    const { PrismaClient } = await import('@prisma/client');
+    const prisma = new PrismaClient();
+    
+    const employees = await prisma.user.findMany({
+      where: {
+        role: 'KARYAWAN',
+        status: 'AKTIF',
+        phone: { not: null }
+      },
+      select: { phone: true, nama: true }
+    });
+
+    console.log(`📢 Memulai Broadcast WA ke ${employees.length} karyawan...`);
+    
+    // Kirim secara asinkron tanpa memblokir thread utama
+    employees.forEach((emp) => {
+      if (emp.phone) {
+        const personalizedMessage = `Halo *${emp.nama}*,\n\n${message}`;
+        sendWhatsAppMessage(emp.phone, personalizedMessage);
+      }
+    });
+
+  } catch (e) {
+    console.error("Gagal melakukan broadcast WA:", e);
+  }
+}
