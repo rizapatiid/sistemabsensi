@@ -5,6 +5,7 @@ import { revalidatePath } from "next/cache"
 import { getSession } from "@/actions/auth"
 import { getTodayJakarta, getJakartaDate } from "@/lib/date"
 import { sendNotificationToUser } from "@/actions/push"
+import { uploadBase64Image } from "@/lib/cloudinary"
 
 export async function submitKehadiranAction(status: "HADIR" | "IZIN", foto?: string, buktiApp?: string, alasan?: string) {
   const session = await getSession()
@@ -26,14 +27,17 @@ export async function submitKehadiranAction(status: "HADIR" | "IZIN", foto?: str
     return { error: "Anda sudah melakukan absen hari ini!" }
   }
 
+  const fotoUrl = foto ? await uploadBase64Image(foto, 'absensi/foto') : null;
+  const buktiAppUrl = buktiApp ? await uploadBase64Image(buktiApp, 'absensi/bukti') : null;
+
   await prisma.attendance.create({
     data: {
       idKaryawan: session.id,
       tanggal: today,
       waktuMasuk: getJakartaDate(),
       status,
-      foto,
-      buktiApp,
+      foto: fotoUrl || null,
+      buktiApp: buktiAppUrl || null,
       alasan
     }
   })

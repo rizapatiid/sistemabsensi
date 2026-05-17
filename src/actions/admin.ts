@@ -5,6 +5,7 @@ import { revalidatePath } from "next/cache"
 import { redirect } from "next/navigation"
 import { z } from "zod"
 import { sendNotificationToUser, sendNotificationToAllUsers } from "@/actions/push"
+import { uploadBase64Image } from "@/lib/cloudinary"
 
 // -- KALENDER / HARI LIBUR --
 export async function createHolidayAction(formData: FormData) {
@@ -27,12 +28,15 @@ export async function createHolidayAction(formData: FormData) {
   }
 
   try {
+    const imageBase64 = formData.get("image") as string || null;
+    const imageUrl = imageBase64 ? await uploadBase64Image(imageBase64, 'kalender') : null;
+
     await prisma.calendar.create({
       data: {
         tanggal,
         keterangan,
         isHoliday: true,
-        image: formData.get("image") as string || null
+        image: imageUrl
       }
     })
 
@@ -88,8 +92,11 @@ export async function updateHolidayAction(id: string, formData: FormData) {
     }
 
     const image = formData.get("image") as string
-    if (image !== null) {
-      data.image = image // will update image if a new one is set, or if explicitly removed.
+    if (image === "REMOVE") {
+      data.image = null;
+    } else if (image !== null) {
+      const imageUrl = await uploadBase64Image(image, 'kalender');
+      if (imageUrl) data.image = imageUrl;
     }
 
     await prisma.calendar.update({
@@ -121,10 +128,13 @@ export async function createAnnouncementAction(formData: FormData) {
   const scheduleStr = formData.get("scheduleDate") as string
   const scheduleDate = scheduleStr ? new Date(scheduleStr) : null
 
+  const imageBase64 = formData.get("image") as string
+  const imageUrl = imageBase64 ? await uploadBase64Image(imageBase64, 'pengumuman') : null;
+
   if (!judul || !konten) return { error: "Data tidak lengkap" }
 
   const newAnnouncement = await prisma.announcement.create({
-    data: { judul, konten, image: image || null, scheduleDate }
+    data: { judul, konten, image: imageUrl, scheduleDate }
   })
 
   revalidatePath("/admin/kalender")
@@ -154,9 +164,18 @@ export async function updateAnnouncementAction(formData: FormData) {
 
   if (!id || !judul || !konten) return { error: "Data tidak lengkap" }
 
+  const data: any = { judul, konten, scheduleDate }
+  
+  if (image === "REMOVE") {
+    data.image = null;
+  } else if (image) {
+    const imageUrl = await uploadBase64Image(image, 'pengumuman');
+    if (imageUrl) data.image = imageUrl;
+  }
+
   await prisma.announcement.update({
     where: { id },
-    data: { judul, konten, image: image || null, scheduleDate }
+    data
   })
 
   revalidatePath("/admin/kalender")
