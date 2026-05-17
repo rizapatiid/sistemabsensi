@@ -18,7 +18,7 @@ const IconUserX = () => (
 export default async function AdminKaryawanPage() {
   // Gunakan queryRaw karena prisma generate gagal akibat file lock di Windows (EPERM)
   const karyawan = await prisma.$queryRaw<any[]>`
-    SELECT * FROM "User" WHERE role = 'KARYAWAN' ORDER BY "createdAt" DESC
+    SELECT * FROM \`User\` WHERE role = 'KARYAWAN' ORDER BY \`createdAt\` DESC
   `
 
   const countTotal = karyawan.length

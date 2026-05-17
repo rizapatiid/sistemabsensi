@@ -28,7 +28,7 @@ export default async function EmployeeAbsensiPage() {
   // Gunakan queryRaw karena prisma generate gagal akibat file lock di Windows (EPERM)
   // Ini menghindari runtime validation error pada client yang belum terupdate
   const userResults = await prisma.$queryRaw<any[]>`
-    SELECT "absensiEnabled" FROM "User" WHERE id = ${session?.id || ""}
+    SELECT \`absensiEnabled\` FROM \`User\` WHERE id = ${session?.id || ""}
   `
   const user = userResults[0]
 

@@ -2,21 +2,19 @@ import prisma from "./prisma"
 
 export async function getSystemSettings() {
     try {
-        // Gunakan raw query agar tidak bergantung pada prisma generate yang terhambat file lock
         const result: any = await prisma.$queryRawUnsafe(
-            `SELECT * FROM "SystemSetting" WHERE "id" = 'global' LIMIT 1`
+            "SELECT * FROM `SystemSetting` WHERE `id` = 'global' LIMIT 1"
         )
 
         let settings = result[0]
 
         if (!settings) {
-            // Gunakan ON CONFLICT DO NOTHING untuk menangani race condition
+            // MySQL: INSERT IGNORE untuk handle race condition (tidak error kalau sudah ada)
             await prisma.$queryRawUnsafe(
-                `INSERT INTO "SystemSetting" ("id", "maintenance", "updatedAt") VALUES ('global', false, NOW()) ON CONFLICT ("id") DO NOTHING`
+                "INSERT IGNORE INTO `SystemSetting` (`id`, `maintenance`, `updatedAt`) VALUES ('global', false, NOW())"
             )
-            // Ambil lagi setelah insert (siapa tahu sudah ada dari request lain)
             const retry: any = await prisma.$queryRawUnsafe(
-                `SELECT * FROM "SystemSetting" WHERE "id" = 'global' LIMIT 1`
+                "SELECT * FROM `SystemSetting` WHERE `id` = 'global' LIMIT 1"
             )
             settings = retry[0] || { maintenance: false }
         }
@@ -32,13 +30,14 @@ export async function toggleMaintenanceMode(value: boolean, reason?: string, unt
     const reasonValue = reason ? `'${reason.replace(/'/g, "''")}'` : 'NULL'
     const untilValue = until ? `'${until.replace(/'/g, "''")}'` : 'NULL'
 
+    // MySQL: ON DUPLICATE KEY UPDATE (pengganti PostgreSQL ON CONFLICT DO UPDATE)
     return await prisma.$queryRawUnsafe(
-        `INSERT INTO "SystemSetting" ("id", "maintenance", "maintenanceReason", "maintenanceUntil", "updatedAt") 
+        `INSERT INTO \`SystemSetting\` (\`id\`, \`maintenance\`, \`maintenanceReason\`, \`maintenanceUntil\`, \`updatedAt\`) 
          VALUES ('global', ${value}, ${reasonValue}, ${untilValue}, NOW())
-         ON CONFLICT ("id") DO UPDATE SET 
-            "maintenance" = EXCLUDED."maintenance", 
-            "maintenanceReason" = EXCLUDED."maintenanceReason", 
-            "maintenanceUntil" = EXCLUDED."maintenanceUntil", 
-            "updatedAt" = EXCLUDED."updatedAt"`
+         ON DUPLICATE KEY UPDATE 
+            \`maintenance\` = VALUES(\`maintenance\`), 
+            \`maintenanceReason\` = VALUES(\`maintenanceReason\`), 
+            \`maintenanceUntil\` = VALUES(\`maintenanceUntil\`), 
+            \`updatedAt\` = VALUES(\`updatedAt\`)`
     )
 }
