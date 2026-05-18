@@ -1,5 +1,6 @@
 "use server"
 
+import 'dotenv/config'
 import prisma from "@/lib/prisma"
 import { getSession } from "@/actions/auth"
 import webpush from "web-push"

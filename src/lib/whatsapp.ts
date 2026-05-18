@@ -1,3 +1,5 @@
+import 'dotenv/config';
+
 /**
  * RMP Digitals WhatsApp API Integration
  * Menggunakan Fonnte (https://fonnte.com) sebagai provider pihak ketiga
