@@ -76,6 +76,7 @@ export default function AbsensiClient({
   const [izinSubtype, setIzinSubtype] = useState<"IZIN" | "LAINNYA">("IZIN")
   const [capturedIzinPhoto, setCapturedIzinPhoto] = useState<string | null>(null)
   const [izinCameraActive, setIzinCameraActive] = useState(false)
+  const [showFixModal, setShowFixModal] = useState(false)
   
   const activeStatus = submittedStatus || existingStatus
   const videoRef = useRef<HTMLVideoElement>(null)
@@ -122,8 +123,12 @@ export default function AbsensiClient({
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" } })
       if (videoRef.current) videoRef.current.srcObject = stream
-    } catch (err) {
-      setMsg({ type: "error", text: "Gagal mengakses kamera. Pastikan izin diberikan." })
+    } catch (err: any) {
+      if (err.name === 'NotAllowedError' || err.name === 'PermissionDeniedError') {
+         setShowFixModal(true)
+      } else {
+         setMsg({ type: "error", text: "Gagal mengakses kamera. Pastikan izin diberikan." })
+      }
       setCameraActive(false)
     }
   }
@@ -474,6 +479,91 @@ export default function AbsensiClient({
           </div>
         </div>
       )}
+
+      {/* 5. MODAL CARA PERBAIKI IZIN KAMERA */}
+      {showFixModal && (
+        <div className={styles.modalOverlay} onClick={() => setShowFixModal(false)}>
+          <div className={styles.modal} style={{ maxWidth: '320px', padding: '24px 20px' }} onClick={e => e.stopPropagation()}>
+            <div style={{ textAlign: 'center', marginBottom: '16px' }}>
+              <div style={{ background: '#fff1f2', padding: '10px', borderRadius: '14px', color: '#e11d48', display: 'inline-flex', marginBottom: '12px' }}>
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M23 4v6h-6"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+              </div>
+              <h2 style={{ fontSize: "1.1rem", fontWeight: 900, color: "#0f172a", margin: 0 }}>Akses Terblokir</h2>
+              <p style={{ margin: '6px 0 0', color: '#64748b', fontSize: '0.8rem', lineHeight: 1.4 }}>Browser menolak akses kamera. Ikuti panduan ini:</p>
+            </div>
+            
+            {/* ANIMATED VISUAL GUIDE FULL CYCLE */}
+            <div style={{ background: '#f8fafc', padding: '16px 12px', borderRadius: '12px', border: '1px solid #e2e8f0', marginBottom: '20px', display: 'flex', justifyContent: 'center', position: 'relative', height: '120px' }}>
+              <div style={{ background: '#fff', border: '1px solid #cbd5e1', borderRadius: '20px', padding: '4px 12px', display: 'flex', alignItems: 'center', gap: '6px', width: '200px', height: '32px', flexShrink: 0, boxShadow: '0 2px 4px rgba(0,0,0,0.02)', position: 'relative', zIndex: 10 }}>
+                {/* Lock pulse */}
+                <div style={{ position: 'absolute', inset: '-3px', border: '2px solid rgba(225, 29, 72, 0.4)', borderRadius: '24px', opacity: 0, animation: 'pulseLock 6s infinite' }}></div>
+                <div style={{ color: '#0f172a', display: 'flex', zIndex: 1 }}>
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                </div>
+                <span style={{ fontSize: '0.75rem', color: '#0f172a', fontWeight: 700, letterSpacing: '-0.01em' }}>app.rmpid.com</span>
+                
+                {/* Fake Dropdown */}
+                <div className={styles.mockDropdown} style={{ position: 'absolute', top: '40px', left: '0px', background: 'white', borderRadius: '10px', border: '1px solid #cbd5e1', padding: '12px', width: '200px', boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1)', opacity: 0, transform: 'translateY(-10px)', pointerEvents: 'none', zIndex: 5 }}>
+                  <div style={{ fontSize: '0.65rem', color: '#64748b', marginBottom: '8px', borderBottom: '1px solid #e2e8f0', paddingBottom: '4px' }}>Pengaturan Situs</div>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: '#0f172a', fontSize: '0.75rem', fontWeight: 600 }}>
+                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+                      Kamera
+                    </div>
+                    {/* Simulated Block -> Allow Toggle */}
+                    <div style={{ position: 'relative', width: '54px', height: '22px', borderRadius: '4px', overflow: 'hidden' }}>
+                      <div className={styles.mockToggleBlock} style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#fee2e2', color: '#e11d48', fontSize: '0.65rem', fontWeight: 700 }}>Blokir</div>
+                      <div className={styles.mockToggleAllow} style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#dcfce7', color: '#16a34a', fontSize: '0.65rem', fontWeight: 700 }}>Izinkan</div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Simulated cursor */}
+                <div style={{ position: 'absolute', top: '10px', left: '10px', animation: 'moveCursorFull 6s infinite', zIndex: 20 }}>
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="#0f172a" stroke="white" strokeWidth="1.5"><path d="M3 3l7.07 16.97 2.51-7.39 7.39-2.51L3 3z"/></svg>
+                </div>
+              </div>
+            </div>
+
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', marginBottom: '20px', textAlign: 'left' }}>
+              <div style={{ display: 'flex', gap: '10px', alignItems: 'flex-start' }}>
+                <div style={{ color: '#0f172a', width: '22px', height: '22px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#f1f5f9', fontWeight: 800, fontSize: '0.7rem', flexShrink: 0 }}>1</div>
+                <div>
+                  <p style={{ margin: 0, fontWeight: 700, color: '#0f172a', fontSize: '0.8rem', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                    Klik Ikon Gembok
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                  </p>
+                  <p style={{ margin: '4px 0 0', fontSize: '0.8rem', color: '#64748b', lineHeight: 1.4 }}>Klik ikon di sisi kiri alamat web Anda (atas).</p>
+                </div>
+              </div>
+              <div style={{ display: 'flex', gap: '14px', alignItems: 'flex-start' }}>
+                <div style={{ color: '#0f172a', width: '28px', height: '28px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#f1f5f9', fontWeight: 800, fontSize: '0.8rem', flexShrink: 0 }}>2</div>
+                <div>
+                  <p style={{ margin: 0, fontWeight: 700, color: '#0f172a', fontSize: '0.9rem' }}>Buka Menu Izin (Permissions)</p>
+                  <p style={{ margin: '4px 0 0', fontSize: '0.8rem', color: '#64748b', lineHeight: 1.4 }}>Cari menu pengaturan situs (Site Settings).</p>
+                </div>
+              </div>
+              <div style={{ display: 'flex', gap: '14px', alignItems: 'flex-start' }}>
+                <div style={{ color: '#0f172a', width: '28px', height: '28px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#f1f5f9', fontWeight: 800, fontSize: '0.8rem', flexShrink: 0 }}>3</div>
+                <div>
+                  <p style={{ margin: 0, fontWeight: 700, color: '#0f172a', fontSize: '0.9rem' }}>Izinkan Kamera (Allow)</p>
+                  <p style={{ margin: '4px 0 0', fontSize: '0.8rem', color: '#64748b', lineHeight: 1.4 }}>Ubah opsi dari "Blokir" menjadi "Izinkan".</p>
+                </div>
+              </div>
+            </div>
+
+            <div style={{ display: 'flex', gap: '12px' }}>
+              <button className={styles.secondaryBtn} style={{ flex: 1, padding: '12px 0' }} onClick={() => setShowFixModal(false)}>
+                Tutup
+              </button>
+              <button className={styles.primaryBtn} style={{ flex: 1.5, padding: '12px 0', background: '#0f172a', boxShadow: '0 4px 6px -1px rgba(15, 23, 42, 0.15)' }} onClick={() => { setShowFixModal(false); window.location.reload(); }}>
+                Muat Ulang
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
     </div>
   )
 }
