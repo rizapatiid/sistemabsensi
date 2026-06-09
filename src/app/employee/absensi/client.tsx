@@ -29,6 +29,9 @@ const IconAlert = () => (
 const IconFileText = () => (
   <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><path d="M10 9H8"/></svg>
 )
+const IconInfo = () => (
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+)
 
 export default function AbsensiClient({ 
   isClosed, 
@@ -77,6 +80,9 @@ export default function AbsensiClient({
   const [capturedIzinPhoto, setCapturedIzinPhoto] = useState<string | null>(null)
   const [izinCameraActive, setIzinCameraActive] = useState(false)
   const [showFixModal, setShowFixModal] = useState(false)
+  const [showPolicyModal, setShowPolicyModal] = useState(false)
+  const [showCameraModal, setShowCameraModal] = useState(false)
+  const [tempPhoto, setTempPhoto] = useState<string | null>(null)
   
   const activeStatus = submittedStatus || existingStatus
   const videoRef = useRef<HTMLVideoElement>(null)
@@ -119,7 +125,9 @@ export default function AbsensiClient({
 
   const startCamera = async () => {
     setCameraActive(true)
+    setShowCameraModal(true)
     setMsg(null)
+    setTempPhoto(null)
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" } })
       if (videoRef.current) videoRef.current.srcObject = stream
@@ -130,6 +138,7 @@ export default function AbsensiClient({
          setMsg({ type: "error", text: "Gagal mengakses kamera. Pastikan izin diberikan." })
       }
       setCameraActive(false)
+      setShowCameraModal(false)
     }
   }
 
@@ -141,10 +150,23 @@ export default function AbsensiClient({
       if (ctx) {
         ctx.drawImage(video, 0, 0); const dataUrl = canvas.toDataURL("image/jpeg", 0.8)
         const compressed = await compressImage(dataUrl, 800, 800)
-        setCapturedPhoto(compressed); const stream = video.srcObject as MediaStream
-        if (stream) stream.getTracks().forEach(t => t.stop())
-        setCameraActive(false)
+        setTempPhoto(compressed)
       }
+    }
+  }
+
+  const savePhoto = () => {
+    setCapturedPhoto(tempPhoto)
+    closeCameraModal()
+  }
+
+  const closeCameraModal = () => {
+    setTempPhoto(null)
+    setShowCameraModal(false)
+    setCameraActive(false)
+    if (videoRef.current && videoRef.current.srcObject) {
+      const stream = videoRef.current.srcObject as MediaStream
+      stream.getTracks().forEach(t => t.stop())
     }
   }
 
@@ -196,12 +218,12 @@ export default function AbsensiClient({
       {/* 1. COMMAND CENTER HEADER */}
       <section className={styles.headerSection}>
         <div className={styles.headerContent}>
-            <h1>Portal Absensi Digital</h1>
-            <p>Selesaikan verifikasi harian Anda untuk validasi kehadiran hari ini.</p>
+            <h1>Portal Absensi</h1>
+            <p>Selesaikan absensi harian Anda hari ini.</p>
         </div>
-        <div style={{ background: '#f8fafc', padding: '12px 24px', borderRadius: '16px', border: '1px solid #e2e8f0', display: 'flex', alignItems: 'center', gap: '12px' }}>
+        <div style={{ background: '#f8fafc', padding: '8px 16px', borderRadius: '12px', border: '1px solid #e2e8f0', display: 'flex', alignItems: 'center', gap: '8px' }}>
             <div style={{ color: '#0f172a' }}><IconClock /></div>
-            <div style={{ fontSize: '0.85rem', fontWeight: 900, color: '#0f172a' }}>
+            <div style={{ fontSize: '0.85rem', fontWeight: 700, color: '#0f172a' }}>
                 {new Intl.DateTimeFormat("id-ID", { hour: '2-digit', minute: '2-digit' }).format(new Date())} <span style={{ opacity: 0.4 }}>WIB</span>
             </div>
         </div>
@@ -275,9 +297,14 @@ export default function AbsensiClient({
           </div>
         ) : (
           <div style={{ width: "100%" }}>
-            <div style={{ textAlign: 'left', marginBottom: '40px' }}>
-                <h2 style={{ fontSize: "1.5rem", fontWeight: 900, color: "#0f172a", margin: '0 0 12px' }}>Input Kehadiran</h2>
-                <p style={{ color: "#64748b", fontSize: "0.95rem", fontWeight: 600, margin: 0 }}>Sertakan bukti selfie dan screenshot aplikasi yang aktif sebagai lampiran wajib.</p>
+            <div style={{ textAlign: 'left', marginBottom: '24px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
+                  <h2 style={{ fontSize: "1.25rem", fontWeight: 800, color: "#0f172a", margin: 0 }}>Input Kehadiran</h2>
+                  <div onClick={() => setShowPolicyModal(true)} style={{ color: '#3b82f6', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#eff6ff', borderRadius: '50%', padding: '4px' }} title="Lihat Panduan Presensi">
+                    <IconInfo />
+                  </div>
+                </div>
+                <p style={{ color: "#64748b", fontSize: "0.85rem", fontWeight: 500, margin: 0 }}>Sertakan bukti selfie dan screenshot sebagai lampiran wajib.</p>
             </div>
 
             {msg && msg.type === "error" && (
@@ -310,18 +337,13 @@ export default function AbsensiClient({
                 <div className={`${styles.captureBox} ${capturedPhoto ? styles.activeCaptureBox : ""}`}>
                   {capturedPhoto ? (
                     <>
-                      <img src={capturedPhoto} alt="Selfie" className={styles.previewImage} />
+                      <img src={capturedPhoto} alt="Selfie" className={styles.previewImage} style={{ transform: 'scaleX(-1)' }} />
                       <button onClick={() => { setCapturedPhoto(null); startCamera(); }} className={styles.reCaptureBtn}>×</button>
                     </>
-                  ) : cameraActive ? (
-                    <>
-                      <video ref={videoRef} autoPlay playsInline className={styles.videoElement} />
-                      <button onClick={takePhoto} className={styles.snapBtn}>AMBIL FOTO SEKARANG</button>
-                    </>
                   ) : (
-                    <div onClick={startCamera} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                    <div onClick={startCamera} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', cursor: 'pointer', padding: '24px 0' }}>
                       <div className={styles.actionIcon}><IconCamera /></div>
-                      <span style={{ fontSize: '0.8rem', fontWeight: 900, color: '#0f172a' }}>START CAMERA</span>
+                      <span style={{ fontSize: '0.8rem', fontWeight: 700, color: '#0f172a', marginTop: '8px' }}>MULAI KAMERA</span>
                     </div>
                   )}
                 </div>
@@ -342,7 +364,7 @@ export default function AbsensiClient({
                     <label style={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}>
                       <input type="file" accept="image/*" onChange={handleScreenshot} style={{ display: "none" }} />
                       <div className={styles.actionIcon}><IconUpload /></div>
-                      <span style={{ fontSize: '0.8rem', fontWeight: 900, color: '#0f172a' }}>UPLOAD CAPTURE</span>
+                      <span style={{ fontSize: '0.8rem', fontWeight: 700, color: '#0f172a' }}>UNGGAH FOTO</span>
                     </label>
                   )}
                 </div>
@@ -370,32 +392,80 @@ export default function AbsensiClient({
         )}
       </div>
 
-      {/* 3. POLICY GRID SECTION */}
-      <section className={styles.card}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '32px', paddingBottom: '20px', borderBottom: '1px solid #f1f5f9' }}>
-          <div style={{ color: '#0f172a' }}><IconShield /></div>
-          <h2 style={{ fontSize: "1.25rem", fontWeight: 900, color: "#0f172a", margin: 0 }}>Panduan & Integritas Presensi</h2>
-        </div>
-
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '24px' }}>
-          {[
-            { n: '01', t: 'Window Transaksi', d: 'Layanan absensi aktif pukul 07.00 - 10.00 WIB. Pastikan perangkat Anda terhubung ke internet yang stabil.' },
-            { n: '02', t: 'Validasi Multi-Bukti', d: 'Sistem mewajibkan lampiran visual wajah dan bukti aplikasi sebagai syarat sah penerimaan data oleh manajemen.' },
-            { n: '03', t: 'Status Non-Hadir', d: 'Segala bentuk izin atau ketidakhadiran lainnya wajib disertai dokumen pendukung dan dikirim sebelum batas waktu.' },
-            { n: '04', t: 'Timestamp Server', d: 'Absensi menggunakan waktu server Jakarta yang tidak dapat dimanipulasi melalui pengaturan waktu perangkat lokal.' },
-            { n: '05', t: 'Pemeriksaan Berlapis', d: 'HRD akan melakukan audit berkala. Manipulasi data atau ketidaksesuaian bukti selfie akan dikenakan sanksi disipliner.' },
-            { n: '06', t: 'Dukungan Teknis', d: 'Jika terjadi kendala sistem (Error), segera hubungi tim IT dengan melampirkan bukti screenshot kendala tersebut.' }
-          ].map(p => (
-            <div key={p.n} className={styles.policyItem}>
-              <div className={styles.policyNumber}>{p.n}</div>
-              <div>
-                <h4 className={styles.policyTitle}>{p.t}</h4>
-                <p className={styles.policyText}>{p.d}</p>
+      {/* 2.5 CAMERA MODAL */}
+      {showCameraModal && (
+        <div className={`${styles.modalOverlay} ${styles.cameraOverlay}`} style={{ zIndex: 9999 }}>
+          <div className={`${styles.modal} ${styles.cameraModal}`}>
+            
+            <button onClick={closeCameraModal} className={styles.closeCameraBtn} aria-label="Tutup Kamera">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+            </button>
+            
+            <div className={styles.cameraVideoContainer} style={{ flexDirection: 'column', display: tempPhoto ? 'none' : 'flex', background: '#000', position: 'relative', height: '100vh' }}>
+              <video ref={videoRef} autoPlay playsInline className={styles.cameraVideoElement} style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', display: 'block', transform: 'scaleX(-1)', objectFit: 'cover' }} />
+              <div style={{ position: 'absolute', bottom: 0, left: 0, width: '100%', padding: '40px 24px 32px 24px', background: 'transparent', display: 'flex', justifyContent: 'center', alignItems: 'flex-end', zIndex: 5 }}>
+                <div onClick={takePhoto} className={styles.shutterBtn} style={{ boxShadow: '0 4px 20px rgba(0,0,0,0.1)' }}>
+                  <div className={styles.shutterBtnInner}>
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#ffffff" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+                  </div>
+                </div>
               </div>
             </div>
-          ))}
+
+            {tempPhoto && (
+               <div className={styles.cameraVideoContainer} style={{ flexDirection: 'column', background: '#000', position: 'relative', height: '100vh' }}>
+                 <img src={tempPhoto} className={styles.cameraVideoElement} style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', display: 'block', transform: 'scaleX(-1)', objectFit: 'cover' }} alt="Temp Selfie" />
+                 <div style={{ position: 'absolute', bottom: 0, left: 0, width: '100%', padding: '40px 20px 32px 20px', background: 'transparent', display: 'flex', gap: '16px', zIndex: 5 }}>
+                    <button onClick={() => setTempPhoto(null)} style={{ width: '56px', height: '56px', flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', boxSizing: 'border-box', background: 'rgba(241, 245, 249, 0.95)', backdropFilter: 'blur(10px)', color: '#334155', border: '1px solid rgba(203, 213, 225, 0.6)', borderRadius: '14px', cursor: 'pointer', boxShadow: '0 4px 12px rgba(0,0,0,0.05)', transition: 'transform 0.15s' }}>
+                      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+                    </button>
+                    <button onClick={savePhoto} style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', height: '56px', boxSizing: 'border-box', background: '#0f172a', color: '#ffffff', border: '1px solid #0f172a', borderRadius: '14px', fontWeight: 800, cursor: 'pointer', fontSize: '0.85rem', boxShadow: '0 6px 16px rgba(15, 23, 42, 0.25)', transition: 'transform 0.15s' }}>
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                      GUNAKAN FOTO
+                    </button>
+                 </div>
+               </div>
+            )}
+          </div>
         </div>
-      </section>
+      )}
+
+      {/* 3. POLICY MODAL */}
+      {showPolicyModal && (
+        <div className={styles.modalOverlay} onClick={() => setShowPolicyModal(false)}>
+          <div className={styles.modal} onClick={e => e.stopPropagation()} style={{ maxWidth: '320px', padding: '24px 20px' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px', paddingBottom: '12px', borderBottom: '1px solid #f1f5f9' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                <div style={{ color: '#0f172a', display: 'flex', alignItems: 'center' }}>
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                </div>
+                <h2 style={{ fontSize: "1.2rem", fontWeight: 900, color: "#0f172a", margin: 0, letterSpacing: '-0.02em' }}>Ketentuan Absensi</h2>
+              </div>
+              <button onClick={() => setShowPolicyModal(false)} style={{ background: 'transparent', border: 'none', cursor: 'pointer', fontSize: '1.5rem', color: '#64748b', display: 'flex', alignItems: 'center', justifyContent: 'center', width: '24px', height: '24px' }}>&times;</button>
+            </div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', maxHeight: '60vh', overflowY: 'auto', paddingRight: '4px' }}>
+              {[
+                { i: <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>, t: 'Window Transaksi', d: 'Layanan absensi aktif pukul 07.00 - 10.00 WIB. Pastikan internet stabil.' },
+                { i: <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>, t: 'Validasi Multi-Bukti', d: 'Sistem mewajibkan lampiran visual wajah dan bukti aplikasi sebagai syarat sah.' },
+                { i: <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><path d="M10 9H8"/></svg>, t: 'Status Non-Hadir', d: 'Bentuk izin/ketidakhadiran wajib disertai dokumen pendukung sebelum batas waktu.' },
+                { i: <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="2" width="20" height="8" rx="2" ry="2"/><rect x="2" y="14" width="20" height="8" rx="2" ry="2"/><line x1="6" y1="6" x2="6.01" y2="6"/><line x1="6" y1="18" x2="6.01" y2="18"/></svg>, t: 'Timestamp Server', d: 'Absensi menggunakan waktu server Jakarta yang tidak dapat dimanipulasi.' },
+                { i: <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>, t: 'Pemeriksaan Berlapis', d: 'HRD akan melakukan audit berkala. Manipulasi data akan dikenakan sanksi.' },
+                { i: <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M3 18v-6a9 9 0 0 1 18 0v6"/><path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"/></svg>, t: 'Dukungan Teknis', d: 'Jika terjadi kendala sistem (Error), hubungi tim IT beserta lampiran screenshot.' }
+              ].map((p, idx) => (
+                <div key={idx} className={styles.policyItem} style={{ background: '#f8fafc', padding: '12px', borderRadius: '12px', display: 'flex', gap: '12px', alignItems: 'flex-start' }}>
+                  <div className={styles.policyNumber} style={{ width: '28px', height: '28px', minWidth: '28px', background: '#eff6ff', color: '#3b82f6', border: '1px solid #bfdbfe', display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: '8px' }}>
+                    {p.i}
+                  </div>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                    <h4 className={styles.policyTitle} style={{ fontSize: '0.85rem', margin: 0 }}>{p.t}</h4>
+                    <p className={styles.policyText} style={{ fontSize: '0.75rem', margin: 0, color: '#64748b', lineHeight: 1.4 }}>{p.d}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* 4. MODAL PENGAJUAN IZIN */}
       {showIzinModal && (
