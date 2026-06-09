@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useRef } from "react"
+import { useState, useRef, useEffect } from "react"
 import { submitKehadiranAction } from "@/actions/employeeUser"
 import styles from "@/styles/absensi_karyawan.module.css"
 
@@ -80,6 +80,29 @@ export default function AbsensiClient({
   const activeStatus = submittedStatus || existingStatus
   const videoRef = useRef<HTMLVideoElement>(null)
   const canvasRef = useRef<HTMLCanvasElement>(null)
+
+  useEffect(() => {
+    if (!isClosed && !activeStatus) {
+      const checkPermission = async () => {
+        try {
+          const res = await navigator.permissions.query({ name: 'camera' as any })
+          if (res.state !== 'granted') {
+            setMsg({ type: "error", text: "Gagal mengakses kamera. Pastikan izin diberikan." })
+          }
+          res.addEventListener('change', () => {
+            if (res.state === 'granted') {
+              setMsg(null)
+            } else {
+              setMsg({ type: "error", text: "Gagal mengakses kamera. Pastikan izin diberikan." })
+            }
+          })
+        } catch (err) {
+          console.log("Permissions API not supported for camera.")
+        }
+      }
+      checkPermission()
+    }
+  }, [isClosed, activeStatus])
 
   const handleScreenshot = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
@@ -253,7 +276,24 @@ export default function AbsensiClient({
             </div>
 
             {msg && msg.type === "error" && (
-                <div className={styles.alertBox} style={{ backgroundColor: '#fef2f2', color: '#991b1b', border: '1px solid #fee2e2', marginBottom: '32px' }}>{msg.text}</div>
+                <div className={msg.text.includes("kamera") ? styles.errorAlertBox : `${styles.alertBox} ${styles.errorAlert}`} style={!msg.text.includes("kamera") ? { marginBottom: '32px' } : undefined}>
+                  {msg.text.includes("kamera") ? (
+                    <>
+                      <div className={styles.errorAlertContent}>
+                        <div className={styles.errorIcon}>
+                          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                        </div>
+                        <span>{msg.text}</span>
+                      </div>
+                      <button onClick={startCamera} className={styles.retryBtn}>
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/><circle cx="12" cy="13" r="3"/></svg>
+                        Beri Akses
+                      </button>
+                    </>
+                  ) : (
+                    <span>{msg.text}</span>
+                  )}
+                </div>
             )}
 
             <div className={styles.captureGrid}>
