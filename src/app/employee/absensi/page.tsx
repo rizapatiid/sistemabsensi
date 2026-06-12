@@ -51,6 +51,7 @@ export default async function EmployeeAbsensiPage() {
     message={message} 
     hasAttendance={!!existing} 
     existingStatus={existing?.status}
+    existingWaktuMasuk={existing?.waktuMasuk ? existing.waktuMasuk.toISOString() : undefined}
     holidayImage={isHoliday?.image || null}
   />
 }

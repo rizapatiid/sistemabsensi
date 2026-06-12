@@ -49,12 +49,14 @@ export default function AbsensiClient({
   message, 
   hasAttendance,
   existingStatus,
+  existingWaktuMasuk,
   holidayImage
 }: { 
   isClosed: boolean, 
   message: string, 
   hasAttendance: boolean,
   existingStatus?: string,
+  existingWaktuMasuk?: string,
   holidayImage?: string | null
 }) {
   const compressImage = (dataUrl: string, maxWidth = 800, maxHeight = 800): Promise<string> => {
@@ -232,38 +234,6 @@ export default function AbsensiClient({
   return (
     <div className={styles.pageContainer}>
       
-      {/* 1. COMMAND CENTER HEADER */}
-      <section className={styles.headerSection}>
-        <div className={styles.headerContent}>
-            <h1>Portal Absensi</h1>
-            <p>Selesaikan absensi harian Anda hari ini.</p>
-            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: '12px', marginTop: '20px' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                    <div style={{ background: '#f1f5f9', padding: '10px 14px', borderRadius: '10px', color: '#0f172a', fontWeight: 800, fontSize: '1.25rem', fontVariantNumeric: 'tabular-nums', width: '50px', textAlign: 'center' }}>
-                        {currentTime ? new Intl.DateTimeFormat("id-ID", { hour: '2-digit', timeZone: 'Asia/Jakarta' }).format(currentTime) : "00"}
-                    </div>
-                    <span style={{ color: '#cbd5e1', fontWeight: 800, fontSize: '1.2rem' }}>:</span>
-                    <div style={{ background: '#f1f5f9', padding: '10px 14px', borderRadius: '10px', color: '#0f172a', fontWeight: 800, fontSize: '1.25rem', fontVariantNumeric: 'tabular-nums', width: '50px', textAlign: 'center' }}>
-                        {currentTime ? new Intl.DateTimeFormat("id-ID", { minute: '2-digit', timeZone: 'Asia/Jakarta' }).format(currentTime) : "00"}
-                    </div>
-                    <span style={{ color: '#cbd5e1', fontWeight: 800, fontSize: '1.2rem' }}>:</span>
-                    <div style={{ background: '#f1f5f9', padding: '10px 14px', borderRadius: '10px', color: '#0f172a', fontWeight: 800, fontSize: '1.25rem', fontVariantNumeric: 'tabular-nums', width: '50px', textAlign: 'center' }}>
-                        {currentTime ? new Intl.DateTimeFormat("id-ID", { second: '2-digit', timeZone: 'Asia/Jakarta' }).format(currentTime) : "00"}
-                    </div>
-                    <div style={{ background: '#e2e8f0', padding: '10px 12px', color: '#475569', fontWeight: 800, fontSize: '1rem', marginLeft: '4px', borderRadius: '10px' }}>
-                        WIB
-                    </div>
-                </div>
-                {currentTime && (
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.9rem', fontWeight: 600, color: '#64748b', paddingLeft: '4px' }}>
-                        <IconClock />
-                        {new Intl.DateTimeFormat("id-ID", { dateStyle: 'full', timeZone: 'Asia/Jakarta' }).format(currentTime)}
-                    </div>
-                )}
-            </div>
-        </div>
-      </section>
-
       {/* 2. MAIN INTERACTIVE AREA */}
       <div className={styles.statusCard}>
         {isClosed ? (
@@ -319,16 +289,67 @@ export default function AbsensiClient({
               </div>
             </div>
         ) : hasAttendance || submittedStatus ? (
-            <div style={{ padding: "12px" }}>
-              <div className={styles.successIcon} style={{ background: activeStatus === 'HADIR' ? '#f0fdf4' : '#eff6ff', color: activeStatus === 'HADIR' ? '#16a34a' : '#0f172a', margin: '0 auto 32px' }}>
-                {activeStatus === "HADIR" ? <IconCheck /> : <IconFileText />}
+            <div style={{ padding: "24px 12px", animation: "fadeIn 0.5s ease" }}>
+              <div style={{ 
+                width: '80px', height: '80px', margin: '0 auto 32px', 
+                background: activeStatus === 'HADIR' ? '#dcfce7' : '#dbeafe', 
+                color: activeStatus === 'HADIR' ? '#16a34a' : '#2563eb', 
+                borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center',
+                boxShadow: activeStatus === 'HADIR' ? '0 0 0 12px #f0fdf4' : '0 0 0 12px #eff6ff'
+              }}>
+                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                  {activeStatus === "HADIR" ? <polyline points="20 6 9 17 4 12"/> : <><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></>}
+                </svg>
               </div>
-              <h2 style={{ fontSize: "2rem", fontWeight: 900, color: "#0f172a", margin: 0 }}>{activeStatus === "HADIR" ? "Presensi Selesai" : "Pengajuan Diterima"}</h2>
-              <p style={{ marginTop: "16px", color: "#64748b", fontWeight: 600, maxWidth: '480px', margin: '16px auto', lineHeight: 1.6 }}>
+              <h2 style={{ fontSize: "1.75rem", fontWeight: 800, color: "#0f172a", margin: "0 0 12px" }}>
+                {activeStatus === "HADIR" ? "Presensi Selesai" : "Pengajuan Diterima"}
+              </h2>
+              <p style={{ color: "#64748b", fontSize: "0.95rem", fontWeight: 500, maxWidth: '400px', margin: '0 auto 32px', lineHeight: 1.6 }}>
                 {activeStatus === "HADIR" 
-                  ? "Data kehadiran Anda telah berhasil divalidasi oleh sistem. Pastikan untuk tetap produktif hari ini." 
-                  : "Dokumen absensi non-kehadiran Anda telah masuk ke sistem dan akan diproses oleh manajemen."}
+                  ? "Sistem telah memverifikasi data Anda. Selamat beraktivitas dan jaga terus performa Anda hari ini!" 
+                  : "Pengajuan Anda telah direkam sistem dan akan diteruskan untuk proses persetujuan HRD."}
               </p>
+
+              {/* Data Summary */}
+              <div style={{ 
+                background: '#ffffff', border: '1px solid #e2e8f0', borderRadius: '16px', 
+                padding: '0', maxWidth: '380px', margin: '0 auto', textAlign: 'left',
+                boxShadow: '0 4px 10px -2px rgba(0,0,0,0.02)'
+              }}>
+                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px 16px', borderBottom: '1px solid #f1f5f9' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                        <div style={{ color: '#94a3b8' }}>
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+                        </div>
+                        <span style={{ fontSize: '0.85rem', fontWeight: 600, color: '#475569' }}>Status Sistem</span>
+                    </div>
+                    <span style={{ fontSize: '0.75rem', fontWeight: 800, color: activeStatus === 'HADIR' ? '#16a34a' : '#2563eb', background: activeStatus === 'HADIR' ? '#dcfce7' : '#dbeafe', padding: '6px 14px', borderRadius: '8px', letterSpacing: '0.5px' }}>
+                      {activeStatus}
+                    </span>
+                 </div>
+                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px 16px', borderBottom: '1px solid #f1f5f9' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                        <div style={{ color: '#94a3b8' }}>
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                        </div>
+                        <span style={{ fontSize: '0.85rem', fontWeight: 600, color: '#475569' }}>Jam Presensi</span>
+                    </div>
+                    <span style={{ fontSize: '0.95rem', fontWeight: 800, color: '#0f172a', fontVariantNumeric: 'tabular-nums' }}>
+                      {new Intl.DateTimeFormat("id-ID", { hour: '2-digit', minute: '2-digit', timeZone: 'Asia/Jakarta' }).format(existingWaktuMasuk ? new Date(existingWaktuMasuk) : new Date())} <span style={{ fontSize: '0.75rem', color: '#64748b' }}>WIB</span>
+                    </span>
+                 </div>
+                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px 16px' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                        <div style={{ color: '#94a3b8' }}>
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+                        </div>
+                        <span style={{ fontSize: '0.85rem', fontWeight: 600, color: '#475569' }}>Tanggal Masuk</span>
+                    </div>
+                    <span style={{ fontSize: '0.95rem', fontWeight: 800, color: '#0f172a' }}>
+                      {new Intl.DateTimeFormat("id-ID", { dateStyle: 'medium', timeZone: 'Asia/Jakarta' }).format(existingWaktuMasuk ? new Date(existingWaktuMasuk) : new Date())}
+                    </span>
+                 </div>
+              </div>
             </div>
         ) : (
             <div style={{ width: "100%" }}>
