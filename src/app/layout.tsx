@@ -4,6 +4,7 @@ import "./globals.css";
 import PreventZoom from "@/components/PreventZoom";
 import RegisterServiceWorker from "@/components/RegisterServiceWorker";
 import PushNotificationManager from "@/components/PushNotificationManager";
+import SecurityWrapper from "@/components/SecurityWrapper";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -61,6 +62,7 @@ export default async function RootLayout({
         <link rel="apple-touch-icon" href="/faficon.jpg" />
       </head>
       <body>
+        <SecurityWrapper />
         <RegisterServiceWorker />
         <PreventZoom />
         {isMaintenance ? <MaintenancePage /> : children}
