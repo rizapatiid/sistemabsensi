@@ -1,440 +1,524 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+
 .pageContainer {
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
-  animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  font-family: 'Inter', sans-serif;
   max-width: 1400px;
   margin: 0 auto;
   width: 100%;
+  padding: 4px 0 24px;
+  animation: fadeUp 0.5s ease-out forwards;
 }
 
-@keyframes slideUp {
+@keyframes fadeUp {
   from { opacity: 0; transform: translateY(20px); }
   to { opacity: 1; transform: translateY(0); }
 }
 
-/* 1. COMMAND CENTER HEADER */
-.headerSection {
-  background: white;
-  border: 1px solid #e2e8f0;
-  border-radius: 28px;
-  padding: 40px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 32px;
-  box-shadow: 0 4px 6px -1px rgba(0,0,0,0.02);
-}
-
-.headerContent h1 {
-  font-size: clamp(1.8rem, 4.5vw, 2.8rem);
-  font-weight: 1000;
-  color: #0f172a;
-  margin: 0;
-  letter-spacing: -0.05em;
-  line-height: 1;
-}
-
-.headerContent p {
-  color: #64748b;
-  margin-top: 12px;
-  font-size: 1.1rem;
-  font-weight: 600;
-  line-height: 1.4;
-}
-
-/* 2. PREMIUM METRICS GRID */
-.metricsGrid {
+/* THE BENTO GRID */
+.bentoGrid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  grid-template-columns: repeat(12, 1fr);
+  grid-auto-rows: minmax(120px, auto);
   gap: 24px;
 }
 
-.metricCard {
-  background: white;
-  border: 1px solid #e2e8f0;
-  border-radius: 28px;
+/* COMMON BENTO BOX STYLES */
+.bentoBox {
+  background: #ffffff;
+  border-radius: 16px;
+  border: 1px solid #f1f5f9;
   padding: 32px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02), 0 2px 4px -2px rgba(0, 0, 0, 0.02);
   display: flex;
   flex-direction: column;
   position: relative;
   overflow: hidden;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.metricCard:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.05);
-  border-color: #0f172a;
+/* 1. PROFILE BOX (Col 1-8, Row 1-2) */
+.profileBox {
+  grid-column: span 8;
+  grid-row: span 1;
+  background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+  color: white;
+  justify-content: center;
+  padding: 24px 32px;
 }
 
-.metricHeader {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  margin-bottom: 24px;
+.profileContent {
+  position: relative;
+  z-index: 1;
 }
 
-.metricTitleStack {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-}
-
-.metricLabel {
-  font-size: 0.7rem;
-  font-weight: 900;
+.greeting {
+  font-size: 0.9rem;
+  font-weight: 700;
   color: #94a3b8;
   text-transform: uppercase;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.1em;
 }
 
-.metricSublabel {
-    font-size: 0.75rem;
-    font-weight: 700;
-    color: #0f172a;
+.userName {
+  font-size: clamp(1.8rem, 3vw, 2.2rem);
+  font-weight: 900;
+  margin: 4px 0 4px;
+  letter-spacing: -0.02em;
+  color: #f8fafc;
 }
 
-.metricIconCircle {
+.quote {
+  font-size: 0.95rem;
+  font-style: italic;
+  color: #cbd5e1;
+  max-width: 80%;
+  line-height: 1.4;
+  margin: 0;
+}
+
+/* Profile background decor icon */
+.profileBgIcon {
+  position: absolute;
+  right: -20px;
+  bottom: -40px;
+  color: #fde047;
+  opacity: 0.1;
+  transform: rotate(-15deg);
+  pointer-events: none;
+}
+
+/* Today status background decor icon */
+.statusBgIcon {
+  position: absolute;
+  right: -30px;
+  bottom: -40px;
+  color: #f1f5f9;
+  opacity: 1;
+  transform: rotate(-15deg);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.todayStatusBox > div,
+.todayStatusBox > a {
+  position: relative;
+  z-index: 1;
+}
+
+/* Profile background abstract shape */
+.profileBox::after {
+  content: '';
+  position: absolute;
+  right: -10%;
+  top: -20%;
+  width: 50%;
+  height: 150%;
+  background: radial-gradient(circle, rgba(99, 102, 241, 0.15) 0%, transparent 70%);
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+/* 2. TODAY STATUS (Col 9-12, Row 1-2) */
+.todayStatusBox {
+  grid-column: span 4;
+  grid-row: span 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  gap: 4px;
+}
+
+.todayTitle {
+  font-size: 0.85rem;
+  font-weight: 800;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin: 0;
+}
+
+.statusHadirBox {
+  position: relative;
+  z-index: 1;
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  color: #166534;
+  padding: 16px 20px;
+  border-radius: 16px;
+  width: 100%;
+}
+.statusAbsenBox {
+  position: relative;
+  z-index: 1;
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  color: #991b1b;
+  padding: 16px 20px;
+  border-radius: 16px;
+  width: 100%;
+  text-decoration: none;
+  display: block;
+  transition: all 0.2s ease;
+}
+.statusAbsenBox:hover {
+  background: #fee2e2;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(220, 38, 38, 0.15);
+}
+.statusLiburBox {
+  position: relative;
+  z-index: 1;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  color: #475569;
+  padding: 16px 20px;
+  border-radius: 16px;
+  width: 100%;
+}
+
+.todayTime {
+  font-size: 1.8rem;
+  font-weight: 900;
+  margin-top: 4px;
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+
+.actionBtnPrimary {
+  background: #4f46e5;
+  color: white;
+  padding: 16px 24px;
+  border-radius: 16px;
+  font-weight: 800;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  transition: all 0.2s;
+  border: none;
+  margin-top: 16px;
+}
+.actionBtnPrimary:hover {
+  background: #4338ca;
+  transform: translateY(-2px);
+}
+
+.statusBelumBox {
+  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+}
+
+.statusValue { font-size: 2rem; font-weight: 900; color: #166534; line-height: 1; margin-top: 8px;}
+.statusLabel { font-size: 0.8rem; font-weight: 800; color: #166534; text-transform: uppercase; letter-spacing: 0.05em;}
+
+/* LAYOUT WRAPPERS */
+.leftWrapper {
+  grid-column: span 8;
+  grid-row: span 3;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.metricsRow {
+  display: flex;
+  gap: 20px;
+}
+
+/* 3. METRICS OVERVIEW */
+.metricCard {
+  flex: 1;
+  display: flex;
+  flex-direction: row !important;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 16px;
+  padding: 16px 20px;
+}
+
+.metricIconWrapper {
   width: 44px;
   height: 44px;
   border-radius: 14px;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #f8fafc;
-  color: #0f172a;
-  border: 1px solid #e2e8f0;
+  flex-shrink: 0;
 }
 
-.metricBody {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
+.iconHadir {
+  background: linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%);
+  color: #166534;
 }
 
-.statusBox {
-    padding: 24px;
-    border-radius: 20px;
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
+.iconIzin {
+  background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+  color: #991b1b;
 }
 
-.statusHadir { background: #f0fdf4; border: 1px solid #dcfce7; color: #166534; }
-.statusAbsen { background: #fff7ed; border: 1px solid #ffedd5; color: #c2410c; }
-.statusLibur { background: #f8fafc; border: 1px solid #e2e8f0; color: #475569; }
-
-.statusTitle { font-size: 0.7rem; font-weight: 900; opacity: 0.8; text-transform: uppercase; letter-spacing: 0.05em; }
-.statusValue { font-size: 1.5rem; font-weight: 1000; letter-spacing: -0.03em; }
-
-.attendanceSummaryGrid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 16px;
+.metricIconWrapper svg {
+  width: 22px;
+  height: 22px;
 }
 
-.summaryBox {
-    padding: 20px;
-    border-radius: 18px;
-    border: 1px solid #f1f5f9;
-}
-
-.summaryVal { font-size: 2rem; font-weight: 1000; line-height: 1; color: #0f172a; }
-.summaryUnit { font-size: 0.8rem; font-weight: 700; color: #94a3b8; margin-left: 4px; }
-.summaryLabel { font-size: 0.65rem; font-weight: 900; text-transform: uppercase; letter-spacing: 0.05em; margin-top: 8px; color: #64748b; }
-
-.payrollAmount {
-    font-size: 2.2rem;
-    font-weight: 1000;
-    color: #0f172a;
-    letter-spacing: -0.04em;
-    margin: 4px 0;
-}
-
-.payrollStatus {
-    font-size: 0.8rem;
-    font-weight: 800;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    margin-top: 12px;
-}
-
-.statusIndicator {
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-}
-
-/* 3. MAIN CONTENT GRID */
-.mainContent {
-  display: grid;
-  grid-template-columns: 1fr 400px;
-  gap: 24px;
-}
-
-/* 4. REFINED CARDS */
-.card {
-  background: white;
-  border: 1px solid #e2e8f0;
-  border-radius: 32px;
-  padding: 40px;
-  box-shadow: 0 4px 6px -1px rgba(0,0,0,0.02);
-}
-
-.cardHeader {
+.metricContent {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 32px;
-  padding-bottom: 24px;
-  border-bottom: 1px solid #f1f5f9;
+  flex-direction: column;
+  align-items: flex-start;
+  text-align: left;
+  gap: 2px;
 }
 
-.cardTitle {
-  font-size: 1.4rem;
-  font-weight: 1000;
-  color: #0f172a;
+.metricValueRow {
   display: flex;
-  align-items: center;
-  gap: 16px;
+  align-items: baseline;
+  gap: 4px;
+}
+
+.metricValue {
+  font-size: 1.5rem;
+  font-weight: 900;
+  line-height: 1;
   letter-spacing: -0.02em;
 }
 
-.seeAllLink {
+.metricUnit {
   font-size: 0.8rem;
-  font-weight: 1000;
-  color: #3b82f6;
-  text-decoration: none;
+  font-weight: 700;
+  color: #64748b;
+}
+
+.metricLabel {
+  font-size: 0.7rem;
+  font-weight: 800;
+  color: #475569;
+  text-transform: uppercase;
   letter-spacing: 0.05em;
-  text-transform: uppercase;
 }
 
-/* 5. SIDEBAR BLOCKS */
-.sidebar {
+.valHadir { color: #10b981; }
+.valSakit { color: #ef4444; }
+
+
+/* 4. ANNOUNCEMENTS */
+.announceBox {
+  flex: 1;
   display: flex;
   flex-direction: column;
-  gap: 24px;
 }
 
-.bankWidget {
-  background: #0f172a;
-  color: white;
-  border-radius: 28px;
-  padding: 32px;
-  position: relative;
-  overflow: hidden;
-  box-shadow: 0 20px 25px -5px rgba(15, 23, 42, 0.1);
+.boxHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #f1f5f9;
 }
 
-.bankWidget label {
-  font-size: 0.75rem;
-  opacity: 0.4;
-  font-weight: 900;
-  text-transform: uppercase;
-  letter-spacing: 0.15em;
-}
-
-.bankId {
-  font-size: 1.5rem;
-  font-weight: 1000;
-  margin: 16px 0;
-  letter-spacing: 0.12em;
-}
-
-.bankAction {
-  display: block;
-  margin-top: 24px;
-  text-align: center;
-  background: rgba(255,255,255,0.05);
-  border: 1px solid rgba(255,255,255,0.1);
-  padding: 12px;
-  border-radius: 14px;
-  color: white;
-  font-size: 0.8rem;
-  font-weight: 900;
-  text-decoration: none;
-  transition: all 0.2s;
-}
-
-.bankAction:hover {
-  background: white;
+.boxTitle {
+  font-size: 1rem;
+  font-weight: 800;
   color: #0f172a;
-  transform: translateY(-2px);
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
-.holidayItem {
-  display: flex;
-  gap: 20px;
-  padding: 16px;
-  border-radius: 20px;
-  transition: all 0.2s;
+.boxTitle svg {
+  width: 20px;
+  height: 20px;
+  color: #6366f1;
 }
 
-.holidayItem:hover { background: #f8fafc; }
-
-.holidayDateBlock {
-  width: 60px;
-  height: 60px;
-  background: white;
-  border: 1px solid #e2e8f0;
-  border-radius: 16px;
+.headerActionBtn {
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
-  flex-shrink: 0;
-  box-shadow: 0 4px 6px -1px rgba(0,0,0,0.02);
-}
-
-.holidayMonth { font-size: 0.6rem; font-weight: 1000; color: #94a3b8; text-transform: uppercase; }
-.holidayDay { font-size: 1.5rem; font-weight: 1000; color: #0f172a; line-height: 1; }
-
-.infoBlock {
-  background: #f8fafc;
-  border: 1px solid #e2e8f0;
-  border-radius: 28px;
-  padding: 32px;
-  display: flex;
-  gap: 20px;
-}
-
-/* 6. ANNOUNCEMENT FEED */
-.announceWrapper {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
-
-.clickableAnnounce {
-  display: flex;
-  gap: 24px;
-  padding: 24px;
-  background: white;
-  border: 1px solid #f1f5f9;
-  border-radius: 20px;
-  cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-  position: relative;
-}
-
-.clickableAnnounce:hover {
-  transform: translateX(8px);
-  border-color: #3b82f6;
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.04);
-  background: #f8fafc;
-}
-
-.announceThumb {
-  width: 120px;
-  height: 120px;
-  border-radius: 16px;
-  overflow: hidden;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
   background: #f1f5f9;
+  color: #64748b;
+  transition: all 0.2s ease;
   flex-shrink: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border: 1px solid #eef2f6;
 }
 
-.announceThumb img {
+.headerActionBtn:hover {
+  background: #e2e8f0;
+  color: #0f172a;
+  transform: translateX(2px);
+}
+
+.announceList { display: flex; flex-direction: column; gap: 12px; }
+
+.announceImageWrapper {
+  width: 90px;
+  height: 90px;
+  flex-shrink: 0;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.announceItem {
+  display: flex;
+  gap: 16px;
+  padding: 16px;
+  background: #f8fafc;
+  border-radius: 16px;
+}
+
+.announceThumbnail {
   width: 100%;
   height: 100%;
   object-fit: cover;
 }
 
-.thumbPlaceholder {
-  color: #94a3b8;
-}
-
-.announceInfo {
-  flex: 1;
+.announceContent {
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  min-width: 0;
+  flex: 1;
 }
 
-.announceDateBadge {
-  font-size: 0.72rem;
-  font-weight: 900;
-  color: #3b82f6;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  margin-bottom: 8px;
+.announceDateText {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #64748b;
+  margin-bottom: 4px;
 }
 
-.announceMiniTitle {
-  font-size: 1.25rem;
-  font-weight: 1000;
-  color: #0f172a;
-  margin: 0 0 8px 0;
-  line-height: 1.2;
-}
-
-.announceExcerpt {
+.announceTitle {
   font-size: 0.95rem;
-  color: #334155;
-  line-height: 1.6;
-  font-weight: 600;
+  font-weight: 800;
+  color: #0f172a;
+  margin: 0 0 6px 0;
+  line-height: 1.3;
+}
+
+.announcePreview {
+  font-size: 0.85rem;
+  color: #475569;
+  margin: 0 0 10px 0;
+  line-height: 1.5;
   display: -webkit-box;
   -webkit-line-clamp: 2;
-  line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
-  margin-bottom: 12px;
 }
 
-.readMoreHint {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 0.75rem;
-  font-weight: 1000;
-  color: #3b82f6;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  transition: all 0.2s;
+.seeMoreBtn {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #6366f1;
+  background: transparent;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  align-self: flex-start;
+  text-decoration: underline;
+  text-decoration-color: transparent;
+  transition: text-decoration-color 0.2s;
 }
 
-.clickableAnnounce:hover .readMoreHint {
-    color: #0f172a;
-    gap: 12px;
+.seeMoreBtn:hover {
+  text-decoration-color: #6366f1;
 }
 
-/* 7. MODAL SYSTEM */
+/* Modal Popup */
 .modalOverlay {
   position: fixed;
-  inset: 0;
-  background: rgba(15, 23, 42, 0.4);
-  backdrop-filter: blur(12px);
-  z-index: 9999;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(15, 23, 42, 0.6);
+  backdrop-filter: blur(4px);
+  z-index: 1000;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 20px;
-  animation: fadeIn 0.3s ease-out;
+  padding: 24px;
+  animation: fadeIn 0.2s ease-out;
 }
 
-.modalContent {
-  background: white;
+.modalContainer {
+  background: #ffffff;
+  border-radius: 24px;
   width: 100%;
-  max-width: 650px;
+  max-width: 600px;
   max-height: 90vh;
-  border-radius: 32px;
+  display: flex;
+  flex-direction: column;
   position: relative;
-  overflow-y: auto;
   box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-  animation: slideUpModal 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  animation: slideUp 0.3s ease-out;
+  overflow: hidden;
 }
 
-@keyframes slideUpModal {
-  from { opacity: 0; transform: translateY(40px); }
-  to { opacity: 1; transform: translateY(0); }
+.modalCloseBtn {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: rgba(0,0,0,0.5);
+  color: #fff;
+  border: none;
+  font-size: 1.2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 10;
+  transition: background 0.2s;
+}
+
+.modalCloseBtn:hover {
+  background: rgba(0,0,0,0.8);
+}
+
+.modalImage {
+  width: calc(100% + 48px);
+  margin: -24px -24px 24px -24px;
+  height: auto;
+  max-height: 50vh;
+  object-fit: contain;
+  background: #f8fafc;
+  flex-shrink: 0;
+  display: block;
+}
+
+.modalContentWrapper {
+  padding: 24px;
+  overflow-y: auto;
+}
+
+.modalTitle {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: #0f172a;
+  margin: 0 0 8px 0;
+  line-height: 1.3;
+}
+
+.modalDate {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #64748b;
+  margin-bottom: 24px;
+}
+
+.modalBody {
+  font-size: 1rem;
+  color: #334155;
+  line-height: 1.6;
+}
+
+.modalBody p {
+  margin-bottom: 16px;
 }
 
 @keyframes fadeIn {
@@ -442,34 +526,207 @@
   to { opacity: 1; }
 }
 
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+
+/* 5. PAYROLL/BANK WIDGET (Col 9-12, Row 3-5) */
+.financeStack {
+  grid-column: span 4;
+  grid-row: span 3;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.financeCard {
+  background: #ffffff;
+  border-radius: 16px;
+  border: 1px solid #f1f5f9;
+  padding: 24px;
+  box-shadow: 0 4px 6px -1px rgba(0,0,0,0.02);
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
+}
+
+.bank {
+  background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+  color: white;
+  border: none;
+}
+.bankBgIcon {
+  position: absolute;
+  right: -20px;
+  bottom: -20px;
+  color: #ffffff;
+  opacity: 0.1;
+  pointer-events: none;
+  z-index: 0;
+  transform: rotate(-10deg);
+}
+.payroll {
+  border: 1px solid #e2e8f0;
+}
+.payrollBgIcon {
+  position: absolute;
+  right: -20px;
+  bottom: -20px;
+  color: #64748b;
+  opacity: 0.05;
+  pointer-events: none;
+  z-index: 0;
+  transform: rotate(-10deg);
+}
+.bankLabel { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; opacity: 0.8; margin-bottom: 8px;}
+.bankName { font-size: 1.1rem; font-weight: 800; margin-bottom: 2px; position: relative; z-index: 1;}
+.accNumber { font-size: 1.2rem; font-family: monospace; font-weight: 600; letter-spacing: 0.1em; opacity: 0.9; position: relative; z-index: 1;}
+
+.payrollLabel { font-size: 0.75rem; font-weight: 800; color: #64748b; text-transform: uppercase; letter-spacing: 0.05em; margin: 0;}
+.payrollAmount { font-size: 2.2rem; font-weight: 900; color: #0f172a; margin-bottom: 12px; letter-spacing: -0.03em;}
+.payrollStatus { display: inline-flex; align-items: center; gap: 6px; font-size: 0.75rem; font-weight: 700; color: #475569; background: #f8fafc; padding: 6px 12px; border-radius: 20px; align-self: center; border: 1px solid #e2e8f0; margin: 0;}
+.statusDot { width: 6px; height: 6px; border-radius: 50%; }
+.slipLink { font-size: 0.8rem; font-weight: 700; color: #6366f1; text-decoration: none; align-self: center; margin-top: auto;}
+.slipLink:hover { text-decoration: underline; }
+
+
+/* EMPTY STATES */
+.emptyState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+  text-align: center;
+  color: #94a3b8;
+  font-size: 0.9rem;
+  flex: 1;
+}
+.emptyState svg { width: 40px; height: 40px; margin-bottom: 12px; opacity: 0.5; }
+
+/* HOLIDAYS CARD */
+.holidayList {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.holidayItem {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.holidayDateBlock {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  min-width: 48px;
+  height: 48px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.holidayMonth { font-size: 0.6rem; font-weight: 800; text-transform: uppercase; color: #64748b; }
+.holidayDay { font-size: 1.1rem; font-weight: 900; line-height: 1; color: #0f172a;}
+
+
 /* RESPONSIVE */
-@media (max-width: 1200px) {
-  .mainContent { grid-template-columns: 1fr; }
+@media (max-width: 1024px) {
+  .profileBox, .todayStatusBox, .leftWrapper, .financeStack {
+    grid-column: span 12;
+    grid-row: auto;
+  }
+  
+  .financeStack {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+  }
 }
 
 @media (max-width: 768px) {
-  .headerSection { padding: 32px 24px; text-align: left; border-radius: 20px; }
-  .metricsGrid { gap: 16px; }
-  .metricCard, .card, .bankWidget { padding: 24px; border-radius: 20px; }
-  
-  .cardHeader { 
-    flex-direction: row; 
-    align-items: center; 
-    justify-content: space-between; 
-    margin-bottom: 24px; 
-    border: none; 
-    padding-bottom: 0; 
+  .bentoGrid {
+    gap: 16px;
   }
-  .seeAllLink { font-size: 0.65rem; letter-spacing: 0.05em; font-weight: 1000; }
-  .cardTitle { font-size: 1.1rem; gap: 10px; }
-  
-  .clickableAnnounce { flex-direction: column; gap: 16px; padding: 16px; border-radius: 20px; border: 1px solid #f1f5f9; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.02); }
-  .announceThumb { width: 100%; height: 160px; border-radius: 12px; }
-  
-  .announceMiniTitle { font-size: 1.15rem; margin-bottom: 8px; line-height: 1.25; }
-  .readMoreHint { margin-top: 4px; }
-
-  .cardTitle { font-size: 1.25rem; }
-  .headerContent h1 { font-size: 2rem; }
-  .headerContent p { font-size: 0.95rem; margin-top: 8px; }
+  .bentoBox, .profileBox, .financeCard {
+    padding: 20px;
+  }
+  .metricCard {
+    padding: 12px 16px;
+    gap: 12px;
+  }
+  .userName { font-size: 1.5rem; }
+  .quote { max-width: 100%; }
+  .metricValue { font-size: 1.2rem; }
+  .metricIconWrapper { width: 32px; height: 32px; border-radius: 10px; }
+  .metricIconWrapper svg { width: 16px; height: 16px; }
+  .payrollAmount { font-size: 1.5rem; }
+  .metricsRow {
+    flex-direction: row;
+    gap: 8px; /* reduce gap between the two cards */
+  }
+  .metricLabel {
+    font-size: 0.55rem;
+    line-height: 1.2;
+    white-space: nowrap;
+  }
+  .metricCard {
+    padding: 10px; 
+    gap: 6px; 
+  }
+  .financeStack {
+    grid-template-columns: 1fr;
+  }
+  .profileBgIcon {
+    right: -30px;
+    bottom: -80px;
+    width: 140px;
+    height: 140px;
+  }
+  .statusBgIcon {
+    right: -20px;
+    bottom: -30px;
+    width: 120px;
+    height: 120px;
+  }
+  .modalOverlay {
+    padding: 0;
+  }
+  .modalContainer {
+    max-width: 100%;
+    height: 100vh;
+    max-height: 100vh;
+    border-radius: 0;
+  }
+  .modalImage {
+    height: auto;
+    max-height: 50vh;
+  }
+  .announceTitle {
+    font-size: 0.8rem;
+    margin-bottom: 4px;
+  }
+  .announcePreview {
+    font-size: 0.7rem;
+    margin-bottom: 6px;
+    -webkit-line-clamp: 2;
+  }
+  .announceDateText {
+    font-size: 0.65rem;
+    margin-bottom: 2px;
+  }
+  .seeMoreBtn {
+    font-size: 0.7rem;
+  }
+  .announceImageWrapper {
+    width: 70px;
+    height: 70px;
+  }
 }

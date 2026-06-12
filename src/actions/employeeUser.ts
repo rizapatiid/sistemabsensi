@@ -62,6 +62,7 @@ export async function updateRekeningAction(formData: FormData) {
   })
 
   revalidatePath("/employee/transaksi")
+  revalidatePath("/employee/home")
   return { success: true }
 }
 
