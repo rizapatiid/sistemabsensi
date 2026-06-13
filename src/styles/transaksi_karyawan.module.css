@@ -19,6 +19,17 @@
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
 }
 
+.headerTitleContainer {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 4px;
+}
+
+.headerIconWrapper {
+  color: #1e3a8a;
+}
+
 .headerContent h1 {
   font-size: 1.5rem;
   font-weight: 800;
@@ -84,6 +95,157 @@
   display: flex;
   align-items: center;
   gap: 6px;
+}
+
+/* NEW LIGHT ACCOUNT CARD */
+.lightAccountCard {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 16px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 24px;
+  gap: 16px;
+  flex-wrap: nowrap;
+}
+
+.accountInfo {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex: 1;
+  min-width: 0;
+}
+
+.accountIcon {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: #f1f5f9;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #64748b;
+  flex-shrink: 0;
+}
+
+.accountIcon svg {
+  width: 28px;
+  height: 28px;
+}
+
+.accountText {
+  display: flex;
+  flex-direction: column;
+  gap: 0px;
+  overflow: hidden;
+  justify-content: center;
+}
+
+.accountName {
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: #0f172a;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  margin: 0 !important;
+  line-height: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.accountBank {
+  font-size: 0.95rem;
+  color: #64748b;
+  margin: 0 !important;
+  line-height: 1;
+  margin-top: -2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.accountNumber {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #0f172a;
+  margin: 0 !important;
+  line-height: 1;
+  margin-top: -2px;
+  letter-spacing: 0.05em;
+}
+
+.btnUpdateLight {
+  background: #0f172a;
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 20px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 0.9rem;
+  white-space: nowrap;
+  box-shadow: 0 2px 4px rgba(15, 23, 42, 0.15);
+}
+
+.btnUpdateLight:hover {
+  background: #1e293b;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 6px rgba(15, 23, 42, 0.25);
+}
+
+@media (max-width: 640px) {
+  .headerSection {
+    background: transparent;
+    border: none;
+    padding: 0;
+    box-shadow: none;
+  }
+  .headerTitleContainer, .headerDescription {
+    display: none;
+  }
+  .lightAccountCard {
+    margin-top: 16px;
+    padding: 12px;
+    gap: 8px;
+  }
+
+  .accountInfo {
+    gap: 10px;
+  }
+  .accountIcon {
+    width: 46px;
+    height: 46px;
+  }
+  .accountIcon svg {
+    width: 24px;
+    height: 24px;
+  }
+  .accountName {
+    font-size: 1.05rem;
+    line-height: 1;
+  }
+  .accountBank {
+    font-size: 0.7rem;
+    line-height: 1;
+    margin-top: -3px !important;
+  }
+  .accountNumber {
+    font-size: 0.75rem;
+    line-height: 1;
+    margin-top: -3px !important;
+  }
+  .accountText {
+    gap: 0px;
+  }
+  .btnUpdateLight {
+    padding: 8px 12px;
+    font-size: 0.8rem;
+  }
 }
 
 /* 2. MAIN LOG CARD */
@@ -152,18 +314,26 @@
 }
 
 .badge {
-  padding: 6px 12px;
-  border-radius: 8px;
-  font-size: 0.7rem;
-  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 600;
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  white-space: nowrap;
+  gap: 4px;
 }
 
-.badgeLunas { background: #dcfce7; color: #166534; }
-.badgeBelum { background: #fee2e2; color: #991b1b; }
+.badgeLunas {
+  background: #ecfdf5;
+  color: #047857;
+  border: 1px solid #a7f3d0;
+}
+
+.badgeBelum {
+  background: #fff1f2;
+  color: #be123c;
+  border: 1px solid #fecdd3;
+}
 
 /* MODAL STYLES */
 .modalOverlay {
@@ -235,6 +405,120 @@
   font-size: 0.9rem;
   font-weight: 700;
   cursor: pointer;
+}
+
+/* DESKTOP VS MOBILE VISIBILITY */
+.mobileOnly {
+  display: none;
+}
+.desktopOnly {
+  display: block;
+}
+
+@media (max-width: 768px) {
+  .mobileOnly {
+    display: block;
+  }
+  .desktopOnly {
+    display: none;
+  }
+  
+  .card {
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+  }
+  .cardHeader {
+    padding: 0 4px;
+    margin-bottom: 16px;
+  }
+}
+
+/* MOBILE HISTORY LIST STYLES */
+.mobileList {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.mobileHistoryRow {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  background: #ffffff;
+  box-shadow: 0 4px 12px -4px rgba(15, 23, 42, 0.06);
+  text-align: left;
+  transition: all 0.2s ease;
+}
+
+.mobileHistoryRow:active {
+  transform: scale(0.98);
+  background: #f8fafc;
+}
+
+.mobileHistoryIcon {
+  color: #3b82f6;
+  background: #eff6ff;
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.mobileHistoryLeft {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.mobileHistoryTitle {
+  font-weight: 700;
+  font-size: 0.9rem;
+  color: #0f172a;
+  line-height: 1.3;
+}
+
+.mobileHistoryDesc {
+  font-size: 0.75rem;
+  color: #64748b;
+  font-weight: 500;
+}
+
+.mobileHistoryDate {
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: #94a3b8;
+  line-height: 1.2;
+  margin-top: 2px;
+}
+
+.mobileHistoryRight {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+}
+
+.mobileHistoryAmount {
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: #0f172a;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
+.mobileHistoryStatus {
+  font-size: 0.8rem;
+  font-weight: 600;
+  line-height: 1.2;
 }
 
 /* RESPONSIVE */

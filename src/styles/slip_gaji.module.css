@@ -1,17 +1,18 @@
 .slipContainer {
   background-color: #fff;
-  padding: 1rem;
-  border-radius: 10px;
+  padding: 1.5rem;
+  border-radius: 12px;
   width: 100%;
   max-width: 440px;
   max-height: 92vh;
   overflow-y: auto;
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
   position: relative;
   font-family: 'Inter', system-ui, -apple-system, sans-serif;
   color: #1e293b;
   scrollbar-width: thin;
   scrollbar-color: #cbd5e1 transparent;
+  border-top: 6px solid #1e3a8a;
 }
 
 @media (max-width: 600px) {
@@ -19,15 +20,26 @@
     max-width: 350px;
     padding: 0.75rem;
   }
+  .infoGrid {
+    grid-template-columns: 2.5fr 1fr;
+    column-gap: 0.5rem;
+    padding: 12px;
+  }
+  .rowValue {
+    font-size: 0.75rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
 }
 
 .slipHeader {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  margin-bottom: 0.5rem;
+  margin-bottom: 1rem;
   border-bottom: 2px solid #f1f5f9;
-  padding-bottom: 0.5rem;
+  padding-bottom: 0.75rem;
 }
 
 .brand {
@@ -72,8 +84,13 @@
 .infoGrid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 0.5rem;
-  margin-bottom: 0.75rem;
+  row-gap: 0.4rem;
+  column-gap: 1rem;
+  margin-bottom: 1.25rem;
+  background: #f8fafc;
+  padding: 16px;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
 }
 
 .infoItem label {
@@ -93,21 +110,24 @@
 
 .statusBadge {
   display: inline-flex;
-  padding: 2px 8px;
-  border-radius: 4px;
-  font-size: 0.6rem;
+  padding: 4px 10px;
+  border-radius: 9999px;
+  font-size: 0.65rem;
   font-weight: 700;
   text-transform: uppercase;
+  letter-spacing: 0.02em;
 }
 
 .statusLunas {
-  background-color: #f0fdf4;
-  color: #166534;
+  background-color: #ecfdf5;
+  color: #047857;
+  border: 1px solid #a7f3d0;
 }
 
 .statusPending {
-  background-color: #fff7ed;
-  color: #9a3412;
+  background-color: #fff1f2;
+  color: #be123c;
+  border: 1px solid #fecdd3;
 }
 
 .tableSection {
@@ -116,29 +136,35 @@
 
 .tableSection h4 {
   font-size: 0.75rem;
-  font-weight: 700;
-  margin-bottom: 0.5rem;
-  color: #0f172a;
-  border-left: 2px solid #0f172a;
-  padding-left: 8px;
+  font-weight: 800;
+  margin-bottom: 0.75rem;
+  color: #475569;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border-bottom: 1px solid #e2e8f0;
+  padding-bottom: 6px;
 }
 
 .row {
   display: flex;
   justify-content: space-between;
-  padding: 6px 0;
-  border-bottom: 1px solid #f1f5f9;
+  padding: 10px 0;
+  border-bottom: 1px dashed #cbd5e1;
+}
+
+.row:last-child {
+  border-bottom: none;
 }
 
 .rowLabel {
   color: #475569;
-  font-size: 0.75rem;
+  font-size: 0.8rem;
 }
 
 .rowValue {
-  font-weight: 600;
+  font-weight: 700;
   color: #0f172a;
-  font-size: 0.8rem;
+  font-size: 0.85rem;
 }
 
 .totalRow {

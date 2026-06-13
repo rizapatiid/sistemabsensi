@@ -651,6 +651,9 @@
 }
 
 @media (max-width: 768px) {
+  .pageContainer {
+    padding-top: 16px;
+  }
   .bentoGrid {
     gap: 16px;
   }

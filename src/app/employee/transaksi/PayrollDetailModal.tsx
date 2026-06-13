@@ -28,7 +28,7 @@ const IconEye = () => (
   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
 )
 
-export default function PayrollDetailModal({ p, autoOpen = false }: { p: PayrollDetail, autoOpen?: boolean }) {
+export default function PayrollDetailModal({ p, autoOpen = false, children }: { p: PayrollDetail, autoOpen?: boolean, children?: React.ReactNode }) {
   const [isOpen, setIsOpen] = useState(autoOpen)
 
   const closeModal = () => setIsOpen(false)
@@ -48,28 +48,34 @@ export default function PayrollDetailModal({ p, autoOpen = false }: { p: Payroll
 
   return (
     <>
-      <button 
-        onClick={openModal}
-        className={styles.viewBtn} 
-        style={{ 
-          backgroundColor: "#0f172a", 
-          color: "white", 
-          border: "none", 
-          padding: "6px 14px", 
-          borderRadius: "8px",
-          cursor: "pointer",
-          fontSize: "0.75rem",
-          fontWeight: "700",
-          boxShadow: "0 2px 4px rgba(15, 23, 42, 0.2)",
-          transition: "all 0.2s",
-          display: 'flex',
-          alignItems: 'center',
-          gap: '8px'
-        }}
-      >
-        <IconEye />
-        Lihat Slip
-      </button>
+      {children ? (
+        <div onClick={openModal} style={{ cursor: "pointer" }}>
+          {children}
+        </div>
+      ) : (
+        <button 
+          onClick={openModal}
+          className={styles.viewBtn} 
+          style={{ 
+            backgroundColor: "#0f172a", 
+            color: "white", 
+            border: "none", 
+            padding: "6px 14px", 
+            borderRadius: "8px",
+            cursor: "pointer",
+            fontSize: "0.75rem",
+            fontWeight: "700",
+            boxShadow: "0 2px 4px rgba(15, 23, 42, 0.2)",
+            transition: "all 0.2s",
+            display: 'flex',
+            alignItems: 'center',
+            gap: '8px'
+          }}
+        >
+          <IconEye />
+          Lihat Slip
+        </button>
+      )}
 
       {isOpen && (
         <div style={{
@@ -85,19 +91,19 @@ export default function PayrollDetailModal({ p, autoOpen = false }: { p: Payroll
           justifyContent: "center",
           zIndex: 9999,
           padding: "0.5rem"
-        }} onClick={closeModal}>
-          <div className={styles.slipContainer} onClick={e => e.stopPropagation()}>
+        }} onClick={closeModal} className="no-print-bg print-modal-overlay">
+          <div className={`${styles.slipContainer} print-modal-content`} onClick={e => e.stopPropagation()}>
             
             <div style={{ 
               position: 'absolute', 
-              top: '8%', 
+              top: '50%', 
               left: '50%', 
-              transform: 'translateX(-50%) rotate(-15deg)', 
+              transform: 'translate(-50%, -50%) rotate(-15deg)', 
               fontSize: '3.5rem', 
               fontWeight: '900', 
-              color: 'rgba(30,58,138,0.05)', 
+              color: 'rgba(30,58,138,0.08)', 
               pointerEvents: 'none',
-              zIndex: 0,
+              zIndex: 999,
               whiteSpace: 'nowrap'
             }} className="no-print">
               AUTHENTIC
@@ -134,10 +140,8 @@ export default function PayrollDetailModal({ p, autoOpen = false }: { p: Payroll
               </div>
               <div className={styles.infoItem}>
                 <label>Status</label>
-                <div>
-                  <span className={`${styles.statusBadge} ${p.statusPembayaran === 'DIBAYAR' ? styles.statusLunas : styles.statusPending}`}>
-                    {p.statusPembayaran === 'DIBAYAR' ? 'LUNAS' : 'PROSES'}
-                  </span>
+                <div className={styles.rowValue} style={{ color: p.statusPembayaran === 'DIBAYAR' ? '#047857' : '#be123c' }}>
+                  {p.statusPembayaran === 'DIBAYAR' ? 'LUNAS' : 'PROSES'}
                 </div>
               </div>
             </div>
@@ -152,9 +156,15 @@ export default function PayrollDetailModal({ p, autoOpen = false }: { p: Payroll
               </div>
               
               {p.tipeGaji === "HARIAN" && (
-                <div className={styles.row} style={{ background: '#f8fafc', padding: '4px 6px', borderRadius: '4px' }}>
-                  <span className={styles.rowLabel}>Total Hadir</span>
-                  <span className={styles.rowValue}>{p.jumlahAbsen} Hari</span>
+                <div style={{ background: '#f8fafc', padding: '8px 12px', borderRadius: '8px', marginBottom: '8px', border: '1px solid #e2e8f0' }}>
+                  <div className={styles.row} style={{ marginBottom: '4px', borderBottom: 'none', padding: '0 0 4px 0' }}>
+                    <span className={styles.rowLabel} style={{ fontSize: '0.75rem' }}>Total Hadir</span>
+                    <span className={styles.rowValue} style={{ fontSize: '0.75rem' }}>{p.jumlahAbsen} Hari</span>
+                  </div>
+                  <div className={styles.row} style={{ borderBottom: 'none', padding: 0 }}>
+                    <span className={styles.rowLabel} style={{ fontWeight: '600' }}>Total Harian</span>
+                    <span className={styles.rowValue} style={{ fontWeight: '600', color: '#1e3a8a' }}>Rp {(p.gajiPokok * p.jumlahAbsen).toLocaleString("id-ID")}</span>
+                  </div>
                 </div>
               )}
 
