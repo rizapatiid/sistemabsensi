@@ -91,114 +91,150 @@ export default function LoginPage() {
 
   return (
     <div className={styles.container}>
-      <div className={styles.card}>
-        
-        {/* SISI KIRI: ILUSTRASI (AUTO-HIDDEN ON MOBILE) */}
-        <div className={styles.illustrationSection}>
-           <img 
-               src="/login_illustration.png" 
-               alt="PT Riza Media Productions Illustration" 
-               className={styles.illustration}
-           />
+
+      {/* SISI KIRI: BRANDING (DESKTOP ONLY) */}
+      <div className={styles.brandSection}>
+        {/* Decorative circles */}
+        <div className={styles.brandDecorA} />
+        <div className={styles.brandDecorB} />
+
+        <div className={styles.illustrationWrapper}>
+          {/* Floating feature chips */}
+          <div className={`${styles.floatChip} ${styles.chipAbsen}`}>
+            <div className={styles.chipIconBox}>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="15" y2="15"/></svg>
+            </div>
+            Absen
+          </div>
+          <div className={`${styles.floatChip} ${styles.chipRiwayat}`}>
+            <div className={styles.chipIconBox}>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+            </div>
+            Riwayat
+          </div>
+          <div className={`${styles.floatChip} ${styles.chipGaji}`}>
+            <div className={styles.chipIconBox}>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
+            </div>
+            Slip Gaji
+          </div>
+          <div className={`${styles.floatChip} ${styles.chipPengumuman}`}>
+            <div className={styles.chipIconBox}>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+            </div>
+            Pengumuman
+          </div>
+
+          <img src="/login_illustration.png" alt="Ilustrasi Sistem Absensi" className={styles.brandIllustration} />
+          <div className={styles.illustrationShadow} />
         </div>
+        <h1 className={styles.brandTitle}>Portal Karyawan<br />PT Riza Media Productions</h1>
+        <div className={styles.brandTitleLine} />
+        <p className={styles.brandSubtitle}>
+          Pantau kehadiran, slip gaji, dan informasi kerja Anda kapan saja dan dimana saja.
+        </p>
 
-        {/* SISI KANAN: LOGIN SECTION */}
-        <div className={styles.loginSection}>
-            <div className={styles.logoContainer}>
-                {/* BRAND LOGO - SCALE CONTROLLED BY CSS FOR PERFECT FIT */}
-                <img 
-                    src="/logositus.png" 
-                    alt="PT Riza Media Productions Logo" 
-                    height="95"
-                    className={styles.brandLogo}
-                />
+      </div>
+
+      {/* SISI KANAN: LOGIN FORM */}
+      <div className={styles.loginSection}>
+        <div className={styles.formWrapper}>
+
+          {/* Logo */}
+          <div className={styles.logoContainer}>
+            <img
+              src="/logositus.png"
+              alt="PT Riza Media Productions Logo"
+              className={styles.brandLogo}
+            />
+          </div>
+
+          {/* Heading */}
+          <h2 className={styles.halamanTitle}>Selamat Datang</h2>
+          <p className={styles.halamanSubtitle}>Masuk ke panel operasional Anda.</p>
+
+          {/* Error */}
+          {error && (
+            <div className={styles.error}>
+              <IconAlertCircle size={18} />
+              <span>{error}</span>
+            </div>
+          )}
+
+          {/* Form */}
+          <form
+            onSubmit={async (e) => {
+              e.preventDefault()
+              if (loading) return
+              const formData = new FormData(e.currentTarget)
+              await handleAction(formData)
+            }}
+            className={styles.form}
+          >
+            <div className={styles.inputGroup}>
+              <label className={styles.inputLabel}>Email / ID Karyawan</label>
+              <input
+                name="idKaryawan"
+                type="text"
+                placeholder="Contoh: k001 atau email@anda.com"
+                className={styles.inputField}
+                autoComplete="username"
+                autoFocus
+                required
+              />
             </div>
 
-            <div className={styles.divider}></div>
-
-            <div style={{ textAlign: 'left', marginBottom: '8px' }}>
-                <h2 className={styles.halamanTitle}>Selamat Datang</h2>
-                <p className={styles.halamanSubtitle}>Silakan masuk untuk mengakses panel operasional Anda.</p>
-            </div>
-
-            {error && (
-              <div className={styles.error}>
-                <IconAlertCircle size={20} />
-                {error}
-              </div>
-            )}
-
-            <form 
-              onSubmit={async (e) => {
-                e.preventDefault()
-                if (loading) return
-                const formData = new FormData(e.currentTarget)
-                await handleAction(formData)
-              }} 
-              className={styles.form}
-            >
-                <div className={styles.inputGroup}>
-                    <label className={styles.inputLabel}>EMAIL / ID KARYAWAN</label>
-                    <input 
-                        name="idKaryawan" 
-                        type="text" 
-                        placeholder="Contoh: k001 atau email@anda.com" 
-                        className={styles.inputField}
-                        autoComplete="username"
-                        autoFocus
-                        required 
-                    />
-                </div>
-                
-                <div className={styles.inputGroup}>
-                    <label className={styles.inputLabel}>PASSWORD KEAMANAN</label>
-                    <div style={{ position: 'relative' }}>
-                      <input 
-                          name="password" 
-                          type={showPassword ? "text" : "password"} 
-                          placeholder="Entri Kata Sandi" 
-                          className={styles.inputField}
-                          autoComplete="current-password"
-                          required 
-                      />
-                      <button 
-                        type="button" 
-                        onClick={() => setShowPassword(!showPassword)}
-                        style={{ position: 'absolute', right: '12px', top: '50%', transform: 'translateY(-50%)', background: 'none', border: 'none', color: '#64748b', cursor: 'pointer', padding: '4px' }}
-                      >
-                        {showPassword ? (
-                          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 19c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
-                        ) : (
-                          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-                        )}
-                      </button>
-                    </div>
-                </div>
-
-                <div style={{ textAlign: 'right', marginBottom: '20px' }}>
-                  <button type="button" onClick={() => { setForgotMode("FORGOT"); setError(null); }} style={{ background: 'none', border: 'none', color: '#1e3a8a', fontSize: '0.8rem', fontWeight: '700', cursor: 'pointer' }}>
-                    Lupa Password?
-                  </button>
-                </div>
-
-                <button type="submit" className={styles.submitBtn} disabled={loading}>
-                    {loading ? (
-                      "Memproses Data..."
-                    ) : ( 
-                      <>
-                        LOGIN
-                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
-                      </>
-                    )}
+            <div className={styles.inputGroup}>
+              <div className={styles.labelRow}>
+                <label className={styles.inputLabel}>Password</label>
+                <button
+                  type="button"
+                  className={styles.forgotBtn}
+                  onClick={() => { setForgotMode("FORGOT"); setError(null); }}
+                >
+                  Lupa Password?
                 </button>
-            </form>
-
-            <div className={styles.footer}>
-                &copy; {new Date().getFullYear()} PT RIZA MEDIA PRODUCTIONS <br /> 
-                <span style={{ fontSize: '0.65rem', opacity: 0.8 }}>SYNERGY & TECHNOLOGY FOR EXCELLENCE</span>
+              </div>
+              <div className={styles.passwordWrapper}>
+                <input
+                  name="password"
+                  type={showPassword ? "text" : "password"}
+                  placeholder="Masukkan kata sandi"
+                  className={styles.inputField}
+                  autoComplete="current-password"
+                  required
+                />
+                <button
+                  type="button"
+                  className={styles.eyeBtn}
+                  onClick={() => setShowPassword(!showPassword)}
+                >
+                  {showPassword ? (
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 19c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+                  ) : (
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                  )}
+                </button>
+              </div>
             </div>
-        </div>
 
+            <button type="submit" className={styles.submitBtn} disabled={loading}>
+              {loading ? (
+                <><span className={styles.spinner}></span> Memproses...</>
+              ) : (
+                <>
+                  Masuk ke Sistem
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+                </>
+              )}
+            </button>
+          </form>
+
+          {/* Footer */}
+          <div className={styles.footer}>
+            &copy; {new Date().getFullYear()} PT Riza Media Productions
+          </div>
+        </div>
       </div>
 
       {/* MODAL LUPA PASSWORD */}
