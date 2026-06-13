@@ -4,7 +4,7 @@
   width: 100%;
   max-width: 100vw;
   overflow: hidden;
-  background-color: #f8fafc;
+  background-color: #ffffff;
 }
 
 .sidebar {
@@ -186,26 +186,28 @@
 
 .mainContent {
   flex: 1;
+  display: flex;
+  flex-direction: column;
   overflow-y: auto;
-  padding: 24px;
+  padding: 0 24px 24px 24px;
   -webkit-overflow-scrolling: touch; /* Native-like smooth scrolling for iOS */
   touch-action: pan-y; /* Allow vertical touch scrolling specifically here */
 }
 
 @media (max-width: 1024px) {
   .layoutContainer {
-    height: auto;
-    min-height: 100vh;
-    overflow: visible;
+    height: 100vh;
+    height: 100dvh;
+    overflow: hidden;
   }
 
   .mainWrapper {
     width: 100%;
-    overflow: visible;
+    overflow: hidden;
   }
 
   .mainContent {
-    overflow: visible;
+    overflow-y: auto;
   }
 
   .sidebar {
@@ -219,7 +221,7 @@
 
 @media (max-width: 640px) {
   .mainContent {
-    padding: 32px 16px 90px 16px; /* Increased top padding for breathing room */
+    padding: 0 16px 65px 16px; /* Reduced from 90px to extend the card downwards */
   }
 }
 

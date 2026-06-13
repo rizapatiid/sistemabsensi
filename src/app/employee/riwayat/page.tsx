@@ -1,6 +1,7 @@
 import prisma from "@/lib/prisma"
 import { getSession } from "@/actions/auth"
 import styles from "@/styles/riwayat_karyawan.module.css"
+import CustomSelect from "@/components/CustomSelect"
 import ImageModal from "./ImageModal"
 import { formatWIBTime, formatIndonesianDate } from "@/lib/date"
 
@@ -8,7 +9,7 @@ export const dynamic = "force-dynamic"
 
 // Professional Line Icons
 const IconCalendar = () => (
-  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2" /><line x1="16" y1="2" x2="16" y2="6" /><line x1="8" y1="2" x2="8" y2="6" /><line x1="3" y1="10" x2="21" y2="10" /></svg>
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2" /><line x1="16" y1="2" x2="16" y2="6" /><line x1="8" y1="2" x2="8" y2="6" /><line x1="3" y1="10" x2="21" y2="10" /></svg>
 )
 const IconClipboard = () => (
   <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2" /><rect x="8" y="2" width="8" height="4" rx="1" ry="1" /></svg>
@@ -85,23 +86,40 @@ export default async function EmployeeRiwayatPage({
       {/* 1. CLEAN HEADER SECTION */}
       <section className={styles.headerSection}>
         <div className={styles.headerContent}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '8px' }}>
-            <div style={{ color: '#1e3a8a' }}><IconCalendar /></div>
-            <h1>Riwayat Kehadiran</h1>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '14px', marginBottom: '12px' }}>
+            <div style={{ 
+              background: 'linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%)', 
+              color: '#1d4ed8',
+              padding: '10px',
+              borderRadius: '12px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              boxShadow: '0 4px 12px rgba(29, 78, 216, 0.08)'
+            }}>
+              <IconCalendar />
+            </div>
+            <div>
+              <h1 style={{ lineHeight: 1.2, margin: 0 }}>Riwayat Kehadiran</h1>
+            </div>
           </div>
-          <p>Laporan presensi karyawan periode {months.find(m => m.v === selectedMonth)?.n} {selectedYear}.</p>
+          <p style={{ color: '#64748b', fontSize: '0.9rem', marginBottom: '16px' }}>
+            Laporan presensi periode {months.find(m => m.v === selectedMonth)?.n} {selectedYear}
+          </p>
 
           <form className={styles.filterBar} method="GET">
-            <select name="month" className={styles.filterSelect} defaultValue={selectedMonth}>
-              {months.map(m => (
-                <option key={m.v} value={m.v}>{m.n}</option>
-              ))}
-            </select>
-            <select name="year" className={styles.filterSelect} defaultValue={selectedYear}>
-              {years.map(y => (
-                <option key={y} value={y}>{y}</option>
-              ))}
-            </select>
+            <CustomSelect 
+              name="month" 
+              className={styles.filterSelect} 
+              defaultValue={selectedMonth}
+              options={months.map(m => ({ value: m.v, label: m.n }))}
+            />
+            <CustomSelect 
+              name="year" 
+              className={styles.filterSelect} 
+              defaultValue={selectedYear}
+              options={years.map(y => ({ value: y, label: y.toString() }))}
+            />
             <button type="submit" className={styles.filterAction}>
               <IconFilter />
               Filter Data
@@ -111,20 +129,24 @@ export default async function EmployeeRiwayatPage({
 
         <div className={styles.statsGrid}>
           <div className={styles.statCard}>
-            <div style={{ color: '#166534', background: '#dcfce7', padding: '12px', borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <div className={`${styles.metricIconWrapper} ${styles.iconHadir}`}>
               <IconUserCheck />
             </div>
-            <div>
-              <span className={styles.statValue}>{stats.totalHadir}</span>
+            <div className={styles.metricContent}>
+              <div className={styles.metricValueRow}>
+                <span className={styles.statValue} style={{ color: '#0f172a' }}>{stats.totalHadir}</span>
+              </div>
               <span className={styles.statLabel}>Hadir</span>
             </div>
           </div>
           <div className={styles.statCard}>
-            <div style={{ color: '#1e40af', background: '#dbeafe', padding: '12px', borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <div className={`${styles.metricIconWrapper} ${styles.iconIzin}`}>
               <IconUserX />
             </div>
-            <div>
-              <span className={styles.statValue}>{stats.totalIzin}</span>
+            <div className={styles.metricContent}>
+              <div className={styles.metricValueRow}>
+                <span className={styles.statValue} style={{ color: '#0f172a' }}>{stats.totalIzin}</span>
+              </div>
               <span className={styles.statLabel}>Izin</span>
             </div>
           </div>
@@ -133,17 +155,15 @@ export default async function EmployeeRiwayatPage({
 
       {/* 2. ACTIVITY LOG CARD */}
       <section className={styles.mainCard}>
-        <div className={styles.cardHeader}>
-          <div style={{ color: '#64748b' }}><IconClipboard /></div>
-          <span className={styles.cardTitle}>Data Log Kehadiran Digital</span>
-        </div>
-
         <div className={styles.tableWrapper}>
           <table className={styles.table}>
             <thead>
               <tr>
-                <th>Tanggal & Hari</th>
-                <th>Waktu</th>
+                <th>
+                  <span className={styles.hideOnMobile}>Tanggal & Hari</span>
+                  <span className={styles.hideOnDesktop}>Tanggal & Waktu</span>
+                </th>
+                <th className={styles.hideOnMobile}>Waktu</th>
                 <th>Status</th>
                 <th>Keterangan / Alasan</th>
                 <th style={{ textAlign: 'center' }}>Dokumentasi</th>
@@ -153,15 +173,27 @@ export default async function EmployeeRiwayatPage({
               {absensi.map((a) => (
                 <tr key={a.id}>
                   <td>
-                    <span className={styles.dateMain}>
-                      {formatIndonesianDate(a.tanggal)}
-                    </span>
-                    <span className={styles.dateSub}>
-                      {new Intl.DateTimeFormat("id-ID", { weekday: 'long', timeZone: "Asia/Jakarta" }).format(a.tanggal)}
-                    </span>
+                    {/* Desktop Version */}
+                    <div className={styles.hideOnMobile} style={{ whiteSpace: 'nowrap' }}>
+                      <span className={styles.dateMain}>
+                        {new Intl.DateTimeFormat("id-ID", { weekday: 'long', timeZone: "Asia/Jakarta" }).format(a.tanggal)}, {formatIndonesianDate(a.tanggal)}
+                      </span>
+                    </div>
+
+                    {/* Mobile Version */}
+                    <div className={styles.hideOnDesktop} style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
+                      <div style={{ whiteSpace: 'nowrap' }}>
+                        <span className={styles.dateMain}>
+                          {new Intl.DateTimeFormat("id-ID", { weekday: 'long', timeZone: "Asia/Jakarta" }).format(a.tanggal)}, {formatIndonesianDate(a.tanggal)}
+                        </span>
+                      </div>
+                      <div style={{ color: '#475569', fontSize: '0.85rem', whiteSpace: 'nowrap' }}>
+                        {formatWIBTime(a.waktuMasuk)}
+                      </div>
+                    </div>
                   </td>
-                  <td>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontWeight: '900', color: '#1e3a8a' }}>
+                  <td className={styles.hideOnMobile}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontWeight: '900', color: '#1e3a8a', whiteSpace: 'nowrap' }}>
                       <IconClock />
                       {formatWIBTime(a.waktuMasuk)}
                     </div>
