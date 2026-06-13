@@ -123,13 +123,6 @@ export default function RekeningCombinedHero({
             border: '1px solid #e2e8f0',
             overflow: 'hidden'
           }} onClick={e => e.stopPropagation()}>
-            <button 
-              onClick={() => { setShowEdit(false); setMessage(null); }} 
-              style={{ position: "absolute", top: "24px", right: "24px", color: "#64748b", background: "transparent", border: "none", cursor: "pointer", display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-            >
-              <IconClose />
-            </button>
-            
             <div style={{ padding: '28px 24px 24px' }}>
               {/* Header Area (Like Izin Popup) */}
               <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginBottom: '24px', paddingBottom: '20px', borderBottom: '1px solid #f1f5f9' }}>

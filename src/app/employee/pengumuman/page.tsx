@@ -1,6 +1,6 @@
 import prisma from "@/lib/prisma"
 import { getJakartaDate } from "@/lib/date"
-import styles from "@/styles/admin.module.css"
+import styles from "@/styles/transaksi_karyawan.module.css"
 import AnnouncementGridClient from "./AnnouncementGridClient"
 
 const IconAnnounce = () => (
@@ -30,34 +30,42 @@ export default async function EmployeePengumumanPage() {
   const countOfficial = announcements.length
 
   return (
-    <div className={styles.pageContainer} style={{ background: '#f8fafc', padding: '0px', minHeight: '100vh' }}>
+    <div className={styles.pageContainer} style={{ padding: '16px 0', gap: '12px' }}>
       
-      {/* 1. TOP COMMAND BAR - DUAL PANE */}
-      <div style={{ padding: 'clamp(12px, 2vw, 24px) clamp(16px, 4vw, 32px) 0 clamp(16px, 4vw, 32px)' }}>
-          
+      {/* Premium Hero Header (Like Transaksi/Absensi) */}
+      <div style={{
+        background: 'linear-gradient(135deg, #0f172a 0%, #1e293b 100%)',
+        borderRadius: 'clamp(12px, 3vw, 16px)',
+        padding: 'clamp(20px, 5vw, 32px)',
+        color: '#ffffff',
+        position: 'relative',
+        overflow: 'hidden',
+        boxShadow: '0 20px 40px -10px rgba(15, 23, 42, 0.4)'
+      }}>
+        {/* Geometric Accents */}
+        <div style={{ position: 'absolute', top: '-10%', right: '-5%', width: '300px', height: '300px', background: 'radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%)', borderRadius: '50%' }}></div>
+        <div style={{ position: 'absolute', bottom: '-20%', left: '10%', width: '200px', height: '200px', background: 'radial-gradient(circle, rgba(59,130,246,0.2) 0%, transparent 70%)', borderRadius: '50%' }}></div>
+        
+        <div style={{ position: 'relative', zIndex: 1, display: 'flex', gap: 'clamp(12px, 3vw, 20px)', alignItems: 'center' }}>
           <div style={{ 
-              display: 'inline-flex', 
-              alignItems: 'center', 
-              gap: '6px', 
-              marginBottom: '12px'
+            width: 'clamp(56px, 12vw, 64px)', height: 'clamp(56px, 12vw, 64px)', 
+            background: 'rgba(255, 255, 255, 0.1)', 
+            borderRadius: 'clamp(14px, 3vw, 20px)', 
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            backdropFilter: 'blur(10px)',
+            border: '1px solid rgba(255, 255, 255, 0.2)',
+            flexShrink: 0
           }}>
-              <div style={{ width: '6px', height: '6px', background: '#3b82f6', borderRadius: '50%' }}></div>
-              <span style={{ fontSize: '0.65rem', fontWeight: 800, color: '#94a3b8', letterSpacing: '0.05em', textTransform: 'uppercase' }}>Live Broadcast Feed • Corporate Announcement Hub</span>
+            <svg width="clamp(24px, 6vw, 32px)" height="clamp(24px, 6vw, 32px)" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ color: '#60a5fa' }}><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
           </div>
-
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', flexWrap: 'wrap', gap: '24px', marginBottom: '32px' }}>
-            <div style={{ flex: '1 1 400px' }}>
-                <h1 className={styles.pageTitle} style={{ fontSize: 'clamp(1.75rem, 5vw, 2.5rem)', fontWeight: 800, color: '#0f172a', margin: 0 }}>
-                    Pusat Pengumuman
-                </h1>
-                <p style={{ color: '#64748b', fontWeight: 600, fontSize: 'clamp(0.85rem, 2vw, 1rem)', marginTop: '8px', margin: 0 }}>
-                    Akses kanal informasi resmi dan buletin internal kebijakan perusahaan dalam satu jendela terintegrasi.
-                </p>
-            </div>
+          <div style={{ flex: 1, minWidth: 0 }}>
+            <h1 style={{ fontSize: 'clamp(1.4rem, 4.5vw, 1.75rem)', fontWeight: 900, margin: '0 0 clamp(4px, 1vw, 6px) 0', letterSpacing: '-0.02em', lineHeight: 1.2 }}>Pusat Pengumuman</h1>
+            <p style={{ margin: 0, color: '#93c5fd', fontSize: 'clamp(0.8rem, 2.5vw, 0.95rem)', fontWeight: 500, lineHeight: 1.4 }}>Akses informasi resmi dan kebijakan perusahaan terbaru.</p>
           </div>
+        </div>
       </div>
 
-      <div style={{ padding: '0 clamp(16px, 4vw, 32px) clamp(16px, 4vw, 32px)' }}>
+      <div style={{ marginTop: '8px' }}>
           <AnnouncementGridClient announcements={serializedAnnouncements as any} />
       </div>
 

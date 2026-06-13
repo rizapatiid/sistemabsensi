@@ -49,6 +49,13 @@ html, body {
   width: 100%;
 }
 
+/* Global Desktop UI Downscaling */
+@media (min-width: 1025px) {
+  html {
+    font-size: 14.5px; /* Scales down all rem-based sizes slightly for a sharper, more refined desktop look */
+  }
+}
+
 body {
   font-family: var(--font-sans);
   background-color: var(--background);
