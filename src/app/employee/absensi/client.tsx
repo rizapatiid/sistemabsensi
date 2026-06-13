@@ -259,7 +259,7 @@ export default function AbsensiClient({
               const haloShadow = isSuspended ? '0 0 0 12px #fef2f2' : isWeekend ? '0 0 0 12px #eff6ff' : '0 0 0 12px #fffbeb';
 
               return (
-                <div className={styles.closedContainer} style={!holidayImage ? { justifyContent: 'center', marginTop: 0 } : {}}>
+                <div className={styles.closedContainer}>
                   <div className={styles.closedContentWrapper}>
                     {/* IMAGE HEADER (Jika ada banner dari DB) ATAU ICON */}
                     <div className={styles.closedImageWrapper} style={!holidayImage ? { maxWidth: '100px', margin: '0 auto 16px' } : {}}>
