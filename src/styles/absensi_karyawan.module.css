@@ -584,7 +584,9 @@
 .closedImage {
   width: 100%;
   max-width: 320px;
-  height: auto;
+  max-height: 35vh;
+  object-fit: cover;
+  object-position: center bottom;
   display: block;
   -webkit-mask-image: linear-gradient(to top, transparent 0%, black 35%);
   mask-image: linear-gradient(to top, transparent 0%, black 35%);
@@ -654,6 +656,8 @@
 
   .closedImage {
     max-width: 100%;
+    max-height: 60vh;
+    object-fit: contain;
     -webkit-mask-image: linear-gradient(to top, transparent 0%, black 35%);
     mask-image: linear-gradient(to top, transparent 0%, black 35%);
   }
