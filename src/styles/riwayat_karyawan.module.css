@@ -55,7 +55,7 @@
 .metricIconWrapper {
   width: 44px;
   height: 44px;
-  border-radius: 14px;
+  border-radius: 8px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -68,8 +68,8 @@
 }
 
 .iconIzin {
-  background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
-  color: #1e3a8a;
+  background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+  color: #b91c1c;
 }
 
 .metricContent {

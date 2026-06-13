@@ -65,7 +65,7 @@ export default async function EmployeeRiwayatPage({
 
   const stats = {
     totalHadir: absensi.filter(a => a.status === "HADIR").length,
-    totalIzin: absensi.filter(a => a.status === "IZIN").length,
+    totalTidakHadir: absensi.filter(a => a.status !== "HADIR").length,
   }
 
   const months = [
@@ -145,9 +145,9 @@ export default async function EmployeeRiwayatPage({
             </div>
             <div className={styles.metricContent}>
               <div className={styles.metricValueRow}>
-                <span className={styles.statValue} style={{ color: '#0f172a' }}>{stats.totalIzin}</span>
+                <span className={styles.statValue} style={{ color: '#0f172a' }}>{stats.totalTidakHadir}</span>
               </div>
-              <span className={styles.statLabel}>Izin</span>
+              <span className={styles.statLabel}>Tidak Hadir</span>
             </div>
           </div>
         </div>

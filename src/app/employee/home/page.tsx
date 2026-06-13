@@ -187,8 +187,10 @@ export default async function EmployeeHomePage({
                 <div className={styles.metricsRow}>
                     <div className={`${styles.bentoBox} ${styles.metricCard}`}>
                         <div className={`${styles.metricIconWrapper} ${styles.iconHadir}`}>
-                            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-                               <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                               <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                               <circle cx="8.5" cy="7" r="4" />
+                               <polyline points="17 11 19 13 23 9" />
                             </svg>
                         </div>
                         <div className={styles.metricContent}>
@@ -202,8 +204,11 @@ export default async function EmployeeHomePage({
 
                     <div className={`${styles.bentoBox} ${styles.metricCard}`}>
                         <div className={`${styles.metricIconWrapper} ${styles.iconIzin}`}>
-                            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-                               <path strokeLinecap="round" strokeLinejoin="round" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                               <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                               <circle cx="8.5" cy="7" r="4" />
+                               <line x1="18" y1="8" x2="23" y2="13" />
+                               <line x1="23" y1="8" x2="18" y2="13" />
                             </svg>
                         </div>
                         <div className={styles.metricContent}>

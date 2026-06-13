@@ -221,7 +221,7 @@
 
 @media (max-width: 640px) {
   .mainContent {
-    padding: 0 16px 65px 16px; /* Reduced from 90px to extend the card downwards */
+    padding: 20px 16px 65px 16px; /* Added 20px top padding for mobile */
   }
 }
 
