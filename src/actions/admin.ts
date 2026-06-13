@@ -57,7 +57,7 @@ export async function createHolidayAction(formData: FormData) {
 
     // Kirim Broadcast WA
     try {
-      broadcastWhatsApp(`*INFO LIBUR BARU*\n\nTanggal: ${tanggal.toLocaleDateString("id-ID", { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}\nKeterangan: ${keterangan}\n\nCek kalender selengkapnya di: https://app.rmpid.com/employee/absensi\n\nTerima kasih,\nSistem HRIS RMP Digitals.`)
+      broadcastWhatsApp(`*INFO LIBUR BARU*\n\nTanggal: ${tanggal.toLocaleDateString("id-ID", { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}\nKeterangan: ${keterangan}\n\nCek kalender selengkapnya di: https://app.rmpid.com/employee/absensi\n\nTerima kasih,\nSistem HRIS PT Riza Media Productions.`)
     } catch(e) {
       console.error("Gagal WA libur:", e)
     }

@@ -130,11 +130,11 @@ export default function PengaturanClient({ settings }: { settings: any }) {
                         gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', 
                         gap: '20px' 
                     }}>
-                        <div style={{ background: '#0f172a', padding: '24px', borderRadius: '24px', color: 'white' }}>
+                        <div style={{ background: '#0f172a', padding: '24px', borderRadius: '16px', color: 'white' }}>
                             <div style={{ fontSize: '0.65rem', fontWeight: 800, color: '#94a3b8', marginBottom: '8px', textTransform: 'uppercase' }}>Versi Infrastruktur</div>
                             <div style={{ fontSize: '1.25rem', fontWeight: 900 }}>V2.1.0-STABLE</div>
                         </div>
-                        <div style={{ background: 'white', padding: '24px', borderRadius: '24px', border: '1px solid #e2e8f0' }}>
+                        <div style={{ background: 'white', padding: '24px', borderRadius: '16px', border: '1px solid #e2e8f0' }}>
                             <div style={{ fontSize: '0.65rem', fontWeight: 800, color: '#94a3b8', marginBottom: '8px', textTransform: 'uppercase' }}>Lokasi Server</div>
                             <div style={{ fontSize: '1.25rem', fontWeight: 900, color: '#0f172a' }}>Southeast-1 (ID)</div>
                         </div>

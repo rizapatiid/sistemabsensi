@@ -669,7 +669,7 @@ export default function AbsensiClient({
             <div style={{ background: '#f8fafc', padding: '16px 12px', borderRadius: '12px', border: '1px solid #e2e8f0', marginBottom: '20px', display: 'flex', justifyContent: 'center', position: 'relative', height: '120px' }}>
               <div style={{ background: '#fff', border: '1px solid #cbd5e1', borderRadius: '20px', padding: '4px 12px', display: 'flex', alignItems: 'center', gap: '6px', width: '200px', height: '32px', flexShrink: 0, boxShadow: '0 2px 4px rgba(0,0,0,0.02)', position: 'relative', zIndex: 10 }}>
                 {/* Lock pulse */}
-                <div style={{ position: 'absolute', inset: '-3px', border: '2px solid rgba(225, 29, 72, 0.4)', borderRadius: '24px', opacity: 0, animation: 'pulseLock 6s infinite' }}></div>
+                <div style={{ position: 'absolute', inset: '-3px', border: '2px solid rgba(225, 29, 72, 0.4)', borderRadius: '16px', opacity: 0, animation: 'pulseLock 6s infinite' }}></div>
                 <div style={{ color: '#0f172a', display: 'flex', zIndex: 1 }}>
                   <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
                 </div>

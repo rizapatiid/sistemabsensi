@@ -2,7 +2,7 @@ import type { MetadataRoute } from 'next'
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: 'RMP Digitals - Sistem Absensi',
+    name: 'PT Riza Media Productions - Sistem Absensi',
     short_name: 'RMP Absensi',
     description: 'Sistem Manajemen Kepegawaian, Absensi, dan Payroll Profesional PT Riza Media Productions',
     start_url: '/',

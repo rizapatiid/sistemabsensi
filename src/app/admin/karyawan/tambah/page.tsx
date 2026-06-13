@@ -54,14 +54,14 @@ export default function CreateEmployeeForm() {
                       Pendaftaran Karyawan
                   </h1>
                   <p style={{ color: '#64748b', fontWeight: 600, fontSize: 'clamp(0.85rem, 2vw, 1rem)', marginTop: '8px', margin: 0 }}>
-                    Input data personil baru ke dalam sistem RMP Digitals.
+                    Input data personil baru ke dalam sistem PT Riza Media Productions.
                   </p>
               </div>
           </div>
       </div>
 
       <div style={{ padding: '0 clamp(16px, 4vw, 32px) clamp(16px, 4vw, 32px)' }}>
-            <div className={styles.card} style={{ maxWidth: '900px', padding: 'clamp(20px, 4vw, 40px)', borderRadius: '24px', border: '1px solid #e2e8f0', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.02)' }}>
+            <div className={styles.card} style={{ maxWidth: '900px', padding: 'clamp(20px, 4vw, 40px)', borderRadius: '16px', border: '1px solid #e2e8f0', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.02)' }}>
                 {error && (
                     <div style={{ background: '#fef2f2', border: '1px solid #fee2e2', color: '#dc2626', padding: '16px', borderRadius: '14px', marginBottom: '32px', fontWeight: 700, fontSize: '0.85rem' }}>
                         ⚠️ {error}

@@ -106,7 +106,7 @@ export default function AdminLayoutClient({ children, user }: AdminLayoutClientP
           {isSidebarOpen && (
             <img 
               src="/logositus.png" 
-              alt="RMP Digitals" 
+              alt="PT Riza Media Productions" 
               style={{ height: '36px', width: 'auto', objectFit: 'contain' }}
             />
           )}
@@ -167,7 +167,12 @@ export default function AdminLayoutClient({ children, user }: AdminLayoutClientP
       </aside>
 
       <div className={styles.mainWrapper}>
-        <Navbar user={user} onMobileMenuToggle={toggleSidebar} isSidebarCollapsed={!isSidebarOpen} />
+        <Navbar 
+          user={user} 
+          onMobileMenuToggle={toggleSidebar} 
+          isSidebarCollapsed={!isSidebarOpen} 
+          onLogoutClick={() => setIsLogoutModalOpen(true)}
+        />
         <main className={styles.mainContent} style={pathname.includes("/chat") ? { padding: 0 } : {}}>
           {children}
         </main>
@@ -293,7 +298,7 @@ export default function AdminLayoutClient({ children, user }: AdminLayoutClientP
               <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
             </div>
             <h3>Konfirmasi Keluar Admin</h3>
-            <p>Apakah Anda yakin ingin mengakhiri sesi manajemen dan keluar dari sistem RMP Digitals?</p>
+            <p>Apakah Anda yakin ingin mengakhiri sesi manajemen dan keluar dari sistem PT Riza Media Productions?</p>
             <div className={styles.logoutActions}>
               <button 
                 className={styles.confirmLogoutBtn}

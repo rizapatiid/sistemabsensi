@@ -1,6 +1,7 @@
 import prisma from "@/lib/prisma"
 import { getSession } from "@/actions/auth"
 import { redirect } from "next/navigation"
+import Link from "next/link"
 import styles from "@/styles/profil_karyawan.module.css"
 import AdminProfileForm from "./AdminProfileForm"
 import CopyIdButton from "@/components/CopyIdButton"
@@ -165,6 +166,48 @@ export default async function AdminProfilePage() {
           <EmailNotificationSettings initialEnabled={user.emailNotifEnabled} />
         </div>
       </div>
+
+      {/* TENTANG APLIKASI SECTION */}
+      <div style={{ marginTop: '32px', marginBottom: '16px' }}>
+        <Link 
+          href="/admin/tentang" 
+          style={{ 
+            display: 'flex', 
+            alignItems: 'center', 
+            justifyContent: 'space-between',
+            background: '#ffffff', 
+            padding: '20px 24px', 
+            borderRadius: '16px', 
+            border: '1px solid #f1f5f9',
+            boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.02), 0 2px 4px -2px rgba(0, 0, 0, 0.02)',
+            textDecoration: 'none',
+            color: '#0f172a',
+            transition: 'all 0.2s ease'
+          }}
+          className={styles.tentangHover}
+        >
+          <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+            <div style={{ width: '40px', height: '40px', borderRadius: '10px', background: '#eff6ff', color: '#2563eb', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M12 16v-4"></path><path d="M12 8h.01"></path></svg>
+            </div>
+            <div>
+              <h3 style={{ margin: 0, fontSize: '1.1rem', fontWeight: 700 }}>Tentang Aplikasi</h3>
+              <p style={{ margin: '4px 0 0 0', fontSize: '0.85rem', color: '#64748b' }}>Informasi sistem, privasi, dan bantuan teknis</p>
+            </div>
+          </div>
+          <div style={{ color: '#94a3b8' }}>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+          </div>
+        </Link>
+      </div>
+
+      <style dangerouslySetInnerHTML={{__html: `
+        .${styles.tentangHover}:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -4px rgba(0, 0, 0, 0.05) !important;
+          border-color: #e2e8f0 !important;
+        }
+      `}} />
     </div>
   )
 }

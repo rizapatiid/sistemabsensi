@@ -5,7 +5,7 @@
   max-width: 1440px;
   margin: 0 auto;
   overflow: hidden;
-  background-color: #ffffff;
+  background-color: #f8fafc;
   box-shadow: 0 0 40px rgba(0,0,0,0.03);
 }
 
@@ -103,6 +103,7 @@
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   font-size: 0.875rem;
   margin: 0 4px;
+  border-left: 4px solid transparent;
 }
 
 .navIcon {
@@ -144,8 +145,9 @@
 
 .active {
   background-color: #eff6ff;
-  color: #2563eb;
+  color: #1e40af;
   font-weight: 600;
+  border-left-color: #3b82f6;
 }
 
 .active .navIcon {
@@ -244,7 +246,7 @@
   background: white;
   width: 100%;
   max-width: 340px;
-  border-radius: 24px;
+  border-radius: 16px;
   padding: 32px 24px;
   text-align: center;
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);

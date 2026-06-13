@@ -54,7 +54,7 @@ export default function EditEmployeeForm({ user }: { user: any }) {
                       Edit Profil Karyawan
                   </h1>
                   <p style={{ color: '#64748b', fontWeight: 600, fontSize: 'clamp(0.85rem, 2vw, 1rem)', marginTop: '8px', margin: 0 }}>
-                    Modifikasi data personil dan akses staf RMP Digitals.
+                    Modifikasi data personil dan akses staf PT Riza Media Productions.
                   </p>
               </div>
           </div>

@@ -138,7 +138,7 @@ export default function KalenderClient({ holidays, announcements }: { holidays: 
       </div>
 
       <div style={{ padding: '0 clamp(16px, 4vw, 32px) clamp(16px, 4vw, 32px)' }}>
-          <div className={styles.card} style={{ borderRadius: '24px', border: '1px solid #e2e8f0', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.02)', padding: '0', overflow: 'hidden' }}>
+          <div className={styles.card} style={{ borderRadius: '16px', border: '1px solid #e2e8f0', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.02)', padding: '0', overflow: 'hidden' }}>
               
               <div style={{ padding: '24px', borderBottom: '1px solid #f1f5f9', display: 'flex', justifyContent: 'center' }}>
                   <div style={{ display: 'flex', gap: '4px', background: '#f8fafc', padding: '4px', borderRadius: '14px', border: '1px solid #e2e8f0' }}>

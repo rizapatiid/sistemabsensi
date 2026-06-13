@@ -88,7 +88,7 @@ export default async function AdminAbsensiPage() {
       </div>
 
       <div style={{ padding: '0 clamp(16px, 4vw, 32px) clamp(16px, 4vw, 32px)' }}>
-          <div className={styles.card} style={{ borderRadius: '24px', overflow: 'hidden', padding: 0 }}>
+          <div className={styles.card} style={{ borderRadius: '16px', overflow: 'hidden', padding: 0 }}>
             <AbsensiAdminClient absensi={absensi} initialEmployees={employees} />
           </div>
       </div>

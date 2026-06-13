@@ -3,7 +3,7 @@ import path from "path"
 import fs from "fs"
 
 /**
- * World-Class PDF Generation for RMP Digitals
+ * World-Class PDF Generation for PT Riza Media Productions
  * Optimized for Prestigous Personnel Documentation with Fail-Safe Rejection.
  */
 
@@ -43,7 +43,7 @@ export async function generatePayrollPDF(data: {
       const logoPath = path.join(process.cwd(), "public", "logositus.png")
       
       if (fs.existsSync(logoPath)) { doc.image(logoPath, 50, 45, { width: 45 }) }
-      doc.fillColor("#1e3a8a").fontSize(20).font("Helvetica-Bold").text("RMP DIGITALS", 110, 50)
+      doc.fillColor("#1e3a8a").fontSize(20).font("Helvetica-Bold").text("PT RIZA MEDIA PRODUCTIONS", 110, 50)
       doc.fontSize(10).font("Helvetica").text("PT RIZA MEDIA PRODUCTIONS", 110, 75)
       doc.moveTo(50, 115).lineTo(550, 115).strokeColor("#e2e8f0").stroke()
       

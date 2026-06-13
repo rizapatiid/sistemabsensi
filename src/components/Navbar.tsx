@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { logoutAction } from "@/actions/auth";
 
@@ -13,27 +13,46 @@ interface NavbarProps {
   user: User;
   onMobileMenuToggle?: () => void;
   isSidebarCollapsed?: boolean;
+  onLogoutClick?: () => void;
 }
 
-export default function Navbar({ user, onMobileMenuToggle, isSidebarCollapsed }: NavbarProps) {
+export default function Navbar({ user, onMobileMenuToggle, isSidebarCollapsed, onLogoutClick }: NavbarProps) {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const router = useRouter();
+  const profileRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (profileRef.current && !profileRef.current.contains(event.target as Node)) {
+        setIsDropdownOpen(false);
+      }
+    }
+
+    if (isDropdownOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+    } else {
+      document.removeEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [isDropdownOpen]);
 
   return (
     <header className={`navbar hidden-on-mobile ${isSidebarCollapsed ? 'sidebar-state-collapsed' : ''}`}>
       <div className="navbar-left">
-        {/* Shown conditionally on Desktop (only when sidebar is collapsed) and always on Mobile Toggle */}
         {isSidebarCollapsed && (
           <img
             src="/logositus.png"
-            alt="RMP Digitals"
+            alt="PT Riza Media Productions"
             height="48"
             className="navbar-logo-desktop"
           />
         )}
       </div>
       <div className="navbar-right">
-        <div className="user-profile" onClick={() => setIsDropdownOpen(!isDropdownOpen)}>
+        <div className="user-profile" ref={profileRef} onClick={() => setIsDropdownOpen(!isDropdownOpen)}>
           <div className="user-info-text">
             <span className="user-name">{user?.name?.toUpperCase() || "USER"}</span>
             <span className="user-role-badge">{user?.role}</span>
@@ -72,13 +91,18 @@ export default function Navbar({ user, onMobileMenuToggle, isSidebarCollapsed }:
                 </svg>
                 Profil Saya
               </div>
+
               <div className="dropdown-divider"></div>
               <div
                 className="dropdown-item logout-item"
                 onClick={async (e) => {
                   e.stopPropagation();
                   setIsDropdownOpen(false);
-                  await logoutAction();
+                  if (onLogoutClick) {
+                    onLogoutClick();
+                  } else {
+                    await logoutAction();
+                  }
                 }}
               >
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -96,9 +120,10 @@ export default function Navbar({ user, onMobileMenuToggle, isSidebarCollapsed }:
       <style jsx>{`
         .navbar {
           height: 70px;
-          background: rgba(255, 255, 255, 0.8);
-          backdrop-filter: blur(12px);
-          border-bottom: 1px solid rgba(238, 242, 246, 0.5);
+          background: rgba(255, 255, 255, 0.7);
+          backdrop-filter: blur(20px) saturate(150%);
+          border-bottom: 1px solid rgba(255, 255, 255, 0.4);
+          box-shadow: 0 4px 30px -4px rgba(15, 23, 42, 0.04);
           display: flex;
           align-items: center;
           justify-content: space-between;
@@ -106,6 +131,7 @@ export default function Navbar({ user, onMobileMenuToggle, isSidebarCollapsed }:
           position: sticky;
           top: 0;
           z-index: 110;
+          transition: all 0.3s ease;
         }
         .navbar-left {
           display: flex;
@@ -131,14 +157,27 @@ export default function Navbar({ user, onMobileMenuToggle, isSidebarCollapsed }:
           }
         }
         .welcome-text {
-          font-weight: 700;
-          color: #1e293b;
-          font-size: 0.95rem;
+          font-weight: 800;
+          font-size: 1.05rem;
+          letter-spacing: -0.01em;
+          background: linear-gradient(135deg, #0f172a 0%, #0284c7 100%);
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          background-clip: text;
+          margin-bottom: 2px;
         }
         .welcome-date {
-          font-size: 0.75rem;
+          font-size: 0.7rem;
           color: #64748b;
-          font-weight: 500;
+          font-weight: 700;
+          letter-spacing: 0.05em;
+          text-transform: uppercase;
+        }
+        .navbar-greeting {
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          padding-left: 8px;
         }
         .navbar-logo {
           height: 54px;
@@ -172,34 +211,47 @@ export default function Navbar({ user, onMobileMenuToggle, isSidebarCollapsed }:
           gap: 16px;
           cursor: pointer;
           position: relative;
-          padding: 6px 12px;
+          padding: 6px 8px;
+          background: transparent;
+          border: none;
           border-radius: 12px;
-          transition: background-color 0.2s;
+          transition: all 0.2s ease;
         }
         .user-profile:hover {
-          background-color: #f8fafc;
+          background-color: rgba(15, 23, 42, 0.04);
+          transform: translateY(-1px);
+        }
+        .user-profile:active {
+          transform: translateY(0);
         }
         .user-info-text {
           display: flex;
           flex-direction: column;
           align-items: flex-end;
+          justify-content: center;
         }
         @media (max-width: 1024px) {
           .user-info-text { display: none; }
+          .user-profile { padding: 6px; border-radius: 50%; border: none; box-shadow: none; background: transparent; }
+          .user-profile:hover { background: transparent; transform: none; box-shadow: none; }
         }
         .user-name {
           font-size: 0.85rem;
-          font-weight: 700;
-          color: #334155;
+          font-weight: 800;
+          color: #1e293b;
+          letter-spacing: 0.02em;
         }
         .user-role-badge {
-          font-size: 0.65rem;
+          font-size: 0.6rem;
           font-weight: 800;
-          color: #0369a1;
-          background: #e0f2fe;
-          padding: 2px 8px;
-          border-radius: 4px;
-          margin-top: 2px;
+          color: #0284c7;
+          background: linear-gradient(to right, #e0f2fe, #bae6fd);
+          padding: 3px 10px;
+          border-radius: 20px;
+          margin-top: 3px;
+          letter-spacing: 0.06em;
+          border: 1px solid rgba(255,255,255,0.5);
+          box-shadow: 0 2px 4px rgba(2, 132, 199, 0.05);
         }
         .user-avatar-container {
           display: flex;
@@ -207,64 +259,83 @@ export default function Navbar({ user, onMobileMenuToggle, isSidebarCollapsed }:
           gap: 8px;
         }
         .user-avatar {
-          width: 40px;
-          height: 40px;
-          background-color: #f1f5f9;
-          border: 2px solid #eef2f6;
-          border-radius: 12px;
+          width: 42px;
+          height: 42px;
+          background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+          border: 2px solid #bfdbfe;
+          border-radius: 50%;
           display: flex;
           align-items: center;
           justify-content: center;
-          transition: all 0.2s;
+          transition: all 0.3s;
+          box-shadow: inset 0 2px 4px rgba(255,255,255,0.5);
         }
         .user-profile:hover .user-avatar {
-          border-color: #cbd5e1;
+          border-color: #93c5fd;
+          transform: scale(1.05);
         }
         .dropdown-indicator {
           color: #94a3b8;
-          transition: transform 0.2s;
+          transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
         }
         .dropdown-indicator.rotated {
           transform: rotate(180deg);
+          color: #3b82f6;
         }
         .user-dropdown {
           position: absolute;
-          top: 100%;
+          top: calc(100% + 12px);
           right: 0;
-          width: 220px;
-          background: white;
+          width: 200px;
+          background: rgba(255, 255, 255, 0.95);
+          backdrop-filter: blur(16px);
           border-radius: 16px;
-          box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-          margin-top: 12px;
-          padding: 12px;
+          box-shadow: 0 10px 30px -10px rgba(15, 23, 42, 0.1), 0 0 0 1px rgba(226, 232, 240, 0.8);
+          padding: 6px;
           display: flex;
           flex-direction: column;
-          gap: 4px;
+          gap: 2px;
           z-index: 120;
-          border: 1px solid #eef2f6;
+          animation: dropdownFade 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        @keyframes dropdownFade {
+          from { opacity: 0; transform: translateY(-10px) scale(0.98); }
+          to { opacity: 1; transform: translateY(0) scale(1); }
         }
         .dropdown-header {
-          padding: 8px 12px 12px;
+          padding: 12px 12px 8px;
+          text-align: center;
+          background: linear-gradient(to bottom, #f8fafc, transparent);
+          border-radius: 12px 12px 0 0;
+          margin: -6px -6px 0 -6px;
         }
         .dropdown-header strong {
           display: block;
-          font-size: 0.9rem;
-          color: #1e293b;
+          font-size: 0.85rem;
+          color: #0f172a;
+          font-weight: 800;
+          letter-spacing: -0.01em;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          padding: 0 4px;
         }
         .dropdown-header p {
-          font-size: 0.75rem;
+          font-size: 0.65rem;
           color: #64748b;
+          font-weight: 700;
           margin-top: 2px;
+          letter-spacing: 0.05em;
         }
         .dropdown-item {
           display: flex;
           align-items: center;
-          gap: 12px;
-          padding: 12px;
-          font-size: 0.875rem;
-          font-weight: 600;
+          gap: 10px;
+          padding: 10px 12px;
+          font-size: 0.8rem;
+          font-weight: 700;
           color: #475569;
-          border-radius: 12px;
+          border-radius: 10px;
           transition: all 0.2s;
           background: none;
           border: none;

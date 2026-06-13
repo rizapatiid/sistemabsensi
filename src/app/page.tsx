@@ -97,7 +97,7 @@ export default function LoginPage() {
         <div className={styles.illustrationSection}>
            <img 
                src="/login_illustration.png" 
-               alt="RMP Digitals Illustration" 
+               alt="PT Riza Media Productions Illustration" 
                className={styles.illustration}
            />
         </div>
@@ -108,7 +108,7 @@ export default function LoginPage() {
                 {/* BRAND LOGO - SCALE CONTROLLED BY CSS FOR PERFECT FIT */}
                 <img 
                     src="/logositus.png" 
-                    alt="RMP Digitals Logo" 
+                    alt="PT Riza Media Productions Logo" 
                     height="95"
                     className={styles.brandLogo}
                 />
@@ -227,7 +227,7 @@ export default function LoginPage() {
               maxWidth: '400px', 
               background: 'white', 
               padding: '32px', 
-              borderRadius: '24px', 
+              borderRadius: '16px', 
               width: '100%',
               boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
               position: 'relative'

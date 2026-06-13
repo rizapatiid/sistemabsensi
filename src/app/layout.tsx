@@ -24,7 +24,7 @@ export const viewport = {
 };
 
 export const metadata: Metadata = {
-  title: "RMP DIGITALS - Sistem Pegawai Profesional",
+  title: "PT RIZA MEDIA PRODUCTIONS - Sistem Pegawai Profesional",
   description: "Sistem Manajemen Kepegawaian, Absensi, dan Payroll Profesional",
   icons: {
     icon: "/faficon.jpg",

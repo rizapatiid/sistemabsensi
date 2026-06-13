@@ -5,8 +5,8 @@ import { updateProfileKaryawanAction } from "@/actions/employeeUser"
 import styles from "@/styles/profil_karyawan.module.css"
 
 // Professional Line Icons
-const IconEdit = () => (
-  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+const IconUpdate = () => (
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"/></svg>
 )
 const IconUser = () => (
   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
@@ -50,33 +50,33 @@ export default function ProfileForm({ user }: { user: any }) {
 
   return (
     <>
-      <button 
-        onClick={() => setIsOpen(true)}
-        className={styles.submitBtn}
-        style={{ marginTop: '24px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}
-      >
-        <IconEdit />
-        PERBARUI INFORMASI PROFIL
-      </button>
+      <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '16px' }}>
+        <button 
+          onClick={() => setIsOpen(true)}
+          className={styles.submitBtn}
+          style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', margin: 0 }}
+        >
+          <IconUpdate />
+          PERBARUI
+        </button>
+      </div>
 
       {isOpen && (
         <div className={styles.modalOverlay} onClick={() => setIsOpen(false)}>
           <div className={styles.modalContent} onClick={e => e.stopPropagation()}>
-            <button onClick={() => setIsOpen(false)} className={styles.modalClose}>
-              <IconClose />
-            </button>
-
-            <div className={styles.modalHeader}>
-              <div className={styles.modalIcon}>
-                <IconEdit />
+            <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginBottom: '24px', paddingBottom: '20px', borderBottom: '1px solid #f1f5f9' }}>
+              <div style={{ background: '#eff6ff', padding: '12px', borderRadius: '14px', color: '#3b82f6' }}>
+                <IconUpdate />
               </div>
-              <h2 className={styles.modalTitle}>Informasi Personal</h2>
-              <p className={styles.modalSubtitle}>Pastikan data biodata Anda sesuai dengan dokumen valid.</p>
+              <div>
+                <h2 style={{ fontSize: "1.25rem", fontWeight: 900, color: "#0f172a", margin: 0 }}>Informasi Personal</h2>
+                <p style={{ margin: '4px 0 0', color: '#64748b', fontSize: '0.85rem', fontWeight: 500 }}>Pastikan data biodata Anda sesuai dengan dokumen valid.</p>
+              </div>
             </div>
 
             {msg && (
               <div style={{ 
-                padding: "16px", borderRadius: "12px", marginBottom: "24px", fontSize: "0.9rem", textAlign: "center", fontWeight: "700",
+                padding: "12px", borderRadius: "8px", marginBottom: "20px", fontSize: "0.85rem", textAlign: "center", fontWeight: "600",
                 backgroundColor: msg.type === "success" ? "#f0fdf4" : "#fef2f2",
                 color: msg.type === "success" ? "#166534" : "#991b1b",
                 border: `1px solid ${msg.type === "success" ? "#dcfce7" : "#fee2e2"}`
@@ -85,55 +85,54 @@ export default function ProfileForm({ user }: { user: any }) {
               </div>
             )}
 
-            <form action={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-              <div className={styles.formGroup}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
-                  <div style={{ color: '#94a3b8' }}><IconUser /></div>
-                  <label>NAMA LENGKAP KARYAWAN</label>
-                </div>
-                <input type="text" name="nama" defaultValue={user.nama} required className={styles.input} />
+            <form action={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+              <div>
+                <label style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.75rem', fontWeight: '700', color: '#475569', marginBottom: '8px', letterSpacing: '0.04em' }}>
+                  <div style={{ color: '#94a3b8', display: 'flex', transform: 'scale(0.85)', transformOrigin: 'left center' }}><IconUser /></div>
+                  NAMA LENGKAP KARYAWAN
+                </label>
+                <input type="text" name="nama" defaultValue={user.nama} required style={{ width: '100%', padding: '14px 16px', borderRadius: '8px', border: '1px solid #cbd5e1', background: '#f8fafc', fontSize: '0.95rem', fontWeight: '600', color: '#0f172a', outline: 'none' }} />
               </div>
               
-              <div className={styles.formRow}>
-                <div className={styles.formGroup}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
-                    <div style={{ color: '#94a3b8' }}><IconMail /></div>
-                    <label>EMAIL AKTIF</label>
-                  </div>
-                  <input type="email" name="email" defaultValue={user.email || ""} className={styles.input} />
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+                <div>
+                  <label style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.75rem', fontWeight: '700', color: '#475569', marginBottom: '8px', letterSpacing: '0.04em' }}>
+                    <div style={{ color: '#94a3b8', display: 'flex', transform: 'scale(0.85)', transformOrigin: 'left center' }}><IconMail /></div>
+                    EMAIL AKTIF
+                  </label>
+                  <input type="email" name="email" defaultValue={user.email || ""} style={{ width: '100%', padding: '14px 16px', borderRadius: '8px', border: '1px solid #cbd5e1', background: '#f8fafc', fontSize: '0.95rem', fontWeight: '600', color: '#0f172a', outline: 'none' }} />
                 </div>
-
-                <div className={styles.formGroup}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
-                    <div style={{ color: '#94a3b8' }}><IconPhone /></div>
-                    <label>NOMOR TELEPON</label>
-                  </div>
-                  <input type="text" name="phone" defaultValue={user.phone || ""} className={styles.input} />
+                <div>
+                  <label style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.75rem', fontWeight: '700', color: '#475569', marginBottom: '8px', letterSpacing: '0.04em' }}>
+                    <div style={{ color: '#94a3b8', display: 'flex', transform: 'scale(0.85)', transformOrigin: 'left center' }}><IconPhone /></div>
+                    NOMOR TELEPON
+                  </label>
+                  <input type="text" name="phone" defaultValue={user.phone || ""} style={{ width: '100%', padding: '14px 16px', borderRadius: '8px', border: '1px solid #cbd5e1', background: '#f8fafc', fontSize: '0.95rem', fontWeight: '600', color: '#0f172a', outline: 'none' }} />
                 </div>
               </div>
 
-              <div className={styles.formGroup}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
-                  <div style={{ color: '#94a3b8' }}><IconMapPin /></div>
-                  <label>ALAMAT DOMISILI SAAT INI</label>
-                </div>
-                <textarea name="alamat" defaultValue={user.alamat || ""} rows={3} className={styles.textarea} />
+              <div>
+                <label style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.75rem', fontWeight: '700', color: '#475569', marginBottom: '8px', letterSpacing: '0.04em' }}>
+                  <div style={{ color: '#94a3b8', display: 'flex', transform: 'scale(0.85)', transformOrigin: 'left center' }}><IconMapPin /></div>
+                  ALAMAT DOMISILI SAAT INI
+                </label>
+                <textarea name="alamat" defaultValue={user.alamat || ""} rows={3} style={{ width: '100%', padding: '14px 16px', borderRadius: '8px', border: '1px solid #cbd5e1', background: '#f8fafc', fontSize: '0.95rem', fontWeight: '600', color: '#0f172a', outline: 'none', resize: 'vertical' }} />
               </div>
 
-              <div className={styles.formGroup} style={{ marginBottom: '24px' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
-                  <div style={{ color: '#1e3a8a' }}><IconKey /></div>
-                  <label>UBAH KATA SANDI (SECURITY)</label>
-                </div>
-                <input type="text" name="password" defaultValue={user.password} required className={styles.input} style={{ background: '#f1f5f9', borderStyle: 'dashed' }} />
+              <div>
+                <label style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.75rem', fontWeight: '700', color: '#475569', marginBottom: '8px', letterSpacing: '0.04em' }}>
+                  <div style={{ color: '#1e3a8a', display: 'flex', transform: 'scale(0.85)', transformOrigin: 'left center' }}><IconKey /></div>
+                  UBAH KATA SANDI (SECURITY)
+                </label>
+                <input type="text" name="password" defaultValue={user.password} required style={{ width: '100%', padding: '14px 16px', borderRadius: '8px', border: '1px dashed #cbd5e1', background: '#f1f5f9', fontSize: '0.95rem', fontWeight: '600', color: '#0f172a', outline: 'none' }} />
               </div>
 
-              <div style={{ display: "grid", gridTemplateColumns: '2fr 1fr', gap: "12px" }}>
-                <button type="submit" disabled={loading} className={styles.submitBtn}>
-                  {loading ? "MEMPROSES..." : "SIMPAN PERUBAHAN"}
+              <div style={{ display: "flex", gap: "12px", marginTop: "16px" }}>
+                <button type="button" onClick={() => setIsOpen(false)} style={{ flex: 1, padding: '14px', background: 'white', color: '#475569', border: '1px solid #cbd5e1', borderRadius: '8px', fontWeight: '600', fontSize: '0.9rem', cursor: 'pointer', transition: 'all 0.2s' }}>
+                  Batal
                 </button>
-                <button type="button" onClick={() => setIsOpen(false)} className={styles.btnSecondary}>
-                  BATAL
+                <button type="submit" disabled={loading} style={{ flex: 2, padding: '14px', background: '#0f172a', color: 'white', border: 'none', borderRadius: '8px', fontWeight: '600', fontSize: '0.9rem', cursor: loading ? 'wait' : 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', transition: 'background 0.2s' }}>
+                  {loading ? "MEMPROSES..." : "Simpan Perubahan"}
                 </button>
               </div>
             </form>

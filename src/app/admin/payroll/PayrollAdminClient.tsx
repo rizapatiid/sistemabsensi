@@ -150,7 +150,7 @@ export default function PayrollAdminClient({ payrolls: initialPayrolls, users }:
 
             {/* 2. DATA SECTION */}
             <div style={{ padding: '0 clamp(16px, 4vw, 32px) clamp(16px, 4vw, 32px)' }}>
-                <div className={styles.card} style={{ borderRadius: '24px', border: '1px solid #e2e8f0', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.02)', padding: '0', overflow: 'hidden' }}>
+                <div className={styles.card} style={{ borderRadius: '16px', border: '1px solid #e2e8f0', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.02)', padding: '0', overflow: 'hidden' }}>
                     
                     {/* ENHANCED TABLE HEADER - PARITY WITH DAFTAR PERSONIL */}
                     <div className={styles.cardHeader} style={{ 

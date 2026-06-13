@@ -86,7 +86,7 @@ export default function PayrollForm({ users }: { users: User[] }) {
           display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 9999, padding: '20px'
         }}>
           <div style={{
-            background: 'white', padding: '40px', borderRadius: '24px', maxWidth: '400px', width: '100%',
+            background: 'white', padding: '40px', borderRadius: '16px', maxWidth: '400px', width: '100%',
             textAlign: 'center', boxShadow: '0 25px 50px -12px rgba(0,0,0,0.5)', border: '1px solid #f1f5f9',
             animation: 'modalSlideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1)'
           }}>

@@ -132,7 +132,7 @@ export default function AdminManagementClient({ admins, currentUserId }: { admin
 
       {/* 2. MAIN CONTENT - CARD BASED */}
       <div style={{ padding: '0 clamp(16px, 4vw, 32px) clamp(16px, 4vw, 32px)' }}>
-          <div className={styles.card} style={{ borderRadius: '24px', overflow: 'hidden', padding: 0 }}>
+          <div className={styles.card} style={{ borderRadius: '16px', overflow: 'hidden', padding: 0 }}>
               <div className={styles.cardHeader} style={{ 
                 padding: '20px 24px', 
                 borderBottom: '1px solid #f1f5f9', 
