@@ -50,14 +50,16 @@ export default function AbsensiClient({
   hasAttendance,
   existingStatus,
   existingWaktuMasuk,
-  holidayImage
+  holidayImage,
+  holidayName
 }: { 
   isClosed: boolean, 
   message: string, 
   hasAttendance: boolean,
   existingStatus?: string,
   existingWaktuMasuk?: string,
-  holidayImage?: string | null
+  holidayImage?: string | null,
+  holidayName?: string | null
 }) {
   const compressImage = (dataUrl: string, maxWidth = 800, maxHeight = 800): Promise<string> => {
     return new Promise((resolve) => {
@@ -235,59 +237,104 @@ export default function AbsensiClient({
     <div className={styles.pageContainer}>
       
       {/* 2. MAIN INTERACTIVE AREA */}
-      <div className={styles.statusCard}>
+      <div className={styles.statusCard} style={isClosed ? { background: 'transparent', boxShadow: 'none', border: 'none' } : {}}>
         {isClosed ? (
-            <div style={{ width: "100%", maxWidth: "640px", margin: "0 auto", display: "flex", flexDirection: "column", alignItems: "center", animation: "fadeIn 0.5s cubic-bezier(0.16, 1, 0.3, 1)" }}>
+            (() => {
+              const isSuspended = message.includes("ditangguhkan");
+              const isWeekend = message.includes("akhir pekan");
+              const closedTitle = isSuspended ? "Akses Ditangguhkan" : isWeekend ? "Akhir Pekan" : "Libur Operasional";
               
-              {/* IMAGE HEADER */}
-              {holidayImage ? (
-                <div style={{ width: "100%", position: "relative", marginBottom: "24px", borderRadius: "24px", overflow: "hidden" }}>
-                  <img src={holidayImage} alt="Banner Libur" style={{ width: "100%", height: "auto", display: "block" }} />
-                  {/* Efek Memudar (Fade Effect) */}
-                  <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, height: "120px", background: "linear-gradient(to top, rgba(255,255,255,1), rgba(255,255,255,0))" }}></div>
+              const renderIcon = () => {
+                if (isSuspended) {
+                  return <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>;
+                }
+                if (isWeekend) {
+                  return <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M18 8h1a4 4 0 0 1 0 8h-1"></path><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"></path><path d="M6 1v3"></path><path d="M10 1v3"></path><path d="M14 1v3"></path></svg>;
+                }
+                return <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line><polygon points="12 12 13.5 15.5 17 16 14.5 18.5 15 22 12 20.5 9 22 9.5 18.5 7 16 10.5 15.5 12 12"></polygon></svg>;
+              };
+
+              const iconBg = isSuspended ? '#fee2e2' : isWeekend ? '#dbeafe' : '#fef3c7';
+              const iconColor = isSuspended ? '#dc2626' : isWeekend ? '#2563eb' : '#d97706';
+              const haloShadow = isSuspended ? '0 0 0 12px #fef2f2' : isWeekend ? '0 0 0 12px #eff6ff' : '0 0 0 12px #fffbeb';
+
+              return (
+                <div className={styles.closedContainer} style={!holidayImage ? { justifyContent: 'center', marginTop: 0 } : {}}>
+                  <div className={styles.closedContentWrapper}>
+                    {/* IMAGE HEADER (Jika ada banner dari DB) ATAU ICON */}
+                    <div className={styles.closedImageWrapper} style={!holidayImage ? { maxWidth: '100px', margin: '0 auto 16px' } : {}}>
+                      {holidayImage ? (
+                        <img 
+                          src={holidayImage} 
+                          alt="Banner Libur" 
+                          className={styles.closedImage}
+                        />
+                      ) : (
+                        <div style={{ 
+                          width: '80px', height: '80px', margin: '0 auto', 
+                          background: iconBg, 
+                          color: iconColor, 
+                          borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center',
+                          boxShadow: haloShadow, flexShrink: 0
+                        }}>
+                          {renderIcon()}
+                        </div>
+                      )}
+                    </div>
+
+                    <div className={styles.closedTextWrapper}>
+                      <h2 className={styles.closedTitle}>
+                        {closedTitle}
+                      </h2>
+                      <div 
+                        className={styles.closedMessage}
+                        dangerouslySetInnerHTML={{ __html: message }}
+                      />
+
+                      {/* HOLIDAY NAME CARD */}
+                      {holidayName && (
+                        <div className={styles.closedBadge}>
+                          <div style={{ color: '#2563eb', flexShrink: 0, display: 'flex' }}>
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+                          </div>
+                          <div style={{ fontSize: '0.9rem', fontWeight: 700, color: '#1e3a8a', lineHeight: 1.2, textAlign: 'center' }}>
+                            {holidayName}
+                          </div>
+                        </div>
+                      )}
+
+                      {/* HUBUNGI HRD BUTTON (KHUSUS SUSPEND) */}
+                      {isSuspended && (
+                        <a 
+                          href="https://wa.me/6285121027553" 
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          style={{
+                            marginTop: '8px',
+                            background: '#ef4444',
+                            color: '#ffffff',
+                            padding: '12px 24px',
+                            borderRadius: '100px',
+                            fontSize: '0.95rem',
+                            fontWeight: 700,
+                            textDecoration: 'none',
+                            display: 'inline-flex',
+                            alignItems: 'center',
+                            gap: '8px',
+                            boxShadow: '0 4px 12px rgba(239, 68, 68, 0.25)',
+                            transition: 'transform 0.2s'
+                          }}
+                        >
+                          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
+                          Hubungi HRD
+                        </a>
+                      )}
+                    </div>
+                  </div>
                 </div>
-              ) : (
-                <div className={styles.successIcon} style={{ background: '#fef2f2', color: '#ef4444', margin: '0 auto 32px', width: '88px', height: '88px' }}>
-                  <IconAlert />
-                </div>
-              )}
-  
-              {/* TITLE */}
-              <h2 style={{ fontSize: "clamp(1.75rem, 5vw, 2.5rem)", fontWeight: 950, color: "#0f172a", margin: "0 0 32px", letterSpacing: "-0.03em", lineHeight: 1.1 }}>
-                HARI LIBUR OPERASIONAL
-              </h2>
-  
-              {/* MESSAGE BLOCK */}
-              <div style={{
-                background: "#f8fafc",
-                padding: "clamp(8px, 2vw, 12px) clamp(12px, 3vw, 16px)",
-                borderRadius: "12px",
-                border: "1px solid #e2e8f0",
-                display: "flex",
-                alignItems: "center",
-                gap: "clamp(8px, 2vw, 12px)",
-                width: "100%",
-                maxWidth: "420px",
-                margin: "0 auto",
-                boxShadow: "0 2px 4px rgba(0,0,0,0.02)"
-              }}>
-                <div style={{ 
-                  width: "clamp(28px, 6vw, 36px)", height: "clamp(28px, 6vw, 36px)", 
-                  flexShrink: 0,
-                  background: "#eff6ff", 
-                  color: "#3b82f6", 
-                  borderRadius: "8px", 
-                  display: "flex", alignItems: "center", justifyContent: "center",
-                  border: "1px solid #bfdbfe"
-                }}>
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
-                </div>
-                <p 
-                  style={{ color: "#334155", fontSize: "clamp(0.75rem, 2.5vw, 0.85rem)", fontWeight: 700, margin: 0, lineHeight: 1.4, textAlign: "left" }}
-                  dangerouslySetInnerHTML={{ __html: message }}
-                />
-              </div>
-            </div>
+              );
+            })()
+
         ) : hasAttendance || submittedStatus ? (
             <div style={{ padding: "24px 12px", animation: "fadeIn 0.5s ease" }}>
               <div style={{ 

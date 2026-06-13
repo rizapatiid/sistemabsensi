@@ -38,12 +38,16 @@ export default async function EmployeeAbsensiPage() {
   if (!user?.absensiEnabled) {
     isClosed = true
     message = "Akses otorisasi presensi Anda sedang ditangguhkan. Silakan hubungi Administrator HRD untuk informasi lebih lanjut."
+  } else if (existing) {
+    // Jika sudah ada data (seperti Cuti/Izin/Sakit yang diinput HR atau sistem), 
+    // jangan blokir sebagai hari libur, agar detail cuti tampil.
+    isClosed = false
+  } else if (isHoliday) {
+    isClosed = true
+    message = `Layanan presensi dihentikan sementara sehubungan dengan libur operasional nasional atau internal perusahaan.`
   } else if (isWeekend) {
     isClosed = true
     message = "Sistem presensi tidak beroperasi pada akhir pekan. Selamat menikmati waktu istirahat Anda."
-  } else if (isHoliday) {
-    isClosed = true
-    message = `Layanan presensi dihentikan sementara sehubungan dengan libur operasional: <strong style="color: #2563eb;">${isHoliday.keterangan}</strong>.`
   }
 
   return <AbsensiClient 
@@ -53,5 +57,6 @@ export default async function EmployeeAbsensiPage() {
     existingStatus={existing?.status}
     existingWaktuMasuk={existing?.waktuMasuk ? existing.waktuMasuk.toISOString() : undefined}
     holidayImage={isHoliday?.image || null}
+    holidayName={isHoliday?.keterangan || null}
   />
 }

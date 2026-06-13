@@ -168,9 +168,9 @@
 .statusLiburBox {
   position: relative;
   z-index: 1;
-  background: #f8fafc;
-  border: 1px solid #e2e8f0;
-  color: #475569;
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
+  color: #1e3a8a;
   padding: 16px 20px;
   border-radius: 16px;
   width: 100%;

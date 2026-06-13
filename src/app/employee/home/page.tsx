@@ -159,13 +159,11 @@ export default async function EmployeeHomePage({
                     </div>
                 ) : isWeekend || isHoliday ? (
                     <div className={styles.statusLiburBox}>
-                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', marginBottom: '4px' }}>
-                            <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-                                <path strokeLinecap="round" strokeLinejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                            </svg>
+                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', marginBottom: '4px', color: '#2563eb' }}>
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
                             <div style={{ fontSize: '0.8rem', fontWeight: 800 }}>LIBUR OPERASIONAL</div>
                         </div>
-                        <div className={styles.todayTime} style={{ fontSize: '1.2rem', marginTop: '12px' }}>{isHoliday?.keterangan || "Akhir Pekan"}</div>
+                        <div className={styles.todayTime} style={{ fontSize: '1.2rem', marginTop: '12px', color: '#1e3a8a' }}>{isHoliday?.keterangan || "Akhir Pekan"}</div>
                     </div>
                 ) : (
                     <>
