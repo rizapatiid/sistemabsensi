@@ -127,7 +127,7 @@ export default async function EmployeeLayout({ children }: { children: React.Rea
           </div>
 
           <div style={{ marginTop: '28px', paddingTop: '20px', borderTop: '1px solid #f1f5f9' }}>
-             <p style={{ margin: 0, fontSize: '0.7rem', color: '#94a3b8', fontWeight: 700 }}>PT RIZA MEDIA PRODUCTIONS V 1.0.0</p>
+             <p style={{ margin: 0, fontSize: '0.7rem', color: '#94a3b8', fontWeight: 700 }}>RMP DIGITALS V 1.0.0</p>
           </div>
         </div>
       </div>

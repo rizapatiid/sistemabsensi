@@ -127,7 +127,7 @@ export default function AnnouncementClient({ announcements, autoOpenId }: { anno
                     </div>
                     <div>
                         <p style={{ margin: 0, fontSize: '0.88rem', color: '#0f172a', fontWeight: 1000 }}>Validitas Publikasi</p>
-                        <p style={{ margin: '4px 0 0', fontSize: '0.8rem', color: '#64748b', fontWeight: 600, lineHeight: '1.6' }}>Dokumen ini diterbitkan secara otomatis melalui platform resmi PT Riza Media Productions.</p>
+                        <p style={{ margin: '4px 0 0', fontSize: '0.8rem', color: '#64748b', fontWeight: 600, lineHeight: '1.6' }}>Dokumen ini diterbitkan secara otomatis melalui platform resmi RMP Digitals.</p>
                     </div>
                 </div>
               </div>

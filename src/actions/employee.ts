@@ -55,7 +55,7 @@ export async function createEmployeeAction(formData: FormData) {
     try {
       await sendWhatsAppMessage(
         newEmp.phone,
-        `Halo *${newEmp.nama}*,\n\nAkun Sistem Pegawai Profesional PT Riza Media Productions Anda telah berhasil didaftarkan oleh Admin.\n\n*Informasi Login Anda:*\n👤 ID Karyawan: *${newEmp.id}*\n🔑 Password: *${newEmp.password}*\n\nSilakan login melalui tautan berikut: https://app.rmpid.com\n\nSimpan pesan ini jika Anda lupa password. _(Otomatis dari HRIS PT Riza Media Productions)_`
+        `Halo *${newEmp.nama}*,\n\nAkun Sistem Pegawai Profesional RMP Digitals Anda telah berhasil didaftarkan oleh Admin.\n\n*Informasi Login Anda:*\n👤 ID Karyawan: *${newEmp.id}*\n🔑 Password: *${newEmp.password}*\n\nSilakan login melalui tautan berikut: https://app.rmpid.com\n\nSimpan pesan ini jika Anda lupa password. _(Otomatis dari HRIS RMP Digitals)_`
       )
     } catch (e) {
       console.error("Gagal mengirim WA Info Login", e);

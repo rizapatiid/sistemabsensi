@@ -128,7 +128,7 @@ export default function LoginPage() {
           <img src="/login_illustration.png" alt="Ilustrasi Sistem Absensi" className={styles.brandIllustration} />
           <div className={styles.illustrationShadow} />
         </div>
-        <h1 className={styles.brandTitle}>Portal Karyawan<br />PT Riza Media Productions</h1>
+        <h1 className={styles.brandTitle}>Portal Karyawan<br />RMP Digitals</h1>
         <div className={styles.brandTitleLine} />
         <p className={styles.brandSubtitle}>
           Pantau kehadiran, slip gaji, dan informasi kerja Anda kapan saja dan dimana saja.
@@ -144,7 +144,7 @@ export default function LoginPage() {
           <div className={styles.logoContainer}>
             <img
               src="/logositus.png"
-              alt="PT Riza Media Productions Logo"
+              alt="RMP Digitals Logo"
               className={styles.brandLogo}
             />
           </div>

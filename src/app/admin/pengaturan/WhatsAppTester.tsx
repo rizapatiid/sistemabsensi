@@ -5,7 +5,7 @@ import { sendTestWhatsAppAction } from "@/actions/admin"
 
 export default function WhatsAppTester() {
   const [phone, setPhone] = useState("")
-  const [message, setMessage] = useState("Halo! Ini adalah pesan uji coba dari Sistem HRIS PT Riza Media Productions.")
+  const [message, setMessage] = useState("Halo! Ini adalah pesan uji coba dari Sistem HRIS RMP Digitals.")
   const [loading, setLoading] = useState(false)
   const [status, setStatus] = useState<{type: 'success' | 'error' | null, msg: string}>({ type: null, msg: "" })
 

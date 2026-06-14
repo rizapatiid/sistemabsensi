@@ -2,7 +2,7 @@ import 'dotenv/config'
 import nodemailer from "nodemailer"
 
 /**
- * World-Class Luxury Email System for PT Riza Media Productions
+ * World-Class Luxury Email System for RMP Digitals
  * Optimized for Prestigous Brand Consistency & Operational Speed in Bahasa Indonesia.
  */
 
@@ -16,7 +16,7 @@ const transporter = nodemailer.createTransport({
 })
 
 // Secure 'From' Address Fail-Safe
-const emailFrom = `"PT Riza Media Productions Official" <${process.env.EMAIL_SERVER_USER}>`
+const emailFrom = `"RMP Digitals Official" <${process.env.EMAIL_SERVER_USER}>`
 
 const formatRupiah = (amount: number) => {
   return new Intl.NumberFormat("id-ID", {
@@ -152,7 +152,7 @@ export async function sendLoginNotificationEmail(toEmail: string, employeeName: 
   `
 
   try {
-    await transporter.sendMail({ from: emailFrom, to: toEmail, subject: `❗ Keamanan: Login PT Riza Media Productions Terdeteksi`, html: emailMasterLayout("Keamanan Akun", "#f97316", "Laporan Aktivitas Login Anda.", content) })
+    await transporter.sendMail({ from: emailFrom, to: toEmail, subject: `❗ Keamanan: Login RMP Digitals Terdeteksi`, html: emailMasterLayout("Keamanan Akun", "#f97316", "Laporan Aktivitas Login Anda.", content) })
     return { success: true }
   } catch (err) { console.error("SMTP Error:", err); return { error: "Network anomaly during transmission" } }
 }
@@ -164,7 +164,7 @@ export async function sendResetPasswordEmail(toEmail: string, employeeName: stri
 
   const content = `
     Halo <strong>${employeeName.toUpperCase()}</strong>,<br/><br/>
-    Anda telah meminta untuk mengatur ulang kata sandi akun PT Riza Media Productions Anda. Gunakan kode verifikasi di bawah ini untuk melanjutkan proses:
+    Anda telah meminta untuk mengatur ulang kata sandi akun RMP Digitals Anda. Gunakan kode verifikasi di bawah ini untuk melanjutkan proses:
     
     <div style="background: #f8fafc; border: 2px dashed #1e3a8a; margin: 30px 0; border-radius: 16px; padding: 30px; text-align: center;">
       <span style="font-size: 0.75rem; font-weight: 850; text-transform: uppercase; color: #64748b; letter-spacing: 0.15em; display: block; margin-bottom: 10px;">Kode OTP Anda</span>

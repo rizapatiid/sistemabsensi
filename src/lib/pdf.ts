@@ -3,7 +3,7 @@ import path from "path"
 import fs from "fs"
 
 /**
- * World-Class PDF Generation for PT Riza Media Productions
+ * World-Class PDF Generation for RMP Digitals
  * Optimized for Prestigous Personnel Documentation with Fail-Safe Rejection.
  */
 

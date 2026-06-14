@@ -24,7 +24,7 @@ export const viewport = {
 };
 
 export const metadata: Metadata = {
-  title: "PT RIZA MEDIA PRODUCTIONS - Sistem Pegawai Profesional",
+  title: "RMP Digitals - Sistem Pegawai Profesional",
   description: "Sistem Manajemen Kepegawaian, Absensi, dan Payroll Profesional",
   icons: {
     icon: "/faficon.jpg",
@@ -40,6 +40,10 @@ export const metadata: Metadata = {
 import { getSession } from "@/actions/auth";
 import { getSystemSettings } from "@/lib/settings";
 import MaintenancePage from "@/components/MaintenancePage";
+
+// Pastikan layout selalu re-render per-request agar status maintenance langsung aktif
+export const dynamic = "force-dynamic";
+
 
 export default async function RootLayout({
   children,

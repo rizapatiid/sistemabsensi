@@ -1,7 +1,7 @@
 import 'dotenv/config';
 
 /**
- * PT Riza Media Productions WhatsApp API Integration
+ * RMP Digitals WhatsApp API Integration
  * Menggunakan Fonnte (https://fonnte.com) sebagai provider pihak ketiga
  */
 

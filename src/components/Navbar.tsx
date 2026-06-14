@@ -45,7 +45,7 @@ export default function Navbar({ user, onMobileMenuToggle, isSidebarCollapsed, o
         {isSidebarCollapsed && (
           <img
             src="/logositus.png"
-            alt="PT Riza Media Productions"
+            alt="RMP Digitals"
             height="48"
             className="navbar-logo-desktop"
           />

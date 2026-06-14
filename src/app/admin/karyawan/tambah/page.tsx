@@ -54,7 +54,7 @@ export default function CreateEmployeeForm() {
                       Pendaftaran Karyawan
                   </h1>
                   <p style={{ color: '#64748b', fontWeight: 600, fontSize: 'clamp(0.85rem, 2vw, 1rem)', marginTop: '8px', margin: 0 }}>
-                    Input data personil baru ke dalam sistem PT Riza Media Productions.
+                    Input data personil baru ke dalam sistem RMP Digitals.
                   </p>
               </div>
           </div>

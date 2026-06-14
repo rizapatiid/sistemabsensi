@@ -1,5 +1,5 @@
 /**
- * Elite World-Class Date Utility for PT Riza Media Productions
+ * Elite World-Class Date Utility for RMP Digitals
  * Optimized for Serverless Environments (Vercel)
  * Menjamin sinkronisasi WIB (UTC+7) yang akurat di Local maupun Production.
  */

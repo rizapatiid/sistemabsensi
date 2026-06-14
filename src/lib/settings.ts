@@ -31,7 +31,7 @@ export const getSystemSettings = cache(
       }
     },
     ["system-settings"],
-    { revalidate: 60 } // Cache 60 detik — settings jarang berubah
+    { revalidate: 5, tags: ["system-settings"] } // Cache 5 detik + tag untuk invalidasi instan
   )
 )
 
