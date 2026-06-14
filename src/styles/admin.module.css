@@ -444,17 +444,11 @@
 }
 
 .quickActionsBar {
-  display: flex;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
   gap: 12px;
-  overflow-x: auto;
   padding: 4px 0 16px 0;
   margin-bottom: 24px;
-  -ms-overflow-style: none;
-  scrollbar-width: none;
-}
-
-.quickActionsBar::-webkit-scrollbar {
-  display: none;
 }
 
 .quickActionBtn {
@@ -470,15 +464,7 @@
   font-weight: 700;
   font-size: 0.85rem;
   white-space: nowrap;
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 1px 2px rgba(0,0,0,0.05);
-}
-
-.quickActionBtn:hover {
-  transform: translateY(-2px);
-  border-color: #1e3a8a;
-  color: #1e3a8a;
-  box-shadow: 0 4px 12px rgba(30, 58, 138, 0.1);
+  box-shadow: 0 1px 2px rgba(0,0,0,0.04);
 }
 
 .quickActionIcon {
@@ -555,10 +541,11 @@
   }
 
   .quickActionsBar {
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
     padding-bottom: 8px;
     margin-bottom: 24px;
-    margin-right: -16px; /* Bleed effect for better UX */
-    padding-right: 16px;
+    margin-right: 0;
+    padding-right: 0;
   }
 
   .quickActionBtn {
@@ -644,4 +631,39 @@
 .btnSm:hover {
   background: #dbeafe;
   transform: translateY(-1px);
+}
+
+/* Admin Bento Home Layout Overrides */
+.adminProfileBox {
+  grid-column: span 8 !important;
+  grid-row: span 1 !important;
+}
+
+.adminTodayStatusBox {
+  grid-column: span 4 !important;
+  grid-row: span 2 !important;
+}
+
+.adminQuickActionsSection {
+  grid-column: span 8 !important;
+  grid-row: span 1 !important;
+  margin-bottom: 0 !important;
+  margin-top: -12px !important;
+}
+
+.statusContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+}
+
+@media (max-width: 1024px) {
+  .adminProfileBox, .adminTodayStatusBox, .adminQuickActionsSection {
+    grid-column: span 12 !important;
+    grid-row: auto !important;
+  }
+  .adminQuickActionsSection {
+    margin-top: 0 !important;
+  }
 }

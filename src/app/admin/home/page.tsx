@@ -3,7 +3,9 @@ import styles from "@/styles/admin.module.css"
 import employeeStyles from "@/styles/employee_home.module.css"
 import { getSession } from "@/actions/auth"
 import Link from "next/link"
-import { getTodayJakarta, formatWIBTime, formatIndonesianDate } from "@/lib/date"
+import { getTodayJakarta, formatWIBTime, getJakartaDate, formatIndonesianDate } from "@/lib/date"
+import { getSystemSettings } from "@/lib/settings"
+import LiveServerTime from "@/components/LiveServerTime"
 
 // World-Class Command Icons
 const IconClock = () => (
@@ -19,6 +21,13 @@ const IconMoney = () => (
   <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="6" width="20" height="12" rx="2" /><circle cx="12" cy="12" r="2" /><path d="M6 12h.01M18 12h.01" /></svg>
 )
 
+const IconChat = () => (
+  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+)
+
+const IconShield = () => (
+  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+)
 
 const IconCalendar = () => (
   <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2" /><line x1="16" y1="2" x2="16" y2="6" /><line x1="8" y1="2" x2="8" y2="6" /><line x1="3" y1="10" x2="21" y2="10" /></svg>
@@ -74,8 +83,18 @@ export default async function AdminHomePage() {
         where: { tanggal: { gte: today }, status: "HADIR" }
     })
 
-    const pendingPayrollCount = await prisma.payroll.count({
-        where: { statusPembayaran: "BELUM_LUNAS" }
+    const diprosesPayrolls = await prisma.payroll.findMany({
+        where: { statusPembayaran: "DIPROSES" },
+        include: { user: true },
+        orderBy: { createdAt: "desc" },
+        take: 5
+    })
+
+    const recentEmployees = await prisma.user.findMany({
+        where: { role: "KARYAWAN", status: "AKTIF" },
+        select: { id: true, nama: true, jabatan: true },
+        orderBy: { createdAt: "desc" },
+        take: 5
     })
 
     const recentAttendance = await prisma.attendance.findMany({
@@ -86,8 +105,11 @@ export default async function AdminHomePage() {
     })
 
     const attendanceRate = totalEmployees > 0 ? (presentTodayCount / totalEmployees) * 100 : 0
-
-
+    const settings = await getSystemSettings()
+    const nowJakarta = getJakartaDate()
+    const formattedTime = formatWIBTime(nowJakarta)
+    const formattedDate = formatIndonesianDate(nowJakarta, true)
+    const dayName = new Intl.DateTimeFormat("id-ID", { weekday: 'long', timeZone: 'Asia/Jakarta' }).format(nowJakarta)
 
     const upcomingHolidays = await prisma.calendar.findMany({
         where: { tanggal: { gte: today } },
@@ -104,7 +126,7 @@ export default async function AdminHomePage() {
                 <div className={employeeStyles.bentoGrid}>
                     
                     {/* BENTO BOX 1: PROFILE */}
-                    <section className={`${employeeStyles.bentoBox} ${employeeStyles.profileBox}`}>
+                    <section className={`${employeeStyles.bentoBox} ${employeeStyles.profileBox} ${styles.adminProfileBox}`}>
                         {/* Background Decor (Shield/Activity Icon) */}
                         <svg className={employeeStyles.profileBgIcon} width="200" height="200" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1}>
                             <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
@@ -122,34 +144,49 @@ export default async function AdminHomePage() {
                     </section>
 
                     {/* BENTO BOX 2: SYSTEM HEALTH STATUS */}
-                    <section className={`${employeeStyles.bentoBox} ${employeeStyles.todayStatusBox}`}>
-                        {/* Background Decor (Clock Icon) */}
-                        <svg className={employeeStyles.statusBgIcon} width="160" height="160" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                    <section className={`${employeeStyles.bentoBox} ${employeeStyles.todayStatusBox} ${styles.adminTodayStatusBox}`} style={{ display: 'flex', flexDirection: 'column', justifyContent: 'flex-start', alignItems: 'stretch', textAlign: 'left', padding: '24px' }}>
+                        {/* Background Decor (Server Grid Icon) */}
+                        <svg className={employeeStyles.statusBgIcon} width="160" height="160" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={0.8} style={{ opacity: 0.025, right: '-15px', bottom: '-15px', position: 'absolute', pointerEvents: 'none' }}>
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M5 12h14M5 12a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v4a2 2 0 01-2 2M5 12a2 2 0 00-2 2v4a2 2 0 002 2h14a2 2 0 002-2v-4a2 2 0 00-2-2m-2-4h.01M17 16h.01" />
                         </svg>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '16px' }}>
-                            <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5} style={{ color: '#64748b' }}>
-                                <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-                            </svg>
-                            <h2 className={employeeStyles.todayTitle} style={{ margin: 0 }}>Status Sistem</h2>
-                        </div>
-                        <div className={employeeStyles.statusHadirBox} style={{ background: '#f0fdf4', borderColor: '#bbf7d0', color: '#166534' }}>
-                            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', marginBottom: '4px' }}>
-                                <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-                                    <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+
+                        {/* Card Title */}
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '20px' }}>
+                            <div style={{ background: '#f1f5f9', color: '#475569', width: '32px', height: '32px', borderRadius: '10px', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                                <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                                    <path strokeLinecap="round" strokeLinejoin="round" d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-2 2 2 2 0 01-2-2v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83 0 2 2 0 010-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 01-2-2 2 2 0 012-2h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83 0l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 012-2 2 2 0 012 2v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 0 2 2 0 010 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 012 2 2 2 0 01-2 2h-.09a1.65 1.65 0 00-1.51 1z" />
                                 </svg>
-                                <div style={{ fontSize: '0.8rem', fontWeight: 800 }}>RMP COMMAND CENTER</div>
                             </div>
-                            <div className={employeeStyles.todayTime} style={{ fontSize: '1.4rem' }}>AKTIF & AMAN</div>
+                            <span style={{ fontSize: '0.75rem', fontWeight: 800, color: '#475569', letterSpacing: '0.08em', textTransform: 'uppercase' }}>Command Center Status</span>
+                        </div>
+
+                        {/* Info Grid (Side-by-side on Desktop, Stacked on Mobile) */}
+                        <div className={styles.statusContainer}>
+                            {/* Server Status Box */}
+                            <Link href="/admin/pengaturan" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: settings?.maintenance ? 'linear-gradient(135deg, #fff5f5 0%, #fee2e2 100%)' : 'linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%)', border: settings?.maintenance ? '1px solid #fca5a5' : '1px solid #86efac', padding: '14px 18px', borderRadius: '16px', transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)', boxShadow: settings?.maintenance ? '0 4px 12px rgba(239, 68, 68, 0.05)' : '0 4px 12px rgba(16, 185, 129, 0.05)' }}>
+                                <div style={{ display: 'flex', flexDirection: 'column', gap: '3px' }}>
+                                    <span style={{ fontSize: '0.65rem', fontWeight: 900, color: settings?.maintenance ? '#dc2626' : '#15803d', letterSpacing: '0.05em', textTransform: 'uppercase' }}>STATUS OPERASIONAL</span>
+                                    <span style={{ fontSize: '1.05rem', fontWeight: 900, color: settings?.maintenance ? '#991b1b' : '#166534' }}>
+                                        {settings?.maintenance ? 'MODE PERAWATAN' : 'SISTEM ONLINE'}
+                                    </span>
+                                </div>
+                                <div style={{ display: 'flex', alignItems: 'center', background: 'white', padding: '6px 10px', borderRadius: '10px', boxShadow: '0 2px 4px rgba(0,0,0,0.02)', border: '1px solid rgba(0,0,0,0.03)', transition: 'all 0.2s' }}>
+                                    <span style={{ fontSize: '0.7rem', fontWeight: 800, color: '#475569', textTransform: 'uppercase', letterSpacing: '0.02em', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                                        Kelola
+                                        <svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
+                                            <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+                                        </svg>
+                                    </span>
+                                </div>
+                            </Link>
+
+                            {/* Details Grid */}
+                            <LiveServerTime initialTime={formattedTime} initialDate={formattedDate} initialDayName={dayName} />
                         </div>
                     </section>
 
                     {/* BENTO BOX 2.5: OPERATIONAL ACCESS BAR */}
-                    <section className={employeeStyles.quickActionsSection}>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '12px' }}>
-                            <span style={{ height: '2px', width: '20px', background: '#1e3a8a', borderRadius: '2px' }}></span>
-                            <h3 style={{ fontSize: '0.7rem', fontWeight: 800, color: '#1e3a8a', textTransform: 'uppercase', letterSpacing: '0.1em', margin: 0 }}>Akses Operasional</h3>
-                        </div>
+                    <section className={`${employeeStyles.quickActionsSection} ${styles.adminQuickActionsSection}`}>
                         <div className={styles.quickActionsBar} style={{ paddingBottom: '4px', marginBottom: 0 }}>
                             <Link href="/admin/karyawan" className={styles.quickActionBtn}>
                                 <div className={styles.quickActionIcon} style={{ background: '#eff6ff', color: '#2563eb' }}><IconUsers /></div>
@@ -166,6 +203,14 @@ export default async function AdminHomePage() {
                             <Link href="/admin/kalender" className={styles.quickActionBtn}>
                                 <div className={styles.quickActionIcon} style={{ background: '#fef2f2', color: '#ef4444' }}><IconCalendar /></div>
                                 Kalender
+                            </Link>
+                            <Link href="/admin/chat" className={styles.quickActionBtn}>
+                                <div className={styles.quickActionIcon} style={{ background: '#faf5ff', color: '#8b5cf6' }}><IconChat /></div>
+                                Chat Internal
+                            </Link>
+                            <Link href="/admin/kelola-admin" className={styles.quickActionBtn}>
+                                <div className={styles.quickActionIcon} style={{ background: '#fdf2f8', color: '#ec4899' }}><IconShield /></div>
+                                Tim Admin
                             </Link>
                             <Link href="/admin/pengaturan" className={styles.quickActionBtn}>
                                 <div className={styles.quickActionIcon} style={{ background: '#f8fafc', color: '#1e293b' }}>
@@ -198,12 +243,13 @@ export default async function AdminHomePage() {
                                 <div className={`${employeeStyles.metricIconWrapper} ${employeeStyles.iconIzin}`} style={{ background: 'linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%)', color: '#166534' }}>
                                     <IconCheckIn />
                                 </div>
-                                <div className={employeeStyles.metricContent}>
+                                <div className={employeeStyles.metricContent} style={{ flex: 1 }}>
                                     <div className={employeeStyles.metricValueRow}>
                                         <span className={employeeStyles.metricValue} style={{ color: '#16a34a' }}>{presentTodayCount}</span>
                                         <span className={employeeStyles.metricUnit}>({Math.round(attendanceRate)}%)</span>
                                     </div>
                                     <span className={employeeStyles.metricLabel}>Hadir Hari Ini</span>
+
                                 </div>
                             </div>
                         </div>
@@ -264,86 +310,131 @@ export default async function AdminHomePage() {
                     {/* BENTO GRID RIGHT: FINANCE/WIDGETS */}
                     <aside className={employeeStyles.financeStack}>
                         {/* Audit Center Card */}
-                        <div className={`${employeeStyles.financeCard} ${employeeStyles.bank}`} style={{ background: 'linear-gradient(135deg, #6366f1 0%, #4f46e5 100%)' }}>
-                            <svg className={employeeStyles.bankBgIcon} width="120" height="120" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1}>
+                        <div className={employeeStyles.financeCard} style={{ background: 'white', border: '1px solid #e2e8f0', padding: '20px', position: 'relative', overflow: 'hidden' }}>
+                            {/* Background SVG Decor */}
+                            <svg style={{ position: 'absolute', right: '-18px', bottom: '-18px', opacity: 0.045, pointerEvents: 'none', zIndex: 0 }} width="140" height="140" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1}>
                                 <path strokeLinecap="round" strokeLinejoin="round" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                             </svg>
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '8px', position: 'relative', zIndex: 1 }}>
-                                <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} style={{ opacity: 0.8 }}>
-                                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                </svg>
-                                <span className={employeeStyles.bankLabel} style={{ margin: 0 }}>Audit Center</span>
+                            {/* Content */}
+                            <div style={{ position: 'relative', zIndex: 1 }}>
+                            {/* Header */}
+                            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '16px' }}>
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                    <div style={{ width: '32px', height: '32px', borderRadius: '10px', background: '#f1f5f9', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#475569', flexShrink: 0 }}>
+                                        <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                                            <path strokeLinecap="round" strokeLinejoin="round" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                        </svg>
+                                    </div>
+                                    <div>
+                                        <p style={{ fontSize: '0.6rem', fontWeight: 800, color: '#94a3b8', letterSpacing: '0.08em', textTransform: 'uppercase', margin: 0 }}>Audit Center</p>
+                                        <p style={{ fontSize: '0.9rem', fontWeight: 800, color: '#0f172a', margin: 0 }}>Payroll Diproses</p>
+                                    </div>
+                                </div>
+                                <span style={{ fontSize: '0.7rem', fontWeight: 700, background: diprosesPayrolls.length > 0 ? '#eff6ff' : '#f8fafc', color: diprosesPayrolls.length > 0 ? '#3b82f6' : '#94a3b8', border: diprosesPayrolls.length > 0 ? '1px solid #bfdbfe' : '1px solid #e2e8f0', padding: '3px 10px', borderRadius: '20px' }}>
+                                    {diprosesPayrolls.length} item
+                                </span>
                             </div>
-                            <span className={employeeStyles.bankName} style={{ fontSize: '1.25rem' }}>Verifikasi Penggajian</span>
-                            <span className={employeeStyles.accNumber} style={{ fontSize: '1.5rem', fontFamily: 'Inter, sans-serif', fontWeight: 800, marginTop: '8px' }}>
-                                {pendingPayrollCount} Pending
-                            </span>
+
+                            {/* Divider */}
+                            <div style={{ height: '1px', background: '#f1f5f9', marginBottom: '14px' }} />
+
+                            {/* List */}
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                                {diprosesPayrolls.length === 0 ? (
+                                    <div style={{ textAlign: 'center', padding: '20px 0', color: '#cbd5e1' }}>
+                                        <svg width="28" height="28" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5} style={{ margin: '0 auto 6px', display: 'block', color: '#e2e8f0' }}>
+                                            <path strokeLinecap="round" strokeLinejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                        </svg>
+                                        <p style={{ fontSize: '0.78rem', fontWeight: 600, color: '#94a3b8', margin: 0 }}>Tidak ada payroll diproses</p>
+                                    </div>
+                                ) : (
+                                    diprosesPayrolls.map((p) => (
+                                        <div key={p.id} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: '#f8fafc', border: '1px solid #f1f5f9', borderRadius: '10px', padding: '10px 12px' }}>
+                                            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', minWidth: 0 }}>
+                                                <div style={{ width: '30px', height: '30px', borderRadius: '8px', background: '#e0e7ff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800, fontSize: '0.8rem', color: '#4f46e5', flexShrink: 0 }}>
+                                                    {p.user.nama.charAt(0).toUpperCase()}
+                                                </div>
+                                                <div style={{ minWidth: 0 }}>
+                                                    <div style={{ fontSize: '0.8rem', fontWeight: 700, color: '#1e293b', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: '110px' }}>{p.user.nama}</div>
+                                                    <div style={{ fontSize: '0.65rem', color: '#94a3b8', fontWeight: 600 }}>{new Intl.DateTimeFormat('id-ID', { month: 'long', year: 'numeric', timeZone: 'Asia/Jakarta' }).format(p.periodeAwal)}</div>
+                                                </div>
+                                            </div>
+                                            <span style={{ fontSize: '0.72rem', fontWeight: 700, color: '#334155', whiteSpace: 'nowrap' }}>
+                                                Rp {p.totalGaji.toLocaleString('id-ID')}
+                                            </span>
+                                        </div>
+                                    ))
+                                )}
+                            </div>
+
+                            {/* Footer Link */}
                             <Link 
-                                href="/admin/payroll" 
-                                style={{ 
-                                    background: 'white', 
-                                    color: '#4f46e5', 
-                                    border: 'none', 
-                                    padding: '12px 18px', 
-                                    borderRadius: '12px', 
-                                    fontSize: '0.8rem', 
-                                    fontWeight: 800, 
-                                    cursor: 'pointer',
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    justifyContent: 'center',
-                                    gap: '6px',
-                                    textDecoration: 'none',
-                                    marginTop: '20px',
-                                    boxShadow: '0 4px 6px -1px rgba(79, 70, 229, 0.2)',
-                                    position: 'relative',
-                                    zIndex: 1
-                                }}
+                                href="/admin/payroll"
+                                style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px', marginTop: '16px', padding: '10px', background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: '10px', fontSize: '0.78rem', fontWeight: 700, color: '#475569', textDecoration: 'none', letterSpacing: '0.02em' }}
                             >
-                                VERIFIKASI SEKARANG &rarr;
+                                Lihat Semua Payroll
+                                <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}><path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" /></svg>
                             </Link>
+                            </div>
                         </div>
 
-                        {/* Broadcast Hub Card */}
-                        <div className={`${employeeStyles.financeCard} ${employeeStyles.payroll}`} style={{ border: '1px solid #e2e8f0' }}>
-                            <svg className={employeeStyles.payrollBgIcon} width="120" height="120" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1}>
-                                <path strokeLinecap="round" strokeLinejoin="round" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+                        {/* Daftar Karyawan Card */}
+                        <div className={employeeStyles.financeCard} style={{ background: 'white', border: '1px solid #e2e8f0', padding: '20px', position: 'relative', overflow: 'hidden' }}>
+                            {/* Background SVG Decor */}
+                            <svg style={{ position: 'absolute', right: '-18px', bottom: '-18px', opacity: 0.045, pointerEvents: 'none', zIndex: 0 }} width="140" height="140" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1}>
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" /><path strokeLinecap="round" strokeLinejoin="round" d="M23 21v-2a4 4 0 0 0-3-3.87" /><path strokeLinecap="round" strokeLinejoin="round" d="M16 3.13a4 4 0 0 1 0 7.75" />
                             </svg>
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '8px', position: 'relative', zIndex: 1 }}>
-                                <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5} style={{ color: '#64748b' }}>
-                                    <path strokeLinecap="round" strokeLinejoin="round" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
-                                </svg>
-                                <span className={employeeStyles.payrollLabel} style={{ margin: 0 }}>Broadcast Hub</span>
+                            {/* Content */}
+                            <div style={{ position: 'relative', zIndex: 1 }}>
+                            {/* Header */}
+                            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '16px' }}>
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                    <div style={{ width: '32px', height: '32px', borderRadius: '10px', background: '#f1f5f9', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#475569', flexShrink: 0 }}>
+                                        <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                                            <path strokeLinecap="round" strokeLinejoin="round" d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" /><path d="M23 21v-2a4 4 0 0 0-3-3.87" /><path d="M16 3.13a4 4 0 0 1 0 7.75" />
+                                        </svg>
+                                    </div>
+                                    <div>
+                                        <p style={{ fontSize: '0.6rem', fontWeight: 800, color: '#94a3b8', letterSpacing: '0.08em', textTransform: 'uppercase', margin: 0 }}>Personil</p>
+                                        <p style={{ fontSize: '0.9rem', fontWeight: 800, color: '#0f172a', margin: 0 }}>Daftar Karyawan</p>
+                                    </div>
+                                </div>
+                                <span style={{ fontSize: '0.7rem', fontWeight: 700, background: '#f1f5f9', color: '#64748b', border: '1px solid #e2e8f0', padding: '3px 10px', borderRadius: '20px' }}>
+                                    {totalEmployees} orang
+                                </span>
                             </div>
-                            <span className={employeeStyles.payrollAmount} style={{ fontSize: '1.25rem', margin: '4px 0 8px 0', position: 'relative', zIndex: 1 }}>
-                                Pesan Broadcast
-                            </span>
-                            <span style={{ fontSize: '0.8rem', color: '#64748b', fontWeight: 600, lineHeight: '1.4', position: 'relative', zIndex: 1 }}>
-                                Push informasi penting ke seluruh dashboard karyawan.
-                            </span>
-                            <Link 
-                                href="/admin/kalender/tambah-pengumuman" 
-                                style={{ 
-                                    background: '#eff6ff', 
-                                    color: '#1e3a8a', 
-                                    border: '1px solid #dbeafe', 
-                                    padding: '12px 18px', 
-                                    borderRadius: '12px', 
-                                    fontSize: '0.8rem', 
-                                    fontWeight: 800, 
-                                    cursor: 'pointer',
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    justifyContent: 'center',
-                                    gap: '6px',
-                                    textDecoration: 'none',
-                                    marginTop: '20px',
-                                    position: 'relative',
-                                    zIndex: 1
-                                }}
+
+                            {/* Divider */}
+                            <div style={{ height: '1px', background: '#f1f5f9', marginBottom: '14px' }} />
+
+                            {/* List */}
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                                {recentEmployees.map((emp, i) => {
+                                    const colors = ['#eff6ff','#f0fdf4','#faf5ff','#fff7ed','#fef2f2']
+                                    const textColors = ['#3b82f6','#22c55e','#a855f7','#f97316','#ef4444']
+                                    return (
+                                        <div key={emp.id} style={{ display: 'flex', alignItems: 'center', gap: '10px', background: '#f8fafc', border: '1px solid #f1f5f9', borderRadius: '10px', padding: '10px 12px' }}>
+                                            <div style={{ width: '30px', height: '30px', borderRadius: '8px', background: colors[i % colors.length], display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800, fontSize: '0.8rem', color: textColors[i % textColors.length], flexShrink: 0 }}>
+                                                {emp.nama.charAt(0).toUpperCase()}
+                                            </div>
+                                            <div style={{ flex: 1, minWidth: 0 }}>
+                                                <div style={{ fontSize: '0.8rem', fontWeight: 700, color: '#1e293b', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{emp.nama}</div>
+                                                <div style={{ fontSize: '0.65rem', color: '#94a3b8', fontWeight: 600, marginTop: '1px' }}>{emp.jabatan ?? 'Tidak ada jabatan'}</div>
+                                            </div>
+                                        </div>
+                                    )
+                                })}
+                            </div>
+
+                            {/* Footer */}
+                            <Link
+                                href="/admin/karyawan"
+                                style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px', marginTop: '16px', padding: '10px', background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: '10px', fontSize: '0.78rem', fontWeight: 700, color: '#475569', textDecoration: 'none', letterSpacing: '0.02em' }}
                             >
-                                BUAT PENGUMUMAN &rarr;
+                                Lihat Semua Karyawan
+                                <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}><path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" /></svg>
                             </Link>
+                            </div>
                         </div>
 
                         {/* Upcoming Holidays Card */}

@@ -621,24 +621,106 @@
 }
 
 .holidayDateBlock {
-  background: #f8fafc;
+  background: #ffffff;
   border: 1px solid #e2e8f0;
-  border-radius: 12px;
-  min-width: 48px;
-  height: 48px;
+  border-radius: 10px;
+  min-width: 46px;
+  height: 50px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
+  overflow: hidden;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.02);
 }
 
-.holidayMonth { font-size: 0.6rem; font-weight: 800; text-transform: uppercase; color: #64748b; }
-.holidayDay { font-size: 1.1rem; font-weight: 900; line-height: 1; color: #0f172a;}
+.holidayMonth { 
+  font-size: 0.55rem; 
+  font-weight: 900; 
+  text-transform: uppercase; 
+  color: #ffffff; 
+  background: #ef4444; 
+  width: 100%; 
+  text-align: center; 
+  padding: 3px 0; 
+  letter-spacing: 0.05em;
+}
+
+.holidayDay { 
+  font-size: 1.1rem; 
+  font-weight: 900; 
+  line-height: 1.2; 
+  color: #1e293b;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .quickActionsSection {
   grid-column: span 12;
   margin-bottom: 8px;
   margin-top: -4px;
+}
+
+/* Bento Box Premium Transitions */
+
+
+/* Premium Finance Stack Cards & Buttons */
+
+
+.financeBtn {
+  background: white;
+  color: #4f46e5;
+  border: none;
+  padding: 12px 18px;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  font-weight: 800;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  text-decoration: none;
+  margin-top: 20px;
+  box-shadow: 0 4px 6px -1px rgba(79, 70, 229, 0.15);
+  position: relative;
+  z-index: 1;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.financeBtn:hover {
+  background: #f8fafc;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 15px -3px rgba(79, 70, 229, 0.3);
+}
+
+.financeBtnSecondary {
+  background: #eff6ff;
+  color: #1e3a8a;
+  border: 1px solid #dbeafe;
+  padding: 12px 18px;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  font-weight: 800;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  text-decoration: none;
+  margin-top: 20px;
+  position: relative;
+  z-index: 1;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.financeBtnSecondary:hover {
+  background: #dbeafe;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 15px -3px rgba(30, 58, 138, 0.15);
 }
 
 /* RESPONSIVE */
