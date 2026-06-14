@@ -635,13 +635,33 @@
 
 .holidayMonth { font-size: 0.6rem; font-weight: 800; text-transform: uppercase; color: #64748b; }
 .holidayDay { font-size: 1.1rem; font-weight: 900; line-height: 1; color: #0f172a;}
-
+.quickActionsSection {
+  grid-column: span 12;
+  margin-bottom: 8px;
+  margin-top: -4px;
+}
 
 /* RESPONSIVE */
 @media (max-width: 1024px) {
-  .profileBox, .todayStatusBox, .leftWrapper, .financeStack {
+  .profileBox, .todayStatusBox, .leftWrapper, .financeStack, .quickActionsSection {
     grid-column: span 12;
     grid-row: auto;
+  }
+  
+  .profileBox {
+    order: 1;
+  }
+  .quickActionsSection {
+    order: 2;
+  }
+  .todayStatusBox {
+    order: 3;
+  }
+  .leftWrapper {
+    order: 4;
+  }
+  .financeStack {
+    order: 5;
   }
   
   .financeStack {
