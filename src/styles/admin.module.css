@@ -667,3 +667,172 @@
     margin-top: 0 !important;
   }
 }
+
+/* Pengumuman Header Responsive */
+.pengumumanHeaderFlex {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+  position: relative;
+  z-index: 1;
+}
+
+.pengumumanHeaderLeft {
+  display: flex;
+  gap: clamp(12px, 3vw, 20px);
+  align-items: center;
+  flex: 1 1 min-content;
+}
+
+.pengumumanHeaderIcon {
+  width: clamp(56px, 12vw, 64px);
+  height: clamp(56px, 12vw, 64px);
+  background: rgba(255,255,255,0.1);
+  border-radius: clamp(14px, 3vw, 20px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255,255,255,0.2);
+  flex-shrink: 0;
+}
+
+.pengumumanHeaderTitle {
+  font-size: clamp(1.4rem, 4.5vw, 1.75rem);
+  font-weight: 900;
+  margin: 0 0 4px 0;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+}
+
+.pengumumanHeaderDesc {
+  margin: 0;
+  color: #93c5fd;
+  font-size: clamp(0.8rem, 2.5vw, 0.95rem);
+  font-weight: 500;
+}
+
+.pengumumanHeaderBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 20px;
+  border-radius: 14px;
+  background: #3b82f6;
+  color: white;
+  font-weight: 900;
+  font-size: 0.75rem;
+  text-decoration: none;
+  box-shadow: 0 8px 20px -4px rgba(59,130,246,0.4);
+  flex-shrink: 0;
+  letter-spacing: 0.02em;
+  transition: all 0.2s;
+}
+
+.pengumumanHeaderBtn:hover {
+  background: #2563eb;
+  transform: translateY(-2px);
+}
+
+@media (max-width: 640px) {
+  .pengumumanHeaderFlex {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 20px;
+  }
+  .pengumumanHeaderLeft {
+    align-items: flex-start;
+  }
+  .pengumumanHeaderIcon {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+  }
+  .pengumumanHeaderIcon svg {
+    width: 24px;
+    height: 24px;
+  }
+  .pengumumanHeaderTitle {
+    font-size: 1.3rem;
+  }
+  .pengumumanHeaderBtn {
+    width: 100%;
+  }
+}
+
+/* Announcement Admin Item Responsive */
+.adminAnnounceItem {
+  flex-wrap: wrap;
+}
+
+.adminAnnounceActions {
+  display: flex;
+  gap: 6px;
+  flex-shrink: 0;
+  align-self: flex-start;
+}
+
+@media (max-width: 640px) {
+  .adminAnnounceActions {
+    width: 100%;
+    justify-content: flex-end;
+    padding-top: 8px;
+    margin-top: -10px;
+    border-top: 1px solid #f1f5f9;
+  }
+}
+
+/* Enhanced Action Buttons */
+.pengumumanActionEdit {
+  padding: 8px 16px;
+  border-radius: 10px;
+  background: white;
+  color: #2563eb;
+  border: 1.5px solid #bfdbfe;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  text-decoration: none;
+  font-size: 0.75rem;
+  font-weight: 800;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
+  box-shadow: 0 2px 4px rgba(37, 99, 235, 0.05);
+}
+
+.pengumumanActionEdit:hover {
+  background: #eff6ff;
+  border-color: #3b82f6;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 6px rgba(37, 99, 235, 0.1);
+}
+
+.pengumumanActionDelete {
+  padding: 8px 16px;
+  border-radius: 10px;
+  background: white;
+  color: #dc2626;
+  border: 1.5px solid #fecaca;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  text-decoration: none;
+  font-size: 0.75rem;
+  font-weight: 800;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
+  box-shadow: 0 2px 4px rgba(220, 38, 38, 0.05);
+}
+
+.pengumumanActionDelete:hover {
+  background: #fef2f2;
+  border-color: #ef4444;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 6px rgba(220, 38, 38, 0.1);
+}
+

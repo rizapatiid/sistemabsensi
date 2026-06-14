@@ -13,7 +13,7 @@ export default async function AdminKalenderPage() {
   }))
 
   return (
-    <div className={styles.pageContainer}>
+    <div className={styles.pageContainer} style={{ padding: '16px 0', gap: '12px' }}>
       <KalenderClient holidays={formattedHolidays} />
     </div>
   )

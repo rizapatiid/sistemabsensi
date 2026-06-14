@@ -47,7 +47,7 @@ export default async function AdminPayrollPage() {
   }))
 
   return (
-    <div className={styles.pageContainer}>
+    <div className={styles.pageContainer} style={{ padding: '16px 0', gap: '12px' }}>
       <PayrollAdminClient payrolls={formattedPayrolls} users={users} />
     </div>
   )

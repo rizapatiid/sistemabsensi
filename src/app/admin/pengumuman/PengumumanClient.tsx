@@ -16,8 +16,8 @@ interface Announcement {
 }
 
 const IconPlus = () => <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-const IconEdit = () => <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
-const IconTrash = () => <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>
+const IconEdit = () => <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+const IconTrash = () => <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>
 
 export default function PengumumanClient({ announcements }: { announcements: Announcement[] }) {
   const [search, setSearch] = useState("")
@@ -41,7 +41,7 @@ export default function PengumumanClient({ announcements }: { announcements: Ann
   }
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', padding: '16px 0' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
 
       {/* ── DARK HERO HEADER ── */}
       <div style={{
@@ -57,43 +57,21 @@ export default function PengumumanClient({ announcements }: { announcements: Ann
         <div style={{ position: 'absolute', top: '-10%', right: '-5%', width: '300px', height: '300px', background: 'radial-gradient(circle, rgba(255,255,255,0.08) 0%, transparent 70%)', borderRadius: '50%' }}></div>
         <div style={{ position: 'absolute', bottom: '-20%', left: '10%', width: '200px', height: '200px', background: 'radial-gradient(circle, rgba(59,130,246,0.2) 0%, transparent 70%)', borderRadius: '50%' }}></div>
 
-        <div style={{ position: 'relative', zIndex: 1, display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '16px' }}>
-          <div style={{ display: 'flex', gap: 'clamp(12px, 3vw, 20px)', alignItems: 'center' }}>
-            <div style={{
-              width: 'clamp(56px, 12vw, 64px)', height: 'clamp(56px, 12vw, 64px)',
-              background: 'rgba(255,255,255,0.1)',
-              borderRadius: 'clamp(14px, 3vw, 20px)',
-              display: 'flex', alignItems: 'center', justifyContent: 'center',
-              backdropFilter: 'blur(10px)',
-              border: '1px solid rgba(255,255,255,0.2)',
-              flexShrink: 0
-            }}>
+        <div className={adminStyles.pengumumanHeaderFlex}>
+          <div className={adminStyles.pengumumanHeaderLeft}>
+            <div className={adminStyles.pengumumanHeaderIcon}>
               <svg width="clamp(24px, 6vw, 32px)" height="clamp(24px, 6vw, 32px)" viewBox="0 0 24 24" fill="none" stroke="#60a5fa" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
             </div>
             <div>
-              <h1 style={{ fontSize: 'clamp(1.4rem, 4.5vw, 1.75rem)', fontWeight: 900, margin: '0 0 4px 0', letterSpacing: '-0.02em', lineHeight: 1.2 }}>Sirkulasi Pengumuman</h1>
-              <p style={{ margin: 0, color: '#93c5fd', fontSize: 'clamp(0.8rem, 2.5vw, 0.95rem)', fontWeight: 500 }}>Kelola dan distribusikan informasi resmi kepada seluruh staf RMP.</p>
+              <h1 className={adminStyles.pengumumanHeaderTitle}>Sirkulasi Pengumuman</h1>
+              <p className={adminStyles.pengumumanHeaderDesc}>Kelola dan distribusikan informasi resmi kepada seluruh staf RMP.</p>
             </div>
           </div>
 
           {/* CTA Button */}
           <Link
             href="/admin/pengumuman/tambah"
-            style={{
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: '8px',
-              padding: '12px 20px',
-              borderRadius: '14px',
-              background: '#3b82f6',
-              color: 'white',
-              fontWeight: 900,
-              fontSize: '0.75rem',
-              textDecoration: 'none',
-              boxShadow: '0 8px 20px -4px rgba(59,130,246,0.4)',
-              flexShrink: 0,
-              letterSpacing: '0.02em'
-            }}
+            className={adminStyles.pengumumanHeaderBtn}
           >
             <IconPlus /> BUAT PENGUMUMAN
           </Link>
@@ -164,7 +142,7 @@ export default function PengumumanClient({ announcements }: { announcements: Ann
                 return (
                   <div
                     key={a.id}
-                    className={styles.announceItem}
+                    className={`${styles.announceItem} ${adminStyles.adminAnnounceItem}`}
                     style={{ cursor: 'pointer', position: 'relative' }}
                     onClick={() => setSelectedAnnouncement(a)}
                   >
@@ -184,43 +162,24 @@ export default function PengumumanClient({ announcements }: { announcements: Ann
                       </button>
                     </div>
 
-                    {/* Admin action buttons — top right */}
+                    {/* Admin action buttons */}
                     <div
-                      style={{ display: 'flex', gap: '6px', flexShrink: 0, alignSelf: 'flex-start' }}
+                      className={adminStyles.adminAnnounceActions}
                       onClick={e => e.stopPropagation()}
                     >
                       <Link
                         href={`/admin/pengumuman/edit/${a.id}`}
                         title="Edit"
-                        style={{
-                          width: '32px', height: '32px',
-                          borderRadius: '8px',
-                          background: '#eff6ff',
-                          color: '#2563eb',
-                          display: 'flex', alignItems: 'center', justifyContent: 'center',
-                          textDecoration: 'none',
-                          flexShrink: 0,
-                          transition: 'background 0.15s'
-                        }}
+                        className={adminStyles.pengumumanActionEdit}
                       >
-                        <IconEdit />
+                        <IconEdit /> Edit
                       </Link>
                       <button
                         title="Hapus"
                         onClick={e => handleDelete(a.id, e)}
-                        style={{
-                          width: '32px', height: '32px',
-                          borderRadius: '8px',
-                          background: '#fee2e2',
-                          color: '#dc2626',
-                          border: 'none',
-                          display: 'flex', alignItems: 'center', justifyContent: 'center',
-                          cursor: 'pointer',
-                          flexShrink: 0,
-                          transition: 'background 0.15s'
-                        }}
+                        className={adminStyles.pengumumanActionDelete}
                       >
-                        <IconTrash />
+                        <IconTrash /> Hapus
                       </button>
                     </div>
                   </div>

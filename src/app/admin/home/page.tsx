@@ -121,7 +121,7 @@ export default async function AdminHomePage() {
     const dailyQuote = MOTIVATIONAL_QUOTES[quoteIndex] || MOTIVATIONAL_QUOTES[0]
 
     return (
-        <div className={employeeStyles.pageContainer} style={{ padding: '0px 0px 24px 0px', maxWidth: 'none' }}>
+        <div className={employeeStyles.pageContainer} style={{ maxWidth: 'none' }}>
                 {/* 4. THE BENTO GRID */}
                 <div className={employeeStyles.bentoGrid}>
                     
