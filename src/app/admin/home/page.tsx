@@ -3,7 +3,7 @@ import styles from "@/styles/admin.module.css"
 import employeeStyles from "@/styles/employee_home.module.css"
 import { getSession } from "@/actions/auth"
 import Link from "next/link"
-import { getTodayJakarta, formatWIBTime, getJakartaDate, formatIndonesianDate } from "@/lib/date"
+import { getTodayJakarta, formatWIBTime, formatIndonesianDate } from "@/lib/date"
 
 // World-Class Command Icons
 const IconClock = () => (
@@ -18,9 +18,7 @@ const IconCheckIn = () => (
 const IconMoney = () => (
   <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="6" width="20" height="12" rx="2" /><circle cx="12" cy="12" r="2" /><path d="M6 12h.01M18 12h.01" /></svg>
 )
-const IconBell = () => (
-  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" /><path d="M13.73 21a2 2 0 0 1-3.46 0" /></svg>
-)
+
 
 const IconCalendar = () => (
   <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2" /><line x1="16" y1="2" x2="16" y2="6" /><line x1="8" y1="2" x2="8" y2="6" /><line x1="3" y1="10" x2="21" y2="10" /></svg>
@@ -102,53 +100,6 @@ export default async function AdminHomePage() {
 
     return (
         <div className={employeeStyles.pageContainer} style={{ padding: '0px 0px 24px 0px', maxWidth: 'none' }}>
-            {/* 1. TOP BAR */}
-            <div className={styles.topBar} style={{ background: '#ffffff', borderBottom: '1px solid #e2e8f0', marginBottom: '32px' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-                    <div style={{ background: '#eff6ff', color: '#1e3a8a', padding: '10px', borderRadius: '12px', display: 'flex' }}><IconActivity /></div>
-                    <div style={{ textAlign: 'left', minWidth: 0 }}>
-                        <h4 style={{ color: '#0f172a', margin: 0, fontSize: '0.85rem', fontWeight: 900, letterSpacing: '0.01em', whiteSpace: 'nowrap' }}>RMP COMMAND CENTER</h4>
-                        <div style={{ color: '#64748b', fontSize: '0.7rem', fontWeight: 700, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                            V 4.2.0 • {user?.nama.split(' ')[0]}
-                        </div>
-                    </div>
-                </div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
-                    <div style={{ textAlign: 'right', display: 'flex', flexDirection: 'column' }}>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '5px', justifyContent: 'flex-end' }}>
-                            <div style={{ width: '6px', height: '6px', background: '#10b981', borderRadius: '50%' }}></div>
-                            <span style={{ color: '#10b981', fontSize: '0.7rem', fontWeight: 900 }}>ACTIVE</span>
-                        </div>
-                        <span style={{ color: '#64748b', fontSize: '0.65rem', fontWeight: 800 }}>{formatWIBTime(getJakartaDate())}</span>
-                    </div>
-                    <div style={{ width: '38px', height: '38px', background: '#f1f5f9', borderRadius: '10px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#64748b', position: 'relative', cursor: 'pointer', flexShrink: 0 }}>
-                        <IconBell />
-                        <div style={{ position: 'absolute', top: '-1px', right: '-1px', width: '10px', height: '10px', background: '#ef4444', border: '2px solid white', borderRadius: '50%' }}></div>
-                    </div>
-                </div>
-            </div>
-
-            {/* 2. HEADER */}
-                <div style={{ marginBottom: '24px' }}>
-                    <div style={{ 
-                        display: 'inline-flex', 
-                        alignItems: 'center', 
-                        gap: '6px', 
-                        marginBottom: '12px'
-                    }}>
-                        <div style={{ width: '6px', height: '6px', background: '#3b82f6', borderRadius: '50%' }}></div>
-                        <span style={{ fontSize: '0.65rem', fontWeight: 800, color: '#94a3b8', letterSpacing: '0.05em', textTransform: 'uppercase' }}>Sistem Optimal</span>
-                    </div>
-
-                    <h1 style={{ fontSize: 'clamp(1.75rem, 5vw, 2.5rem)', fontWeight: 800, color: '#0f172a', margin: 0, letterSpacing: '-0.04em' }}>
-                        Dashboard Overview
-                    </h1>
-                    
-                    <p style={{ color: '#64748b', fontWeight: 600, fontSize: 'clamp(0.85rem, 2vw, 1rem)', marginTop: '8px', margin: 0 }}>
-                        Selamat bekerja kembali, <span style={{ color: '#1e3a8a', fontWeight: 800 }}>{user?.nama}</span>
-                    </p>
-                </div>
-
                 {/* 4. THE BENTO GRID */}
                 <div className={employeeStyles.bentoGrid}>
                     
