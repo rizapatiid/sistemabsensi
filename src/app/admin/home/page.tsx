@@ -356,7 +356,7 @@ export default async function AdminHomePage() {
                                                 </div>
                                                 <div style={{ minWidth: 0 }}>
                                                     <div style={{ fontSize: '0.8rem', fontWeight: 700, color: '#1e293b', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: '110px' }}>{p.user.nama}</div>
-                                                    <div style={{ fontSize: '0.65rem', color: '#94a3b8', fontWeight: 600 }}>{new Intl.DateTimeFormat('id-ID', { month: 'long', year: 'numeric', timeZone: 'Asia/Jakarta' }).format(p.periodeAwal)}</div>
+                                                    <div style={{ fontSize: '0.65rem', color: '#94a3b8', fontWeight: 600 }}>Periode {p.bulan}/{p.tahun}</div>
                                                 </div>
                                             </div>
                                             <span style={{ fontSize: '0.72rem', fontWeight: 700, color: '#334155', whiteSpace: 'nowrap' }}>

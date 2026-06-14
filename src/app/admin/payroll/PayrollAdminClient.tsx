@@ -216,9 +216,16 @@ export default function PayrollAdminClient({ payrolls: initialPayrolls, users }:
                                                 {p.statusPembayaran === 'DIBAYAR' ? 'LUNAS' : 'PROSES'}
                                             </span>
                                         </div>
-                                        <h4 className={employeeStyles.announceTitle}>{p.user.nama.toUpperCase()}</h4>
-                                        <p className={employeeStyles.announcePreview} style={{ margin: '4px 0 0 0' }}>
-                                            <span style={{ fontWeight: 800, color: '#0f172a' }}>Rp {p.totalGaji.toLocaleString("id-ID")}</span> ({p.tipeGaji}) • {p.bankSnapshot || p.user.rekeningBank || '-'}
+                                        <h4 className={employeeStyles.announceTitle} style={{ marginBottom: '2px' }}>{p.user.nama.toUpperCase()}</h4>
+                                        <p className={employeeStyles.announcePreview} style={{ margin: 0 }}>
+                                            <span style={{ fontWeight: 800, color: '#0f172a' }}>Rp {p.totalGaji.toLocaleString("id-ID")}</span> ({p.tipeGaji}) • {(() => {
+                                                const bank = p.bankSnapshot || p.user.rekeningBank || '-';
+                                                const rek = p.noRekeningSnapshot || p.user.noRekening;
+                                                if (rek && rek.length > 5) {
+                                                    return `${bank} (${rek.slice(0,3)}...${rek.slice(-3)})`;
+                                                }
+                                                return rek ? `${bank} (${rek})` : bank;
+                                            })()}
                                         </p>
                                     </div>
 
@@ -311,11 +318,22 @@ export default function PayrollAdminClient({ payrolls: initialPayrolls, users }:
                 }} onClick={() => setSelectedPayrollToView(null)}>
                     <div style={{ position: 'relative' }} onClick={e => e.stopPropagation()}>
                         <div className={slipStyles.slipContainer} style={{ margin: 0 }}>
-                            <div style={{ position: 'absolute', top: '8%', left: '50%', transform: 'translateX(-50%) rotate(-15deg)', fontSize: '3.5rem', fontWeight: '900', color: 'rgba(30,58,138,0.05)', pointerEvents: 'none', zIndex: 0, whiteSpace: 'nowrap' }} className="no-print">
-                                AUTHENTIC
+                            <div style={{ 
+                              position: 'absolute', 
+                              top: '50%', 
+                              left: '50%', 
+                              transform: 'translate(-50%, -50%) rotate(-15deg)', 
+                              fontSize: '3.5rem', 
+                              fontWeight: '900', 
+                              color: 'rgba(30,58,138,0.08)', 
+                              pointerEvents: 'none',
+                              zIndex: 999,
+                              whiteSpace: 'nowrap'
+                            }} className="no-print">
+                              AUTHENTIC
                             </div>
 
-                            <header className={slipStyles.slipHeader}>
+                            <header className={slipStyles.slipHeader} style={{ position: 'relative', zIndex: 1 }}>
                                 <div className={slipStyles.brand}>
                                     <Image src="/iconapps.png" alt="Logo" width={32} height={32} className={slipStyles.logo} />
                                     <div>
@@ -329,27 +347,43 @@ export default function PayrollAdminClient({ payrolls: initialPayrolls, users }:
                                 </div>
                             </header>
 
-                            <div className={slipStyles.infoGrid}>
-                                <div className={slipStyles.infoItem}><label>Nama</label><div className={slipStyles.rowValue}>{selectedPayrollToView.user.nama}</div></div>
-                                <div className={slipStyles.infoItem}><label>Posisi</label><div className={slipStyles.rowValue}>{selectedPayrollToView.user.jabatan || "-"}</div></div>
-                                <div className={slipStyles.infoItem}><label>Periode</label><div className={slipStyles.rowValue}>{new Intl.DateTimeFormat("id-ID", { month: "long" }).format(new Date(selectedPayrollToView.tahun, selectedPayrollToView.bulan - 1))} {selectedPayrollToView.tahun}</div></div>
-                                <div className={slipStyles.infoItem}><label>Status</label><div>
-                                    <span className={`${slipStyles.statusBadge} ${selectedPayrollToView.statusPembayaran === 'DIBAYAR' ? slipStyles.statusLunas : slipStyles.statusPending}`}>
-                                        {selectedPayrollToView.statusPembayaran === 'DIBAYAR' ? 'LUNAS' : 'PROSES'}
-                                    </span>
-                                </div></div>
+                            <div className={slipStyles.infoGrid} style={{ position: 'relative', zIndex: 1 }}>
+                                <div className={slipStyles.infoItem}>
+                                  <label>Nama</label>
+                                  <div className={slipStyles.rowValue}>{selectedPayrollToView.user.nama}</div>
+                                </div>
+                                <div className={slipStyles.infoItem}>
+                                  <label>Posisi</label>
+                                  <div className={slipStyles.rowValue}>{selectedPayrollToView.user.jabatan || "-"}</div>
+                                </div>
+                                <div className={slipStyles.infoItem}>
+                                  <label>Periode</label>
+                                  <div className={slipStyles.rowValue}>{new Intl.DateTimeFormat("id-ID", { month: "long" }).format(new Date(selectedPayrollToView.tahun, selectedPayrollToView.bulan - 1))} {selectedPayrollToView.tahun}</div>
+                                </div>
+                                <div className={slipStyles.infoItem}>
+                                  <label>Status</label>
+                                  <div className={slipStyles.rowValue} style={{ color: selectedPayrollToView.statusPembayaran === 'DIBAYAR' ? '#047857' : '#be123c' }}>
+                                    {selectedPayrollToView.statusPembayaran === 'DIBAYAR' ? 'LUNAS' : 'PROSES'}
+                                  </div>
+                                </div>
                             </div>
 
-                            <div className={slipStyles.tableSection}>
+                            <div className={slipStyles.tableSection} style={{ position: 'relative', zIndex: 1 }}>
                                 <h4>Rincian Upah</h4>
                                 <div className={slipStyles.row}>
                                     <span className={slipStyles.rowLabel}>Gaji Pokok ({selectedPayrollToView.tipeGaji})</span>
                                     <span className={slipStyles.rowValue}>Rp {selectedPayrollToView.gajiPokok.toLocaleString("id-ID")}</span>
                                 </div>
                                 {selectedPayrollToView.tipeGaji === "HARIAN" && (
-                                    <div className={slipStyles.row} style={{ background: '#f8fafc', padding: '4px 6px', borderRadius: '4px' }}>
-                                        <span className={slipStyles.rowLabel}>Total Hadir</span>
-                                        <span className={slipStyles.rowValue}>{selectedPayrollToView.jumlahAbsen} Hari</span>
+                                    <div style={{ background: '#f8fafc', padding: '8px 12px', borderRadius: '8px', marginBottom: '8px', border: '1px solid #e2e8f0' }}>
+                                      <div className={slipStyles.row} style={{ marginBottom: '4px', borderBottom: 'none', padding: '0 0 4px 0' }}>
+                                        <span className={slipStyles.rowLabel} style={{ fontSize: '0.75rem' }}>Total Hadir</span>
+                                        <span className={slipStyles.rowValue} style={{ fontSize: '0.75rem' }}>{selectedPayrollToView.jumlahAbsen} Hari</span>
+                                      </div>
+                                      <div className={slipStyles.row} style={{ borderBottom: 'none', padding: 0 }}>
+                                        <span className={slipStyles.rowLabel} style={{ fontWeight: '600' }}>Total Harian</span>
+                                        <span className={slipStyles.rowValue} style={{ fontWeight: '600', color: '#1e3a8a' }}>Rp {(selectedPayrollToView.gajiPokok * selectedPayrollToView.jumlahAbsen).toLocaleString("id-ID")}</span>
+                                      </div>
                                     </div>
                                 )}
                                 <div className={slipStyles.row}>
@@ -361,19 +395,23 @@ export default function PayrollAdminClient({ payrolls: initialPayrolls, users }:
                                 </div>
                             </div>
 
-                            <div className={slipStyles.totalRow}>
+                            <div className={slipStyles.totalRow} style={{ position: 'relative', zIndex: 1 }}>
                                 <div className={slipStyles.totalLabel}>TOTAL DITERIMA (THP)</div>
                                 <span className={slipStyles.totalValue}>Rp {selectedPayrollToView.totalGaji.toLocaleString("id-ID")}</span>
                             </div>
 
-                            <div className={slipStyles.bankInfo} style={{ border: '1px solid #e2e8f0', background: '#f8fafc', padding: '0.6rem' }}>
+                            <div className={slipStyles.bankInfo} style={{ border: '1px solid #e2e8f0', background: '#f8fafc', position: 'relative', zIndex: 1, padding: '0.6rem' }}>
                                 <label style={{ fontSize: '0.6rem', textTransform: 'uppercase', color: '#94a3b8', fontWeight: '800', display: 'block', marginBottom: '4px' }}>Tujuan Transfer</label>
-                                <div style={{ fontWeight: '700', color: '#1e3a8a', fontSize: '0.85rem' }}>{selectedPayrollToView.bankSnapshot || "-"}</div>
-                                <div style={{ color: '#0f172a', fontWeight: '800', fontSize: '0.8rem' }}>{selectedPayrollToView.noRekeningSnapshot || "XXXX-XXXX-XXXX"}</div>
-                                <div style={{ color: '#64748b', fontSize: '0.7rem' }}>a.n. {selectedPayrollToView.namaRekeningSnapshot || selectedPayrollToView.user.nama}</div>
+                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                  <div>
+                                    <div style={{ fontWeight: '700', color: '#1e3a8a', fontSize: '0.85rem' }}>{selectedPayrollToView.bankSnapshot || "-"}</div>
+                                    <div style={{ color: '#0f172a', fontWeight: '800', fontSize: '0.8rem' }}>{selectedPayrollToView.noRekeningSnapshot || "XXXX-XXXX-XXXX"}</div>
+                                    <div style={{ color: '#64748b', fontSize: '0.7rem' }}>a.n. {selectedPayrollToView.namaRekeningSnapshot || selectedPayrollToView.user.nama}</div>
+                                  </div>
+                                </div>
                             </div>
 
-                            <div className={slipStyles.footer}>
+                            <div className={slipStyles.footer} style={{ position: 'relative', zIndex: 1 }}>
                                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: '1rem' }}>
                                     <div style={{ textAlign: 'left' }}><p>Diterbitkan:</p><p style={{ fontWeight: '700', color: '#1e293b' }}>{new Intl.DateTimeFormat("id-ID", { day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' }).format(new Date(selectedPayrollToView.createdAt))}</p></div>
                                     <div style={{ textAlign: 'center', minWidth: '100px' }}>

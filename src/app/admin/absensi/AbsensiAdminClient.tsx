@@ -2,6 +2,7 @@
 
 import { useState } from "react"
 import styles from "@/styles/admin.module.css"
+import employeeStyles from "@/styles/employee_home.module.css"
 import { formatIndonesianDate, formatWIBTime } from "@/lib/date"
 import { rejectAttendanceAction, manualAttendanceAction } from "../../../actions/admin"
 
@@ -48,6 +49,9 @@ const IconClock = () => (
     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
 )
 
+const IconFileText = () => <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+const IconTrashBtn = () => <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M3 6h18"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>
+const IconRefreshBtn = () => <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
 const IconCheckCircle = () => (
     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
 )
@@ -66,8 +70,7 @@ export default function AbsensiAdminClient({ absensi, initialEmployees }: { abse
   const [filterHari, setFilterHari] = useState<string>("")
   const [filterBulan, setFilterBulan] = useState<string>(new Date().getMonth().toString())
   const [filterTahun, setFilterTahun] = useState<string>(new Date().getFullYear().toString())
-
-  const openModal = (src: string) => setModalImage(src)
+  const openModal = (src: string) => setModalImage(src)
   const closeModal = () => setModalImage(null)
 
   const listHari = Array.from({ length: 31 }, (_, i) => (i + 1).toString())
@@ -79,15 +82,21 @@ export default function AbsensiAdminClient({ absensi, initialEmployees }: { abse
   ]
   const listTahun = Array.from({ length: 5 }, (_, i) => (new Date().getFullYear() - i).toString())
 
-  const handleReject = async (id: string) => {
-    if (!confirm("Apakah Anda yakin ingin MENGHAPUS riwayat absensi ini? Karyawan bersangkutan akan diwajibkan untuk melakukan absensi ulang hari ini.")) return
-    
-    setIsDeleting(id)
-    const res = await rejectAttendanceAction(id)
+  const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null)
+
+  const handleReject = (id: string) => {
+    setConfirmDeleteId(id)
+  }
+
+  const confirmDelete = async () => {
+    if (!confirmDeleteId) return
+    setIsDeleting(confirmDeleteId)
+    const res = await rejectAttendanceAction(confirmDeleteId)
     if (res?.error) {
         alert(res.error)
     }
     setIsDeleting(null)
+    setConfirmDeleteId(null)
   }
 
   const handleManualSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -114,220 +123,163 @@ export default function AbsensiAdminClient({ absensi, initialEmployees }: { abse
     return matchHari && matchBulan && matchTahun
   })
 
+    const countHadir = filteredAbsensi.filter(a => a.status === 'HADIR').length
+  const countIzin = filteredAbsensi.filter(a => a.status !== 'HADIR').length
+
   return (
     <>
-      <div className={styles.cardHeader} style={{ 
-        padding: '24px', 
-        borderBottom: '1px solid #f1f5f9', 
-        background: 'white',
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        flexWrap: 'wrap',
-        gap: '20px'
-      }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#eff6ff', color: '#3b82f6', width: '38px', height: '38px', borderRadius: '12px', border: '1px solid #dbeafe' }}>
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2" /><line x1="16" y1="2" x2="16" y2="6" /><line x1="8" y1="2" x2="8" y2="6" /><line x1="3" y1="10" x2="21" y2="10" /></svg>
-            </div>
-            <div>
-                <h3 className={styles.cardTitle} style={{ margin: 0, fontSize: '1rem', fontWeight: 950, color: '#0f172a' }}>Log Kehadiran</h3>
-                <p style={{ margin: 0, fontSize: '0.7rem', color: '#64748b', fontWeight: 600 }}>Total {filteredAbsensi.length} rekaman ditemukan</p>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+        {/* ── DARK HERO HEADER ── */}
+        <div style={{
+            background: 'linear-gradient(135deg, #0f172a 0%, #1e293b 100%)',
+            borderRadius: 'clamp(12px, 3vw, 16px)',
+            padding: 'clamp(20px, 5vw, 32px)',
+            color: '#ffffff',
+            position: 'relative',
+            overflow: 'hidden',
+            boxShadow: '0 20px 40px -10px rgba(15, 23, 42, 0.4)'
+        }}>
+            <div style={{ position: 'absolute', top: '-10%', right: '-5%', width: '300px', height: '300px', background: 'radial-gradient(circle, rgba(255,255,255,0.08) 0%, transparent 70%)', borderRadius: '50%' }}></div>
+            <div style={{ position: 'absolute', bottom: '-20%', left: '10%', width: '200px', height: '200px', background: 'radial-gradient(circle, rgba(59,130,246,0.2) 0%, transparent 70%)', borderRadius: '50%' }}></div>
+
+            <div className={styles.pengumumanHeaderFlex}>
+                <div className={styles.pengumumanHeaderLeft}>
+                    <div className={styles.pengumumanHeaderIcon}>
+                      <svg width="clamp(24px, 6vw, 32px)" height="clamp(24px, 6vw, 32px)" viewBox="-2 -2 28 28" fill="none" stroke="#60a5fa" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M12 11a2 2 0 1 0-2 2"/><path d="M12 15a6 6 0 1 0-6-6"/><path d="M12 19a10 10 0 1 0-10-10"/><path d="M22 10a10.08 10.08 0 0 0-2-6"/><path d="M2 14c.22 1.63.8 3.16 1.66 4.5"/><path d="M5.34 20.66a10.05 10.05 0 0 0 5.16 2.34"/><path d="M14 22.8c1.33.16 2.67.1 3.96-.16"/><path d="M19.45 20.17a10.15 10.15 0 0 0 2.22-3.1"/></svg>
+                    </div>
+                    <div>
+                        <h1 className={styles.pengumumanHeaderTitle}>Monitor Absensi</h1>
+                        <p className={styles.pengumumanHeaderDesc}>Ringkasan kehadiran personil dan log absensi harian RMP.</p>
+                    </div>
+                </div>
+
+                <button
+                    onClick={() => setShowManualModal(true)}
+                    className={styles.pengumumanHeaderBtn}
+                >
+                    <IconPlus /> INPUT PRESENSI
+                </button>
             </div>
         </div>
 
-        <div style={{ display: 'flex', gap: '12px', alignItems: 'center', flexWrap: 'wrap' }}>
-            <button 
-                onClick={() => setShowManualModal(true)}
-                style={{
-                    background: '#3b82f6',
-                    color: 'white',
-                    border: 'none',
-                    borderRadius: '12px',
-                    padding: '10px 18px',
-                    fontSize: '0.75rem',
-                    fontWeight: 900,
-                    cursor: 'pointer',
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '8px',
-                    boxShadow: '0 4px 12px rgba(59, 130, 246, 0.2)',
-                    letterSpacing: '0.02em'
-                }}
-            >
-                <IconPlus />
-                INPUT PRESENSI
-            </button>
-
-            <div style={{ 
-                display: 'flex', 
-                gap: '8px', 
-                alignItems: 'center', 
-                background: '#f8fafc', 
-                padding: '4px 8px', 
-                borderRadius: '14px',
-                border: '1px solid #e2e8f0'
-            }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                <select
-                    className={styles.filterPill}
-                    style={{ padding: '8px 4px', borderRadius: '10px', fontSize: '0.75rem', fontWeight: 800, border: 'none', background: 'transparent', outline: 'none', color: '#0f172a', cursor: 'pointer', width: 'auto' }}
-                    value={tempHari}
-                    onChange={(e) => setTempHari(e.target.value)}
-                >
-                    <option value="">Tgl</option>
-                    {listHari.map(h => <option key={h} value={h}>{h}</option>)}
-                </select>
-
-                <select
-                    className={styles.filterPill}
-                    style={{ padding: '8px 4px', borderRadius: '10px', fontSize: '0.75rem', fontWeight: 800, border: 'none', background: 'transparent', outline: 'none', color: '#0f172a', cursor: 'pointer', width: 'auto' }}
-                    value={tempBulan}
-                    onChange={(e) => setTempBulan(e.target.value)}
-                >
-                    {listBulan.map(b => <option key={b.v} value={b.v}>{b.l.substring(0,3)}</option>)}
-                </select>
-
-                <select
-                    className={styles.filterPill}
-                    style={{ padding: '8px 4px', borderRadius: '10px', fontSize: '0.75rem', fontWeight: 800, border: 'none', background: 'transparent', outline: 'none', color: '#0f172a', cursor: 'pointer', width: 'auto' }}
-                    value={tempTahun}
-                    onChange={(e) => setTempTahun(e.target.value)}
-                >
-                    {listTahun.map(t => <option key={t} value={t}>{t}</option>)}
-                </select>
-                <div style={{ width: '1px', height: '20px', background: '#e2e8f0', margin: '0 4px' }}></div>
-            </div>
-
-            <button
-                onClick={() => { setFilterHari(tempHari); setFilterBulan(tempBulan); setFilterTahun(tempTahun); }}
-                style={{ 
-                    background: '#0f172a', 
-                    color: 'white', 
-                    border: 'none', 
-                    borderRadius: '10px', 
-                    padding: '8px 14px', 
-                    fontSize: '0.65rem', 
-                    fontWeight: 900, 
-                    cursor: 'pointer',
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '6px'
-                }}
-            >
-                <IconFilter />
-                FILTER
-            </button>
-            </div>
-        </div>
-      </div>
-
-      <div className={styles.tableWrapper}>
-        <table className={styles.dataTable}>
-          <thead>
-            <tr>
-              <th>Waktu Presensi</th>
-              <th>Informasi Karyawan</th>
-              <th>Status</th>
-              <th>Berkas Bukti</th>
-              <th style={{ textAlign: 'right' }}>Keterangan</th>
-              <th style={{ textAlign: 'right' }}>Aksi</th>
-            </tr>
-          </thead>
-          <tbody>
-            {filteredAbsensi.map((a) => (
-              <tr key={a.id}>
-                <td>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                    <div style={{ color: '#3b82f6' }}><IconCalendarTable /></div>
-                    <div>
-                      <div style={{ fontWeight: '800', color: '#0f172a', fontSize: '0.8rem', whiteSpace: 'nowrap' }}>
-                        {formatIndonesianDate(a.tanggal, false).toUpperCase()}
-                      </div>
-                      <div style={{ color: '#64748b', fontSize: '0.7rem', fontWeight: '700' }}>
-                        {formatWIBTime(a.waktuMasuk)} WIB
-                      </div>
-                    </div>
-                  </div>
-                </td>
-                <td>
-                  <div className={styles.userCell}>
-                    <div className={styles.userAvatar} style={{ background: '#f1f5f9', color: '#1e3a8a', fontWeight: 800, width: '34px', height: '34px', fontSize: '0.85rem' }}>{a.user.nama.charAt(0)}</div>
-                    <div>
-                      <div style={{ fontWeight: '800', color: '#1e293b', fontSize: '0.85rem' }}>{a.user.nama.toUpperCase()}</div>
-                      <div style={{ fontSize: '0.7rem', color: '#94a3b8', fontWeight: '600' }}>{a.idKaryawan}</div>
-                    </div>
-                  </div>
-                </td>
-                <td style={{ verticalAlign: 'middle' }}>
-                    <div className={`${styles.badge}`} style={{ background: a.status === 'HADIR' ? '#f0fdf4' : '#fef2f2', color: a.status === 'HADIR' ? '#16a34a' : '#ef4444', border: 'none', fontSize: '0.65rem', fontWeight: 900, padding: '6px 12px', borderRadius: '100px', letterSpacing: '0.05em', textTransform: 'uppercase', display: 'inline-flex', alignItems: 'center', gap: '6px' }} >
-                        <div style={{ display: 'flex' }}>
-                            {a.status === 'HADIR' ? (
-                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-                            ) : (
-                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" /></svg>
-                            )}
+        {/* ── STATS & FILTERS BAR ── */}
+        <div style={{
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '16px',
+            background: 'linear-gradient(to bottom right, #ffffff, #f8fafc)',
+            padding: '24px',
+            borderRadius: '16px',
+            border: '1px solid #e2e8f0',
+            boxShadow: '0 10px 25px -5px rgba(0,0,0,0.02)'
+        }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '16px' }}>
+                <div className={styles.adminStatsContainer} style={{ display: 'flex', gap: '16px' }}>
+                    <div className={styles.adminStatCard} style={{ background: '#f0fdf4', border: '1px solid #dcfce7', padding: '12px 16px', borderRadius: '12px', display: 'flex', alignItems: 'center', gap: '12px' }}>
+                        <div style={{ color: '#16a34a' }}>
+                            <IconCheckCircle />
                         </div>
-                        {a.status}
+                        <div>
+                            <div style={{ fontSize: '1.2rem', fontWeight: 900, color: '#16a34a', lineHeight: 1 }}>{countHadir}</div>
+                            <div style={{ fontSize: '0.65rem', fontWeight: 800, color: '#15803d', textTransform: 'uppercase' }}>Hadir</div>
+                        </div>
                     </div>
-                </td>
-                <td>
-                  <div style={{ display: 'flex', gap: '6px' }}>
-                    {a.foto ? (
-                      <div className={styles.evidenceThumbnail} onClick={() => openModal(a.foto!)} style={{ width: '36px', height: '36px', borderRadius: '10px', border: '1px solid #e2e8f0' }}>
-                        <img src={a.foto} alt="Selfie" style={{ objectFit: 'cover' }} />
-                      </div>
-                    ) : null}
-                    {a.buktiApp ? (
-                      <div className={styles.evidenceThumbnail} onClick={() => openModal(a.buktiApp!)} style={{ width: '36px', height: '36px', borderRadius: '10px', border: '1px solid #e2e8f0' }}>
-                        <img src={a.buktiApp} alt="App" style={{ objectFit: 'cover' }} />
-                      </div>
-                    ) : null}
-                  </div>
-                </td>
-                <td style={{ textAlign: 'right', fontSize: '0.75rem', color: '#475569', fontWeight: '600' }}>
-                  {a.alasan ? a.alasan.toUpperCase() : "-"}
-                </td>
-                <td style={{ textAlign: 'right' }}>
-                    <button 
-                        onClick={() => handleReject(a.id)}
-                        disabled={isDeleting === a.id}
-                        style={{ 
-                            background: '#fef2f2', 
-                            color: '#ef4444', 
-                            border: '1px solid #fee2e2', 
-                            borderRadius: '10px', 
-                            padding: '8px 12px', 
-                            fontSize: '0.65rem', 
-                            fontWeight: 900, 
-                            cursor: isDeleting === a.id ? 'wait' : 'pointer',
-                            display: 'inline-flex',
-                            alignItems: 'center',
-                            gap: '8px',
-                            transition: 'all 0.2s',
-                            opacity: isDeleting === a.id ? 0.6 : 1
-                        }}
-                    >
-                        {isDeleting === a.id ? (
-                            <div style={{ width: '12px', height: '12px', border: '2px solid #ef4444', borderTopColor: 'transparent', borderRadius: '50%', animation: 'spin 0.6s linear infinite' }}></div>
-                        ) : (
-                            <IconRotateCcw />
-                        )}
-                        {isDeleting === a.id ? 'HAPUS...' : 'HAPUS RIWAYAT'}
+                    <div className={styles.adminStatCard} style={{ background: '#eff6ff', border: '1px solid #dbeafe', padding: '12px 16px', borderRadius: '12px', display: 'flex', alignItems: 'center', gap: '12px' }}>
+                        <div style={{ color: '#3b82f6' }}>
+                            <IconClock />
+                        </div>
+                        <div>
+                            <div style={{ fontSize: '1.2rem', fontWeight: 900, color: '#3b82f6', lineHeight: 1 }}>{countIzin}</div>
+                            <div style={{ fontSize: '0.65rem', fontWeight: 800, color: '#1d4ed8', textTransform: 'uppercase' }}>Izin / Sakit</div>
+                        </div>
+                    </div>
+                </div>
+
+                {/* Dropdown Filters */}
+                <div className={styles.adminFilterContainer} style={{ 
+                    display: 'flex', 
+                    gap: '8px', 
+                    alignItems: 'center',
+                    background: '#f8fafc',
+                    padding: '8px',
+                    borderRadius: '16px',
+                    border: '1px solid #e2e8f0',
+                    flexWrap: 'wrap'
+                }}>
+                    <select className={styles.filterPill} style={{ height: '38px', padding: '0 12px', borderRadius: '6px', fontSize: '0.75rem', fontWeight: 800, border: '1px solid #e2e8f0', background: 'white', boxShadow: '0 1px 2px rgba(0,0,0,0.05)', outline: 'none', color: '#0f172a', cursor: 'pointer' }} value={tempHari} onChange={(e) => setTempHari(e.target.value)}>
+                        <option value="">Tgl</option>
+                        {listHari.map(h => <option key={h} value={h}>{h}</option>)}
+                    </select>
+                    <select className={styles.filterPill} style={{ height: '38px', padding: '0 12px', borderRadius: '6px', fontSize: '0.75rem', fontWeight: 800, border: '1px solid #e2e8f0', background: 'white', boxShadow: '0 1px 2px rgba(0,0,0,0.05)', outline: 'none', color: '#0f172a', cursor: 'pointer' }} value={tempBulan} onChange={(e) => setTempBulan(e.target.value)}>
+                        {listBulan.map(b => <option key={b.v} value={b.v}>{b.l.substring(0,3)}</option>)}
+                    </select>
+                    <select className={styles.filterPill} style={{ height: '38px', padding: '0 12px', borderRadius: '6px', fontSize: '0.75rem', fontWeight: 800, border: '1px solid #e2e8f0', background: 'white', boxShadow: '0 1px 2px rgba(0,0,0,0.05)', outline: 'none', color: '#0f172a', cursor: 'pointer' }} value={tempTahun} onChange={(e) => setTempTahun(e.target.value)}>
+                        {listTahun.map(t => <option key={t} value={t}>{t}</option>)}
+                    </select>
+                    <div style={{ width: '1px', height: '20px', background: '#e2e8f0', margin: '0 4px', display: 'none' }} className="mobile-hide"></div>
+                    <button onClick={() => { setFilterHari(tempHari); setFilterBulan(tempBulan); setFilterTahun(tempTahun); }} style={{ height: '38px', padding: '0 16px', background: '#0f172a', color: 'white', border: '1px solid #0f172a', borderRadius: '6px', fontSize: '0.75rem', fontWeight: 900, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px' }}>
+                        <IconFilter /> FILTER
                     </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-        {filteredAbsensi.length === 0 && (
-          <div style={{ textAlign: "center", padding: "100px 20px", color: "#94a3b8", fontWeight: "600", fontSize: '0.85rem' }}>
-            Belum ada data rekaman absensi untuk periode ini.
-          </div>
+                </div>
+            </div>
+        </div>
+
+        {/* ── CARD LIST ── */}
+        {filteredAbsensi.length === 0 ? (
+            <div style={{ background: 'white', borderRadius: '16px', padding: '40px 20px', textAlign: 'center', border: '1px solid #e2e8f0' }}>
+                <p style={{ color: '#94a3b8', fontWeight: 800, fontSize: '1.1rem', margin: 0 }}>Belum ada rekaman absensi ditemukan.</p>
+            </div>
+        ) : (
+            <div style={{ background: 'white', borderRadius: '16px', padding: 'clamp(16px, 4vw, 24px)', border: '1px solid #e2e8f0', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.02)' }}>
+                <div className={employeeStyles.announceList}>
+                    {filteredAbsensi.map(a => (
+                        <div key={a.id} className={`${employeeStyles.announceItem} ${styles.adminAnnounceItem} ${styles.absensiItemGrid}`} style={{ position: 'relative' }}>
+                            <div className={employeeStyles.announceImageContainer}>
+                                {a.foto && (
+                                    <div className={employeeStyles.announceImageWrapper} onClick={() => openModal(a.foto!)} style={{ background: '#f8fafc', width: '56px', height: '56px', display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: '14px', flexShrink: 0, border: '1px solid #e2e8f0', overflow: 'hidden', padding: 0, cursor: 'pointer' }} title="Selfie">
+                                        <img src={a.foto} alt="Selfie" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                                    </div>
+                                )}
+                                {a.buktiApp && (
+                                    <div className={employeeStyles.announceImageWrapper} onClick={() => openModal(a.buktiApp!)} style={{ background: '#f8fafc', width: '56px', height: '56px', display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: '14px', flexShrink: 0, border: '1px solid #e2e8f0', overflow: 'hidden', padding: 0, cursor: 'pointer' }} title="Bukti App">
+                                        <img src={a.buktiApp} alt="Bukti" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                                    </div>
+                                )}
+                                {(!a.foto && !a.buktiApp) && (
+                                    <div className={employeeStyles.announceImageWrapper} style={{ background: '#f8fafc', width: '56px', height: '56px', display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: '14px', fontSize: '1.4rem', fontWeight: 900, color: '#0f172a', flexShrink: 0, border: '1px solid #e2e8f0' }}>
+                                        {a.user.nama.charAt(0).toUpperCase()}
+                                    </div>
+                                )}
+                            </div>
+                            <div className={employeeStyles.announceContent}>
+                                <div style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '8px' }}>
+                                    <span className={employeeStyles.announceDateText}>
+                                        {formatIndonesianDate(a.tanggal, false).toUpperCase()} • {formatWIBTime(a.waktuMasuk)}
+                                    </span>
+                                    <span style={{ display: 'inline-flex', alignItems: 'center', padding: '2px 8px', borderRadius: '100px', background: a.status === 'HADIR' ? '#f0fdf4' : '#fff7ed', border: `1px solid ${a.status === 'HADIR' ? '#dcfce7' : '#ffedd5'}`, color: a.status === 'HADIR' ? '#16a34a' : '#ea580c', fontSize: '0.65rem', fontWeight: 900 }}>
+                                        {a.status}
+                                    </span>
+                                </div>
+                                <h4 className={employeeStyles.announceTitle} style={{ marginBottom: '2px' }}>{a.user.nama.toUpperCase()}</h4>
+                                <p className={employeeStyles.announcePreview} style={{ margin: 0 }}>
+                                    <span style={{ fontWeight: 800, color: '#0f172a' }}>{a.idKaryawan}</span> {a.alasan ? ` • ${a.alasan}` : ''}
+                                </p>
+                            </div>
+
+                            <div className={styles.adminAnnounceActions}>
+
+                                <button onClick={() => handleReject(a.id)} disabled={isDeleting === a.id} className={styles.pengumumanActionDelete} title="Ulangi Absensi">
+                                    {isDeleting === a.id ? '...' : <><IconRefreshBtn /> Ulangi Absensi</>}
+                                </button>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            </div>
         )}
       </div>
 
-      {/* MODAL IMAGE PREVIEW */}
+      {/* MODAL IMAGE PREVIEW */}      {/* MODAL IMAGE PREVIEW */}
       {modalImage && (
         <div style={{ position: 'fixed', inset: 0, background: 'rgba(15, 23, 42, 0.4)', backdropFilter: 'blur(12px)', zIndex: 99999, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '20px' }} onClick={closeModal}>
           <div style={{ position: 'relative', maxWidth: '90%', maxHeight: '90%', background: 'white', padding: '10px', borderRadius: '16px' }} onClick={e => e.stopPropagation()}>
@@ -431,11 +383,25 @@ export default function AbsensiAdminClient({ absensi, initialEmployees }: { abse
           </div>
       )}
 
-      <style jsx>{`
-            @keyframes spin {
-                to { transform: rotate(360deg); }
-            }
-      `}</style>
-    </>
+      {/* Confirm Delete Modal */}
+      {confirmDeleteId && (
+          <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(15, 23, 42, 0.6)', backdropFilter: 'blur(4px)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 9999, padding: '20px' }}>
+              <div style={{ background: 'white', padding: '32px', borderRadius: '24px', width: 'min(400px, 100%)', boxShadow: '0 20px 40px -10px rgba(0,0,0,0.2)', textAlign: 'center' }}>
+                  <div style={{ width: '64px', height: '64px', borderRadius: '50%', background: '#fee2e2', color: '#ef4444', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 20px auto' }}>
+                      <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                  </div>
+                  <h3 style={{ fontSize: '1.25rem', fontWeight: 900, color: '#0f172a', marginBottom: '12px' }}>Ulangi Absensi?</h3>
+                  <p style={{ fontSize: '0.9rem', color: '#64748b', marginBottom: '24px', lineHeight: 1.5 }}>Apakah Anda yakin ingin menghapus riwayat ini? Karyawan bersangkutan akan diwajibkan untuk melakukan absensi ulang.</p>
+                  <div style={{ display: 'flex', gap: '12px' }}>
+                      <button onClick={() => setConfirmDeleteId(null)} disabled={isDeleting !== null} style={{ flex: 1, padding: '12px', borderRadius: '12px', border: 'none', background: '#f1f5f9', color: '#475569', fontWeight: 800, cursor: 'pointer' }}>Batal</button>
+                      <button onClick={confirmDelete} disabled={isDeleting !== null} style={{ flex: 1, padding: '12px', borderRadius: '12px', border: 'none', background: '#ef4444', color: 'white', fontWeight: 800, cursor: isDeleting ? 'wait' : 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
+                          {isDeleting ? 'Memproses...' : 'Ya, Ulangi'}
+                      </button>
+                  </div>
+              </div>
+          </div>
+      )}
+
+      </>
   )
 }
