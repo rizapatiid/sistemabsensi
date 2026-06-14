@@ -2,7 +2,7 @@
 const CACHE_NAME = 'rmp-absensi-v1';
 const ASSETS_TO_CACHE = [
   '/',
-  '/favicon.ico',
+  '/faficon.jpg',
   '/iconapps.png',
   '/logositus.png',
 ];

@@ -40,6 +40,7 @@ export const metadata: Metadata = {
 import { getSession } from "@/actions/auth";
 import { getSystemSettings } from "@/lib/settings";
 import MaintenancePage from "@/components/MaintenancePage";
+import OfflineWrapper from "@/components/OfflineWrapper";
 
 // Pastikan layout selalu re-render per-request agar status maintenance langsung aktif
 export const dynamic = "force-dynamic";
@@ -69,7 +70,9 @@ export default async function RootLayout({
         <SecurityWrapper />
         <RegisterServiceWorker />
         <PreventZoom />
-        {isMaintenance ? <MaintenancePage /> : children}
+        <OfflineWrapper>
+          {isMaintenance ? <MaintenancePage /> : children}
+        </OfflineWrapper>
       </body>
     </html>
   );
