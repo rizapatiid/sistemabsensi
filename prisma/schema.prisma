@@ -17,6 +17,7 @@ model User {
   jabatan              String?            @db.VarChar(255)
   phone                String?            @db.VarChar(50)
   email                String?            @db.VarChar(255)
+  fotoProfil           String?            @db.LongText
   alamat               String?            @db.Text
   rekeningBank         String?            @db.VarChar(100)
   noRekening           String?            @db.VarChar(100)

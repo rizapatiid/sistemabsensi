@@ -10,7 +10,7 @@ export default async function PengaturanPage() {
     const settings = await getSystemSettings()
 
     return (
-        <div className={styles.pageContainer}>
+        <div className={styles.pageContainer} style={{ padding: '16px 0', gap: '12px' }}>
             <PengaturanClient settings={settings} />
         </div>
     )

@@ -5,6 +5,7 @@
   max-width: 1200px;
   margin: 0 auto;
   width: 100%;
+  padding: 4px 0 24px;
 }
 
 /* 1. CLEAN HEADER SECTION */
@@ -385,5 +386,11 @@
   .switchKnob {
     width: 20px;
     height: 20px;
+  }
+}
+
+@media (max-width: 768px) {
+  .pageContainer {
+    padding-top: 16px;
   }
 }

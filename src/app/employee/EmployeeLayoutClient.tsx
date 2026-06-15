@@ -10,7 +10,7 @@ import { getUnreadAnnouncementCount, markAnnouncementsAsRead, getUnreadPayrollCo
 
 interface EmployeeLayoutClientProps {
   children: React.ReactNode;
-  user: { id: string; name: string; role: string };
+  user: { id: string; name: string; role: string; fotoProfil?: string | null };
 }
 
 export default function EmployeeLayoutClient({ children, user }: EmployeeLayoutClientProps) {
@@ -79,7 +79,7 @@ export default function EmployeeLayoutClient({ children, user }: EmployeeLayoutC
     },
     {
       name: "Riwayat Kehadiran", href: "/employee/riwayat", icon: (
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/><path d="M12 7v5l4 2"/></svg>
       )
     },
     {
@@ -89,7 +89,7 @@ export default function EmployeeLayoutClient({ children, user }: EmployeeLayoutC
     },
     {
       name: "Slip Gaji & Rekening", href: "/employee/transaksi", icon: (
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="5" width="20" height="14" rx="2" /><line x1="2" y1="10" x2="22" y2="10" /><path d="M7 15h.01" /><path d="M11 15h.01" /><path d="M15 15h.01" /></svg>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><rect width="20" height="12" x="2" y="6" rx="2"/><circle cx="12" cy="12" r="2"/><path d="M6 12h.01M18 12h.01"/></svg>
       )
     },
     {
@@ -220,17 +220,21 @@ export default function EmployeeLayoutClient({ children, user }: EmployeeLayoutC
         <div className={styles.drawerHandle} />
         <div className={styles.drawerHeader}>
           <div className={styles.drawerProfile}>
-            <div className={styles.drawerAvatar}>
-              {user.name.charAt(0).toUpperCase()}
+            <div className={styles.drawerAvatar} style={{ overflow: 'hidden' }}>
+              {user.fotoProfil ? (
+                <img src={user.fotoProfil} alt={user.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+              ) : (
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#1a567e" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                  <circle cx="12" cy="7" r="4"></circle>
+                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                </svg>
+              )}
             </div>
             <div className={styles.drawerInfo}>
               <span className={styles.drawerName}>{user.name}</span>
               <span className={styles.drawerRole}>{user.role === 'employee' ? 'Karyawan' : user.role}</span>
             </div>
           </div>
-          <button className={styles.drawerClose} onClick={() => setIsMoreMenuOpen(false)}>
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
-          </button>
         </div>
         <div className={styles.drawerGrid}>
           <Link href="/employee/pengumuman" className={styles.drawerItem} onClick={() => setIsMoreMenuOpen(false)}>
@@ -280,14 +284,14 @@ export default function EmployeeLayoutClient({ children, user }: EmployeeLayoutC
       {/* Bottom Navigation for Mobile */}
       <nav className={styles.bottomNav}>
         <Link href="/employee/home" className={`${styles.bottomNavItem} ${pathname === '/employee/home' ? styles.bottomNavItemActive : ''}`}>
-          <div className={styles.bottomNavIcon}>
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" /><polyline points="9 22 9 12 15 12 15 22" /></svg>
-          </div>
+              <div className={styles.bottomNavIcon}>
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+              </div>
           <span>Home</span>
         </Link>
         <Link href="/employee/riwayat" className={`${styles.bottomNavItem} ${pathname === '/employee/riwayat' ? styles.bottomNavItemActive : ''}`}>
           <div className={styles.bottomNavIcon}>
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/><path d="M12 7v5l4 2"/></svg>
           </div>
           <span>Riwayat</span>
         </Link>
@@ -305,7 +309,7 @@ export default function EmployeeLayoutClient({ children, user }: EmployeeLayoutC
         </Link>
         <Link href="/employee/transaksi" className={`${styles.bottomNavItem} ${pathname === '/employee/transaksi' ? styles.bottomNavItemActive : ''}`}>
           <div className={styles.bottomNavIcon}>
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="5" width="20" height="14" rx="2" /><line x1="2" y1="10" x2="22" y2="10" /><path d="M7 15h.01" /><path d="M11 15h.01" /><path d="M15 15h.01" /></svg>
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><rect width="20" height="12" x="2" y="6" rx="2"/><circle cx="12" cy="12" r="2"/><path d="M6 12h.01M18 12h.01"/></svg>
           </div>
           <span>Gaji</span>
           {payrollCount > 0 && <span className={styles.bottomNavBadge}>{payrollCount}</span>}

@@ -93,3 +93,20 @@ export async function updateProfileKaryawanAction(formData: FormData) {
   return { success: true }
 }
 
+export async function updateAvatarKaryawanAction(base64Image: string) {
+  const session = await getSession()
+  if (!session || session.role !== "KARYAWAN") return { error: "Unauthorized" }
+
+  try {
+    const fotoUrl = await uploadBase64Image(base64Image, 'absensi/profil');
+    await prisma.user.update({
+      where: { id: session.id },
+      data: { fotoProfil: fotoUrl }
+    })
+    revalidatePath("/employee/profil")
+    return { success: true }
+  } catch (error) {
+    console.error("Gagal update avatar:", error)
+    return { error: "Terjadi kesalahan saat mengunggah foto profil." }
+  }
+}

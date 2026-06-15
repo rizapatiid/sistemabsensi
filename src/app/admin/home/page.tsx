@@ -15,7 +15,7 @@ const IconUsers = () => (
   <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" /><path d="M23 21v-2a4 4 0 0 0-3-3.87" /><path d="M16 3.13a4 4 0 0 1 0 7.75" /></svg>
 )
 const IconCheckIn = () => (
-  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" /><polyline points="16 11 18 13 22 9" /></svg>
+  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M12 10a2 2 0 0 0-2 2c0 1.02-.1 2.02-.3 3"/><path d="M14 22a10 10 0 0 0-4-4"/><path d="M18 12a6 6 0 0 0-6-6 6 6 0 0 0-6 6c0 2.21.12 4.41.34 6.61"/><path d="M22 12a10 10 0 0 0-10-10A10 10 0 0 0 2 12c0 4.23 1.01 8.42 3 12"/><path d="M8 22a10 10 0 0 1-1-4 10 10 0 0 1 10-10"/></svg>
 )
 const IconMoney = () => (
   <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="6" width="20" height="12" rx="2" /><circle cx="12" cy="12" r="2" /><path d="M6 12h.01M18 12h.01" /></svg>
@@ -164,19 +164,23 @@ export default async function AdminHomePage() {
                         <div className={styles.statusContainer}>
                             {/* Server Status Box */}
                             <Link href="/admin/pengaturan" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: settings?.maintenance ? 'linear-gradient(135deg, #fff5f5 0%, #fee2e2 100%)' : 'linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%)', border: settings?.maintenance ? '1px solid #fca5a5' : '1px solid #86efac', padding: '14px 18px', borderRadius: '16px', transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)', boxShadow: settings?.maintenance ? '0 4px 12px rgba(239, 68, 68, 0.05)' : '0 4px 12px rgba(16, 185, 129, 0.05)' }}>
-                                <div style={{ display: 'flex', flexDirection: 'column', gap: '3px' }}>
-                                    <span style={{ fontSize: '0.65rem', fontWeight: 900, color: settings?.maintenance ? '#dc2626' : '#15803d', letterSpacing: '0.05em', textTransform: 'uppercase' }}>STATUS OPERASIONAL</span>
-                                    <span style={{ fontSize: '1.05rem', fontWeight: 900, color: settings?.maintenance ? '#991b1b' : '#166534' }}>
-                                        {settings?.maintenance ? 'MODE PERAWATAN' : 'SISTEM ONLINE'}
+                                <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                                    <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                                        <span style={{ position: 'relative', display: 'flex', width: '8px', height: '8px' }}>
+                                            <span style={{ position: 'absolute', inset: 0, borderRadius: '50%', background: settings?.maintenance ? '#ef4444' : '#22c55e', opacity: 0.4, animation: 'ping 1.5s cubic-bezier(0,0,0.2,1) infinite' }}></span>
+                                            <span style={{ position: 'relative', width: '8px', height: '8px', borderRadius: '50%', background: settings?.maintenance ? '#ef4444' : '#22c55e' }}></span>
+                                        </span>
+                                        <span style={{ fontSize: '0.7rem', fontWeight: 600, color: settings?.maintenance ? '#dc2626' : '#15803d', letterSpacing: '0.02em' }}>Status Operasional</span>
+                                    </div>
+                                    <span style={{ fontSize: '1.05rem', fontWeight: 800, color: settings?.maintenance ? '#991b1b' : '#166534', letterSpacing: '-0.3px' }}>
+                                        {settings?.maintenance ? 'Mode Perawatan' : 'Sistem Online'}
                                     </span>
                                 </div>
-                                <div style={{ display: 'flex', alignItems: 'center', background: 'white', padding: '6px 10px', borderRadius: '10px', boxShadow: '0 2px 4px rgba(0,0,0,0.02)', border: '1px solid rgba(0,0,0,0.03)', transition: 'all 0.2s' }}>
-                                    <span style={{ fontSize: '0.7rem', fontWeight: 800, color: '#475569', textTransform: 'uppercase', letterSpacing: '0.02em', display: 'flex', alignItems: 'center', gap: '4px' }}>
-                                        Kelola
-                                        <svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
-                                            <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
-                                        </svg>
-                                    </span>
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '4px', background: 'rgba(255,255,255,0.8)', padding: '7px 12px', borderRadius: '10px', boxShadow: '0 2px 6px rgba(0,0,0,0.06)', border: '1px solid rgba(255,255,255,0.9)', backdropFilter: 'blur(4px)' }}>
+                                    <span style={{ fontSize: '0.75rem', fontWeight: 700, color: '#475569', letterSpacing: '0.01em' }}>Kelola</span>
+                                    <svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5} style={{ color: '#94a3b8' }}>
+                                        <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+                                    </svg>
                                 </div>
                             </Link>
 
@@ -188,33 +192,39 @@ export default async function AdminHomePage() {
                     {/* BENTO BOX 2.5: OPERATIONAL ACCESS BAR */}
                     <section className={`${employeeStyles.quickActionsSection} ${styles.adminQuickActionsSection}`}>
                         <div className={styles.quickActionsBar} style={{ paddingBottom: '4px', marginBottom: 0 }}>
-                            <Link href="/admin/karyawan" className={styles.quickActionBtn}>
-                                <div className={styles.quickActionIcon} style={{ background: '#eff6ff', color: '#2563eb' }}><IconUsers /></div>
-                                Personil
-                            </Link>
-                            <Link href="/admin/absensi" className={styles.quickActionBtn}>
-                                <div className={styles.quickActionIcon} style={{ background: '#ecfdf5', color: '#059669' }}><IconCheckIn /></div>
+                            <Link href="/admin/absensi" className={styles.quickActionBtn} style={{'--card-bg': 'linear-gradient(145deg, #ffffff, #f0fdf8)'} as React.CSSProperties}>
+                                <div className={styles.quickActionIcon} style={{ background: 'linear-gradient(135deg, #d1fae5, #a7f3d0)', color: '#059669', boxShadow: '0 4px 12px rgba(5,150,105,0.15)' }}><IconCheckIn /></div>
                                 Absensi
                             </Link>
-                            <Link href="/admin/payroll" className={styles.quickActionBtn}>
-                                <div className={styles.quickActionIcon} style={{ background: '#fff7ed', color: '#ea580c' }}><IconMoney /></div>
+                            <Link href="/admin/payroll" className={styles.quickActionBtn} style={{'--card-bg': 'linear-gradient(145deg, #ffffff, #fff7ed)'} as React.CSSProperties}>
+                                <div className={styles.quickActionIcon} style={{ background: 'linear-gradient(135deg, #ffedd5, #fed7aa)', color: '#ea580c', boxShadow: '0 4px 12px rgba(234,88,12,0.15)' }}><IconMoney /></div>
                                 Payroll
                             </Link>
-                            <Link href="/admin/kalender" className={styles.quickActionBtn}>
-                                <div className={styles.quickActionIcon} style={{ background: '#fef2f2', color: '#ef4444' }}><IconCalendar /></div>
+                            <Link href="/admin/pengumuman" className={styles.quickActionBtn} style={{'--card-bg': 'linear-gradient(145deg, #ffffff, #fffbeb)'} as React.CSSProperties}>
+                                <div className={styles.quickActionIcon} style={{ background: 'linear-gradient(135deg, #fef3c7, #fde68a)', color: '#d97706', boxShadow: '0 4px 12px rgba(217,119,6,0.15)' }}>
+                                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M22 17H2a3 3 0 0 0 3-3V9a7 7 0 0 1 14 0v5a3 3 0 0 0 3 3zm-8.27 4a2 2 0 0 1-3.46 0"/></svg>
+                                </div>
+                                Pengumuman
+                            </Link>
+                            <Link href="/admin/kalender" className={styles.quickActionBtn} style={{'--card-bg': 'linear-gradient(145deg, #ffffff, #fff5f5)'} as React.CSSProperties}>
+                                <div className={styles.quickActionIcon} style={{ background: 'linear-gradient(135deg, #fee2e2, #fecaca)', color: '#ef4444', boxShadow: '0 4px 12px rgba(239,68,68,0.15)' }}><IconCalendar /></div>
                                 Kalender
                             </Link>
-                            <Link href="/admin/chat" className={styles.quickActionBtn}>
-                                <div className={styles.quickActionIcon} style={{ background: '#faf5ff', color: '#8b5cf6' }}><IconChat /></div>
-                                Chat Internal
+                            <Link href="/admin/karyawan" className={styles.quickActionBtn} style={{'--card-bg': 'linear-gradient(145deg, #ffffff, #eff6ff)'} as React.CSSProperties}>
+                                <div className={styles.quickActionIcon} style={{ background: 'linear-gradient(135deg, #dbeafe, #bfdbfe)', color: '#2563eb', boxShadow: '0 4px 12px rgba(37,99,235,0.15)' }}><IconUsers /></div>
+                                Karyawan
                             </Link>
-                            <Link href="/admin/kelola-admin" className={styles.quickActionBtn}>
-                                <div className={styles.quickActionIcon} style={{ background: '#fdf2f8', color: '#ec4899' }}><IconShield /></div>
+                            <Link href="/admin/kelola-admin" className={styles.quickActionBtn} style={{'--card-bg': 'linear-gradient(145deg, #ffffff, #fdf2f8)'} as React.CSSProperties}>
+                                <div className={styles.quickActionIcon} style={{ background: 'linear-gradient(135deg, #fce7f3, #fbcfe8)', color: '#ec4899', boxShadow: '0 4px 12px rgba(236,72,153,0.15)' }}><IconShield /></div>
                                 Tim Admin
                             </Link>
-                            <Link href="/admin/pengaturan" className={styles.quickActionBtn}>
-                                <div className={styles.quickActionIcon} style={{ background: '#f8fafc', color: '#1e293b' }}>
-                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.1a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z" /><circle cx="12" cy="12" r="3" /></svg>
+                            <Link href="/admin/chat" className={styles.quickActionBtn} style={{'--card-bg': 'linear-gradient(145deg, #ffffff, #f5f3ff)'} as React.CSSProperties}>
+                                <div className={styles.quickActionIcon} style={{ background: 'linear-gradient(135deg, #ede9fe, #ddd6fe)', color: '#8b5cf6', boxShadow: '0 4px 12px rgba(139,92,246,0.15)' }}><IconChat /></div>
+                                Chat
+                            </Link>
+                            <Link href="/admin/pengaturan" className={styles.quickActionBtn} style={{'--card-bg': 'linear-gradient(145deg, #ffffff, #f8fafc)'} as React.CSSProperties}>
+                                <div className={styles.quickActionIcon} style={{ background: 'linear-gradient(135deg, #f1f5f9, #e2e8f0)', color: '#475569', boxShadow: '0 4px 12px rgba(71,85,105,0.12)' }}>
+                                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
                                 </div>
                                 Sistem
                             </Link>

@@ -6,6 +6,7 @@ import { redirect } from "next/navigation"
 import { z } from "zod"
 import { getSession } from "@/actions/auth"
 import { sendWhatsAppMessage } from "@/lib/whatsapp"
+import { uploadBase64Image } from "@/lib/cloudinary"
 
 const EmployeeSchema = z.object({
   id: z.string().min(1, "ID Karyawan Wajib diisi"),
@@ -14,32 +15,66 @@ const EmployeeSchema = z.object({
   phone: z.string().optional(),
   email: z.string().email("Format email salah").optional().or(z.literal("")),
   alamat: z.string().optional(),
-  password: z.string().min(5, "Password minimal 5 karakter")
+  password: z.string().min(5, "Password minimal 5 karakter"),
+  fotoProfil: z.string().optional(),
+  rekeningBank: z.string().optional(),
+  noRekening: z.string().optional(),
+  namaRekening: z.string().optional(),
 })
 
 export async function createEmployeeAction(formData: FormData) {
   const result = EmployeeSchema.safeParse({
-    id: formData.get("id"),
-    nama: formData.get("nama"),
-    jabatan: formData.get("jabatan"),
-    phone: formData.get("phone"),
-    email: formData.get("email"),
-    alamat: formData.get("alamat"),
-    password: formData.get("password")
+    id: formData.get("id") as string,
+    nama: formData.get("nama") as string,
+    jabatan: formData.get("jabatan") as string,
+    phone: (formData.get("phone") as string) ?? undefined,
+    email: (formData.get("email") as string) ?? undefined,
+    alamat: (formData.get("alamat") as string) ?? undefined,
+    password: formData.get("password") as string,
+    fotoProfil: (formData.get("fotoProfil") as string) ?? undefined,
+    rekeningBank: (formData.get("rekeningBank") as string) ?? undefined,
+    noRekening: (formData.get("noRekening") as string) ?? undefined,
+    namaRekening: (formData.get("namaRekening") as string) ?? undefined,
   })
 
   if (!result.success) {
     return { error: result.error.issues[0].message }
   }
 
-  const exists = await prisma.user.findUnique({ where: { id: result.data.id } })
+  let finalId = result.data.id
+  if (finalId === "OTOMATIS (SISTEM)" || finalId.trim() === "") {
+    finalId = await getNextEmployeeId()
+  }
+
+  const exists = await prisma.user.findUnique({ where: { id: finalId } })
   if (exists) {
     return { error: "ID Karyawan sudah terdaftar!" }
   }
 
+  if (result.data.email) {
+    const emailExists = await prisma.user.findFirst({ where: { email: result.data.email } })
+    if (emailExists) return { error: "Email sudah terdaftar untuk karyawan lain!" }
+  }
+
+  if (result.data.phone) {
+    const phoneExists = await prisma.user.findFirst({ where: { phone: result.data.phone } })
+    if (phoneExists) return { error: "Nomor WhatsApp sudah terdaftar untuk karyawan lain!" }
+  }
+
+  let finalFotoProfil = result.data.fotoProfil;
+  if (finalFotoProfil && finalFotoProfil.startsWith('data:image')) {
+    const uploadedUrl = await uploadBase64Image(finalFotoProfil, 'absensi/profil');
+    if (uploadedUrl) {
+      finalFotoProfil = uploadedUrl;
+    } else {
+      return { error: "Gagal mengunggah foto profil ke server" };
+    }
+  }
+
+  // Create existing fields using prisma client
   const newEmp = await prisma.user.create({
     data: {
-      id: result.data.id,
+      id: finalId,
       nama: result.data.nama,
       jabatan: result.data.jabatan,
       phone: result.data.phone || null,
@@ -50,6 +85,16 @@ export async function createEmployeeAction(formData: FormData) {
       status: "AKTIF"
     }
   })
+
+  // Update new fields using executeRaw because Prisma Client is locked (EPERM)
+  await prisma.$executeRaw`
+    UPDATE \`User\` SET 
+      \`fotoProfil\` = ${finalFotoProfil || null},
+      \`rekeningBank\` = ${result.data.rekeningBank || null},
+      \`noRekening\` = ${result.data.noRekening || null},
+      \`namaRekening\` = ${result.data.namaRekening || null}
+    WHERE \`id\` = ${finalId}
+  `
 
   if (newEmp.phone) {
     try {
@@ -66,34 +111,95 @@ export async function createEmployeeAction(formData: FormData) {
   redirect("/admin/karyawan")
 }
 
+export async function getNextEmployeeId() {
+  const lastUser = await prisma.user.findFirst({
+    where: { id: { startsWith: 'RMP-' } },
+    orderBy: { id: 'desc' },
+    select: { id: true }
+  })
+  if (!lastUser) return "RMP-001"
+  
+  const lastId = lastUser.id // e.g. RMP-005
+  const numPart = parseInt(lastId.replace("RMP-", ""))
+  if (isNaN(numPart)) return "RMP-001"
+  
+  const nextNum = numPart + 1
+  return `RMP-${nextNum.toString().padStart(3, '0')}`
+}
+
 export async function updateEmployeeAction(formData: FormData) {
   const idOriginal = formData.get("idOriginal") as string
   const result = EmployeeSchema.safeParse({
-    id: formData.get("id"),
-    nama: formData.get("nama"),
-    jabatan: formData.get("jabatan"),
-    phone: formData.get("phone"),
-    email: formData.get("email"),
-    alamat: formData.get("alamat"),
-    password: formData.get("password")
+    id: formData.get("id") as string,
+    nama: formData.get("nama") as string,
+    jabatan: formData.get("jabatan") as string,
+    phone: (formData.get("phone") as string) ?? undefined,
+    email: (formData.get("email") as string) ?? undefined,
+    alamat: (formData.get("alamat") as string) ?? undefined,
+    password: (formData.get("password") as string) || "123456", // Temporary fallback to pass validation if empty
+    fotoProfil: (formData.get("fotoProfil") as string) ?? undefined,
+    rekeningBank: (formData.get("rekeningBank") as string) ?? undefined,
+    noRekening: (formData.get("noRekening") as string) ?? undefined,
+    namaRekening: (formData.get("namaRekening") as string) ?? undefined,
   })
 
   if (!result.success) {
     return { error: result.error.issues[0].message }
   }
 
+  if (result.data.email) {
+    const emailExists = await prisma.user.findFirst({ 
+      where: { email: result.data.email, NOT: { id: idOriginal } } 
+    })
+    if (emailExists) return { error: "Email sudah terdaftar untuk karyawan lain!" }
+  }
+
+  if (result.data.phone) {
+    const phoneExists = await prisma.user.findFirst({ 
+      where: { phone: result.data.phone, NOT: { id: idOriginal } } 
+    })
+    if (phoneExists) return { error: "Nomor WhatsApp sudah terdaftar untuk karyawan lain!" }
+  }
+
+  let finalFotoProfil = result.data.fotoProfil;
+  if (finalFotoProfil && finalFotoProfil.startsWith('data:image')) {
+    const uploadedUrl = await uploadBase64Image(finalFotoProfil, 'absensi/profil');
+    if (uploadedUrl) {
+      finalFotoProfil = uploadedUrl;
+    } else {
+      return { error: "Gagal mengunggah foto profil ke server" };
+    }
+  }
+
+  const updateData: any = {
+    id: result.data.id,
+    nama: result.data.nama,
+    jabatan: result.data.jabatan,
+    phone: result.data.phone || null,
+    email: result.data.email || null,
+    alamat: result.data.alamat || null,
+  }
+  
+  const pw = formData.get("password") as string
+  if (pw && pw.trim() !== "") {
+      updateData.password = pw
+  }
+
+  // Update existing fields using prisma client
   await prisma.user.update({
     where: { id: idOriginal },
-    data: {
-      id: result.data.id,
-      nama: result.data.nama,
-      jabatan: result.data.jabatan,
-      phone: result.data.phone || null,
-      email: result.data.email || null,
-      alamat: result.data.alamat || null,
-      password: result.data.password,
-    }
+    data: updateData
   })
+
+  // Update new fields using executeRaw because Prisma Client is locked (EPERM)
+  await prisma.$executeRaw`
+    UPDATE \`User\` SET 
+      \`fotoProfil\` = ${finalFotoProfil || null},
+      \`rekeningBank\` = ${result.data.rekeningBank || null},
+      \`noRekening\` = ${result.data.noRekening || null},
+      \`namaRekening\` = ${result.data.namaRekening || null}
+    WHERE \`id\` = ${result.data.id}
+  `
 
   revalidatePath("/admin/karyawan")
   redirect("/admin/karyawan")
@@ -182,7 +288,7 @@ export async function toggleAbsensiAccessAction(id: string, currentStatus: boole
   // Gunakan executeRaw karena prisma client belum terupdate (EPERM file lock)
   const newVal = !currentStatus
   await prisma.$executeRaw`
-    UPDATE "User" SET "absensiEnabled" = ${newVal} WHERE id = ${id}
+    UPDATE \`User\` SET \`absensiEnabled\` = ${newVal} WHERE id = ${id}
   `
   revalidatePath("/admin/karyawan")
 }

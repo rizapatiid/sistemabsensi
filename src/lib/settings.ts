@@ -24,6 +24,20 @@ export const getSystemSettings = cache(
           settings = retry[0] || { maintenance: false }
         }
 
+        // Logic mematikan maintenance secara otomatis jika waktu 'maintenanceUntil' sudah terlewati
+        if (settings.maintenance && settings.maintenanceUntil) {
+            const untilDate = new Date(settings.maintenanceUntil)
+            if (!isNaN(untilDate.getTime()) && new Date() >= untilDate) {
+                // Set memory object ke false agar segera berlaku di response saat ini
+                settings.maintenance = false;
+                
+                // Lakukan query asinkron untuk update database di latar belakang
+                prisma.$queryRawUnsafe(
+                    "UPDATE `SystemSetting` SET `maintenance` = false, `maintenanceUntil` = NULL WHERE `id` = 'global'"
+                ).catch(e => console.error("Gagal auto-lift maintenance:", e))
+            }
+        }
+
         return settings
       } catch (error) {
         console.error("Gagal mengambil pengaturan sistem:", error)

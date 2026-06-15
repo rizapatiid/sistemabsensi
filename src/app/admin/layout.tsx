@@ -9,13 +9,13 @@ export default async function AdminLayout({ children }: { children: React.ReactN
 
   const userProfile = await prisma.user.findUnique({
     where: { id: session.id },
-    select: { nama: true, role: true }
+    select: { nama: true, role: true, fotoProfil: true }
   })
 
   if (!userProfile) redirect("/")
 
   return (
-    <AdminLayoutClient user={{ id: session.id, name: userProfile.nama, role: userProfile.role }} >
+    <AdminLayoutClient user={{ id: session.id, name: userProfile.nama, role: userProfile.role, fotoProfil: userProfile.fotoProfil }} >
       {children}
     </AdminLayoutClient>
   )

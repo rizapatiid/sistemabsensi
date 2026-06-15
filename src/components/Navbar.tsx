@@ -7,6 +7,7 @@ import { logoutAction } from "@/actions/auth";
 interface User {
   name: string;
   role: string;
+  fotoProfil?: string | null;
 }
 
 interface NavbarProps {
@@ -59,10 +60,18 @@ export default function Navbar({ user, onMobileMenuToggle, isSidebarCollapsed, o
           </div>
           <div className="user-avatar-container">
             <div className="user-avatar">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1a567e" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                <circle cx="12" cy="7" r="4"></circle>
-                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-              </svg>
+              {user?.fotoProfil ? (
+                <img 
+                  src={user.fotoProfil} 
+                  alt={user.name} 
+                  style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
+                />
+              ) : (
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1a567e" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                  <circle cx="12" cy="7" r="4"></circle>
+                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                </svg>
+              )}
             </div>
             <div className={`dropdown-indicator ${isDropdownOpen ? 'rotated' : ''}`}>
               <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
@@ -269,6 +278,7 @@ export default function Navbar({ user, onMobileMenuToggle, isSidebarCollapsed, o
           justify-content: center;
           transition: all 0.3s;
           box-shadow: inset 0 2px 4px rgba(255,255,255,0.5);
+          overflow: hidden;
         }
         .user-profile:hover .user-avatar {
           border-color: #93c5fd;

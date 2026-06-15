@@ -2,12 +2,14 @@ import prisma from "@/lib/prisma"
 import { getSession } from "@/actions/auth"
 import { redirect } from "next/navigation"
 import Link from "next/link"
+import Image from "next/image"
 import styles from "@/styles/profil_karyawan.module.css"
 import ProfileForm from "./ProfileForm"
+import CopyButton from "@/components/CopyButton"
 import CopyIdButton from "@/components/CopyIdButton"
 import PushNotificationManager from "@/components/PushNotificationManager"
 import EmailNotificationSettings from "@/components/EmailNotificationSettings"
-
+import AvatarEditor from "./AvatarEditor"
 // Professional Line Icons
 const IconUser = () => (
   <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
@@ -47,102 +49,93 @@ export default async function EmployeeProfilePage() {
   return (
     <div className={styles.pageContainer}>
       
-      {/* Premium Hero Header */}
-      <div style={{
-        background: 'linear-gradient(135deg, #0f172a 0%, #1e293b 100%)',
-        borderRadius: 'clamp(12px, 3vw, 16px)',
-        padding: 'clamp(20px, 5vw, 32px)',
-        color: '#ffffff',
-        position: 'relative',
-        overflow: 'hidden',
-        boxShadow: '0 20px 40px -10px rgba(15, 23, 42, 0.4)',
-        marginBottom: '4px'
-      }}>
-        {/* Geometric Accents */}
-        <div style={{ position: 'absolute', top: '-10%', right: '-5%', width: '300px', height: '300px', background: 'radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%)', borderRadius: '50%' }}></div>
-        <div style={{ position: 'absolute', bottom: '-20%', left: '10%', width: '200px', height: '200px', background: 'radial-gradient(circle, rgba(59,130,246,0.2) 0%, transparent 70%)', borderRadius: '50%' }}></div>
-        
-        <div style={{ position: 'relative', zIndex: 1, display: 'flex', gap: 'clamp(12px, 3vw, 20px)', alignItems: 'center' }}>
-          <div style={{ 
-            width: 'clamp(56px, 12vw, 64px)', height: 'clamp(56px, 12vw, 64px)', 
-            background: 'rgba(255, 255, 255, 0.1)', 
-            borderRadius: 'clamp(14px, 3vw, 20px)', 
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-            backdropFilter: 'blur(10px)',
-            border: '1px solid rgba(255, 255, 255, 0.2)',
-            flexShrink: 0
-          }}>
-            <svg width="clamp(24px, 6vw, 32px)" height="clamp(24px, 6vw, 32px)" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ color: '#60a5fa' }}><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-          </div>
-          <div style={{ flex: 1, minWidth: 0 }}>
-            <h1 style={{ fontSize: 'clamp(1.4rem, 4.5vw, 1.75rem)', fontWeight: 900, margin: '0 0 clamp(4px, 1vw, 6px) 0', letterSpacing: '-0.02em', lineHeight: 1.2 }}>Profil Saya</h1>
-            <p style={{ margin: 0, color: '#93c5fd', fontSize: 'clamp(0.8rem, 2.5vw, 0.95rem)', fontWeight: 500, lineHeight: 1.4 }}>Kelola rincian akun dan biografi pribadi Anda.</p>
-          </div>
-        </div>
-      </div>
+
 
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '24px' }}>
-        {/* 2. PROFILE SUMMARY CARD */}
-        <div className={styles.card}>
-          <div className={styles.cardHeader}>
-             <div style={{ color: '#1e3a8a' }}><IconShield /></div>
-             <span className={styles.cardTitle}>Status Karyawan</span>
+        {/* 1. FOTO PROFIL & STATUS KARYAWAN CARD */}
+        <div className={styles.card} style={{ padding: 0, overflow: 'hidden', display: 'flex', flexDirection: 'column', height: '100%' }}>
+          {/* Banner */}
+          <div style={{ height: '100px', background: 'linear-gradient(135deg, #0f172a 0%, #1e293b 100%)', position: 'relative' }}>
+             <div style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, background: 'radial-gradient(circle at top right, rgba(255,255,255,0.1) 0%, transparent 60%)' }}></div>
+             <div style={{ position: 'absolute', top: '20px', left: 'clamp(20px, 5vw, 32px)', color: 'rgba(255,255,255,0.9)', display: 'flex', alignItems: 'center', gap: '8px' }}>
+               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+               <span style={{ fontSize: '0.85rem', fontWeight: 800, letterSpacing: '1px', textTransform: 'uppercase' }}>PROFIL SAYA</span>
+             </div>
           </div>
           
-          <div className={styles.infoBox}>
-            <span className={styles.infoLabel}>ID Karyawan</span>
-            <div className={styles.infoValue} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <div style={{ width: '28px', height: '28px', borderRadius: '6px', background: '#eff6ff', color: '#2563eb', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                  <IconId />
-                </div>
-                <span>{user.id}</span>
-              </div>
-              <CopyIdButton id={user.id} />
-            </div>
-          </div>
-
-          <div className={styles.infoBox}>
-            <span className={styles.infoLabel}>Jabatan Resmi</span>
-            <div className={styles.infoValue}>
-              <div style={{ width: '28px', height: '28px', borderRadius: '6px', background: '#eff6ff', color: '#2563eb', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                <IconBriefcase />
-              </div>
-              {user.jabatan || "-"}
-            </div>
-          </div>
-
-          <div className={styles.infoBox}>
-            <span className={styles.infoLabel}>Status Kepegawaian</span>
-            <div style={{ marginTop: '8px' }}>
-              <span className={`${styles.badge} ${user.status === 'AKTIF' ? styles.badgeAktif : styles.badgeNonaktif}`}>
-                 <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: 'currentColor' }}></div>
-                 {user.status}
+          {/* Content */}
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '0 24px 24px 24px', marginTop: '-48px', flex: 1 }}>
+            <AvatarEditor user={{ fotoProfil: user.fotoProfil, nama: user.nama }} />
+            
+            <h3 style={{ margin: '0 0 8px 0', fontSize: '1.25rem', fontWeight: 800, color: '#0f172a', textAlign: 'center' }}>{user.nama}</h3>
+            
+            <div style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', background: '#eff6ff', color: '#2563eb', padding: '6px 12px', borderRadius: '20px' }}>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+              <span style={{ fontSize: '0.75rem', fontWeight: 700, letterSpacing: '0.5px', textTransform: 'uppercase' }}>
+                {user.role === 'admin' ? 'Administrator' : 'Karyawan'}
               </span>
             </div>
-          </div>
 
-          <div style={{ 
-            padding: "10px 14px", 
-            background: "#fffbeb", 
-            borderRadius: "10px",
-            border: "1px solid #fef3c7",
-            display: "flex",
-            gap: "10px",
-            marginBottom: "10px"
-          }}>
-            <div style={{ color: '#d97706', marginTop: '1px' }}><IconAlertCircle /></div>
-            <p style={{ margin: 0, fontSize: "0.75rem", color: "#b45309", lineHeight: "1.5", fontWeight: '500' }}>
-              Informasi ID dan Jabatan dikunci oleh sistem untuk keamanan validasi data.
-            </p>
+            <div style={{ width: '100%', height: '1px', background: '#e2e8f0', margin: '24px 0 20px 0' }}></div>
+
+            <div style={{ width: '100%', display: 'flex', flexDirection: 'column', gap: '12px', marginTop: 'auto' }}>
+              
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+                <div className={styles.infoBox} style={{ marginBottom: 0, padding: '12px' }}>
+                  <span className={styles.infoLabel} style={{ fontSize: '0.7rem' }}>ID Karyawan</span>
+                  <div className={styles.infoValue} style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.85rem' }}>
+                    <div style={{ width: '22px', height: '22px', borderRadius: '4px', background: '#eff6ff', color: '#2563eb', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                      <IconId />
+                    </div>
+                    <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', fontWeight: '800', fontFamily: 'monospace', fontSize: '0.9rem' }}>{user.id}</span>
+                    <CopyButton text={user.id} />
+                  </div>
+                </div>
+
+                <div className={styles.infoBox} style={{ marginBottom: 0, padding: '12px' }}>
+                  <span className={styles.infoLabel} style={{ fontSize: '0.7rem' }}>Jabatan Resmi</span>
+                  <div className={styles.infoValue} style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.85rem' }}>
+                    <div style={{ width: '22px', height: '22px', borderRadius: '4px', background: '#eff6ff', color: '#2563eb', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                      <IconBriefcase />
+                    </div>
+                    <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{user.jabatan || "-"}</span>
+                  </div>
+                </div>
+              </div>
+
+              <div className={styles.infoBox} style={{ marginBottom: 0, padding: '12px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                <span className={styles.infoLabel} style={{ fontSize: '0.75rem', marginBottom: 0 }}>Status Kepegawaian</span>
+                <span className={`${styles.badge} ${user.status === 'AKTIF' ? styles.badgeAktif : styles.badgeNonaktif}`} style={{ padding: '4px 10px', fontSize: '0.7rem' }}>
+                   <div style={{ width: '6px', height: '6px', borderRadius: '50%', background: 'currentColor' }}></div>
+                   {user.status}
+                </span>
+              </div>
+
+              <div style={{ 
+                padding: "10px 14px", 
+                background: "#fffbeb", 
+                borderRadius: "8px",
+                border: "1px solid #fef3c7",
+                display: "flex",
+                gap: "10px"
+              }}>
+                <div style={{ color: '#d97706', marginTop: '1px' }}>
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                </div>
+                <p style={{ margin: 0, fontSize: "0.7rem", color: "#b45309", lineHeight: "1.4", fontWeight: '600' }}>
+                  Informasi ID dan Jabatan dikunci oleh sistem untuk keamanan validasi data.
+                </p>
+              </div>
+            </div>
           </div>
         </div>
 
         {/* 3. BIODATA CARD + POPUP TRIGGER */}
-        <div className={styles.card}>
+        {/* 3. BIODATA CARD + POPUP TRIGGER */}
+        <div className={styles.card} style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
             <div className={styles.cardHeader}>
                 <div style={{ color: '#1e3a8a' }}><IconUser /></div>
-                <span className={styles.cardTitle}>Data Biodata Personal</span>
+                <span className={styles.cardTitle}>Biodata Saya</span>
             </div>
 
             <div className={styles.infoBox}>
@@ -186,7 +179,24 @@ export default async function EmployeeProfilePage() {
                 </div>
             </div>
 
-            <ProfileForm user={user} />
+            <div style={{ marginTop: 'auto', display: 'flex', flexDirection: 'column', gap: '4px' }}>
+              <div style={{ 
+                padding: "10px 14px", 
+                background: "#eff6ff", 
+                borderRadius: "8px",
+                border: "1px solid #bfdbfe",
+                display: "flex",
+                gap: "10px"
+              }}>
+                <div style={{ color: '#2563eb', marginTop: '1px' }}>
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+                </div>
+                <p style={{ margin: 0, fontSize: "0.7rem", color: "#1e40af", lineHeight: "1.4", fontWeight: '600' }}>
+                  Pastikan data biodata Anda selalu valid dan diperbarui untuk keperluan administrasi.
+                </p>
+              </div>
+              <ProfileForm user={user} />
+            </div>
         </div>
       </div>
       

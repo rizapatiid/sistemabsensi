@@ -10,7 +10,7 @@ import { getUnreadAnnouncementCount, markAnnouncementsAsRead } from "@/actions/a
 
 interface AdminLayoutClientProps {
   children: React.ReactNode;
-  user: { id: string; name: string; role: string };
+  user: { id: string; name: string; role: string; fotoProfil?: string | null };
 }
 
 export default function AdminLayoutClient({ children, user }: AdminLayoutClientProps) {
@@ -59,22 +59,22 @@ export default function AdminLayoutClient({ children, user }: AdminLayoutClientP
 
   const navLinks = [
     { name: "Dashboard", href: "/admin/home", icon: (
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
     ) },
     { name: "Data Karyawan", href: "/admin/karyawan", icon: (
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 2 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
     ) },
     { name: "Rekap Absensi", href: "/admin/absensi", icon: (
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/><path d="M12 18v-6"/><path d="M8 15h8"/></svg>
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 10a2 2 0 0 0-2 2c0 1.02-.1 2.02-.3 3"/><path d="M14 22a10 10 0 0 0-4-4"/><path d="M18 12a6 6 0 0 0-6-6 6 6 0 0 0-6 6c0 2.21.12 4.41.34 6.61"/><path d="M22 12a10 10 0 0 0-10-10A10 10 0 0 0 2 12c0 4.23 1.01 8.42 3 12"/><path d="M8 22a10 10 0 0 1-1-4 10 10 0 0 1 10-10"/></svg>
     ) },
     { name: "Payroll System", href: "/admin/payroll", icon: (
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/><path d="M7 15h.01"/><path d="M11 15h.01"/><path d="M15 15h.01"/></svg>
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="20" height="12" x="2" y="6" rx="2"/><circle cx="12" cy="12" r="2"/><path d="M6 12h.01M18 12h.01"/></svg>
     ) },
     { name: "Kalender", href: "/admin/kalender", icon: (
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
     ) },
     { name: "Pengumuman", href: "/admin/pengumuman", icon: (
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M11.6 16.8l2.6 3.1c.5.6 1.4.6 1.9 0l3-3.6c.5-.6.5-1.5 0-2.1l-2.6-3.1"/><path d="M18.3 12.1l-10-8.6c-1-.8-2.5-.1-2.5 1.2v14.6c0 1.3 1.5 2 2.5 1.2l10-8.6c.8-.7.8-2 0-2.8z"/></svg>
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
     ) },
     { name: "Kelola Admin", href: "/admin/kelola-admin", icon: (
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
@@ -191,19 +191,41 @@ export default function AdminLayoutClient({ children, user }: AdminLayoutClientP
             <div className={styles.drawerHandle} />
             <div className={styles.drawerHeader}>
               <div className={styles.drawerProfile}>
-                <div className={styles.drawerAvatar}>
-                  {user.name.charAt(0).toUpperCase()}
+                <div className={styles.drawerAvatar} style={{ overflow: 'hidden' }}>
+                  {user.fotoProfil ? (
+                    <img src={user.fotoProfil} alt={user.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                  ) : (
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#1a567e" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                      <circle cx="12" cy="7" r="4"></circle>
+                      <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                    </svg>
+                  )}
                 </div>
                 <div className={styles.drawerInfo}>
                   <span className={styles.drawerName}>{user.name}</span>
                   <span className={styles.drawerRole}>{user.role === 'admin' ? 'Master Admin' : user.role}</span>
                 </div>
               </div>
-              <button className={styles.drawerClose} onClick={() => setIsMoreMenuOpen(false)}>
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
-              </button>
             </div>
             <div className={styles.drawerGrid}>
+              <Link href="/admin/profil" className={styles.drawerItem} onClick={() => setIsMoreMenuOpen(false)}>
+                <div className={styles.drawerIcon}>
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                </div>
+                <span className={styles.drawerLabel}>Profil saya</span>
+                <div className={styles.drawerChevron}>
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                </div>
+              </Link>
+              <Link href="/admin/kalender" className={styles.drawerItem} onClick={() => setIsMoreMenuOpen(false)}>
+                <div className={styles.drawerIcon}>
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/><path d="M8 14h.01"/><path d="M12 14h.01"/><path d="M16 14h.01"/><path d="M8 18h.01"/><path d="M12 18h.01"/><path d="M16 18h.01"/></svg>
+                </div>
+                <span className={styles.drawerLabel}>Kalender</span>
+                <div className={styles.drawerChevron}>
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                </div>
+              </Link>
               <Link href="/admin/karyawan" className={styles.drawerItem} onClick={() => setIsMoreMenuOpen(false)}>
                 <div className={styles.drawerIcon}>
                   <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 2 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
@@ -265,25 +287,20 @@ export default function AdminLayoutClient({ children, user }: AdminLayoutClientP
             </Link>
             <Link href="/admin/absensi" className={`${styles.bottomNavItem} ${pathname === '/admin/absensi' ? styles.bottomNavItemActive : ''}`}>
               <div className={styles.bottomNavIcon}>
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M12 20V10"/><path d="M18 20V4"/><path d="M6 20v-4"/><path d="M3 20h18"/></svg>
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M12 10a2 2 0 0 0-2 2c0 1.02-.1 2.02-.3 3"/><path d="M14 22a10 10 0 0 0-4-4"/><path d="M18 12a6 6 0 0 0-6-6 6 6 0 0 0-6 6c0 2.21.12 4.41.34 6.61"/><path d="M22 12a10 10 0 0 0-10-10A10 10 0 0 0 2 12c0 4.23 1.01 8.42 3 12"/><path d="M8 22a10 10 0 0 1-1-4 10 10 0 0 1 10-10"/></svg>
               </div>
               <span>Laporan</span>
             </Link>
             <Link href="/admin/payroll" className={`${styles.bottomNavItem} ${pathname.startsWith('/admin/payroll') ? styles.bottomNavItemActive : ''}`}>
               <div className={styles.bottomNavIcon}>
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/><path d="M7 15h.01"/><path d="M11 15h.01"/><path d="M15 15h.01"/></svg>
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><rect width="20" height="12" x="2" y="6" rx="2"/><circle cx="12" cy="12" r="2"/><path d="M6 12h.01M18 12h.01"/></svg>
               </div>
               <span>Payroll</span>
             </Link>
-            <Link href="/admin/kalender" className={`${styles.bottomNavItem} ${pathname.startsWith('/admin/kalender') ? styles.bottomNavItemActive : ''}`}>
-              <div className={styles.bottomNavIcon}>
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/><path d="M8 14h.01"/><path d="M12 14h.01"/><path d="M16 14h.01"/><path d="M8 18h.01"/><path d="M12 18h.01"/><path d="M16 18h.01"/></svg>
-              </div>
-              <span>Kalender</span>
-            </Link>
+
             <Link href="/admin/pengumuman" className={`${styles.bottomNavItem} ${pathname.startsWith('/admin/pengumuman') ? styles.bottomNavItemActive : ''}`}>
               <div className={styles.bottomNavIcon}>
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M11.6 16.8l2.6 3.1c.5.6 1.4.6 1.9 0l3-3.6c.5-.6.5-1.5 0-2.1l-2.6-3.1"/><path d="M18.3 12.1l-10-8.6c-1-.8-2.5-.1-2.5 1.2v14.6c0 1.3 1.5 2 2.5 1.2l10-8.6c.8-.7.8-2 0-2.8z"/></svg>
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
               </div>
               <span>Pengumuman</span>
               {announcementCount > 0 && <span className={styles.bottomNavBadge}>{announcementCount}</span>}
