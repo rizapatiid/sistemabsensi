@@ -567,27 +567,33 @@ export async function updateAvatarAdminAction(base64Image: string) {
 
 export async function generateAiImageAction(prompt: string) {
   try {
-    const enhancedPrompt = prompt + " high quality detailed professional";
-    // Pollinations now requires payment for any custom parameters.
-    // We must use the base URL exactly to stay on the free tier.
-    const url = `https://image.pollinations.ai/prompt/${encodeURIComponent(enhancedPrompt)}`;
+    const apiKey = process.env.HUGGINGFACE_API_KEY;
+    if (!apiKey) {
+      throw new Error("HUGGINGFACE_API_KEY belum diatur di .env");
+    }
+
+    const enhancedPrompt = prompt + ", high quality, highly detailed, professional photography";
+    const url = "https://api-inference.huggingface.co/models/stabilityai/stable-diffusion-xl-base-1.0";
     
     const res = await fetch(url, { 
-      cache: 'no-store',
+      method: "POST",
       headers: {
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)',
-        'Accept': 'image/*'
-      }
+        "Authorization": `Bearer ${apiKey}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ inputs: enhancedPrompt }),
     });
 
     if (!res.ok) {
-      throw new Error(`Gagal dari Pollinations: ${res.statusText}`);
+      const errText = await res.text();
+      throw new Error(`Gagal dari Hugging Face: ${res.statusText} - ${errText}`);
     }
     
     const arrayBuffer = await res.arrayBuffer();
     const buffer = Buffer.from(arrayBuffer);
     const base64 = buffer.toString('base64');
     
+    // Hugging Face Stable Diffusion returns jpeg
     return { success: true, base64: `data:image/jpeg;base64,${base64}` };
   } catch (error: any) {
     console.error("AI Generate Error:", error);
