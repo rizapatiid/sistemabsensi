@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react"
 import styles from "@/styles/employee_home.module.css"
+import RichTextRenderer from "@/components/RichTextRenderer"
 
 interface Announcement {
   id: string;
@@ -63,7 +64,7 @@ export default function AnnouncementClient({ announcements, autoOpenId }: { anno
                   {new Intl.DateTimeFormat("id-ID", { month: "short", day: "numeric", year: "numeric" }).format(new Date(a.tanggal))}
                 </span>
                 <h3 className={styles.announceMiniTitle}>{a.judul}</h3>
-                <p className={styles.announceExcerpt}>{a.konten.replace(/<[^>]*>/g, '')}</p>
+                <p className={styles.announceExcerpt}>{a.konten.replace(/<[^>]*>?/gm, '').replace(/&nbsp;/g, ' ')}</p>
                 <div className={styles.readMoreHint}>
                     BACA SELENGKAPNYA <IconArrowRight />
                 </div>
@@ -117,8 +118,8 @@ export default function AnnouncementClient({ announcements, autoOpenId }: { anno
 
                 <h2 style={{ fontSize: '1.85rem', fontWeight: 1000, color: '#0f172a', marginBottom: '28px', lineHeight: '1.2' }}>{selected.judul}</h2>
 
-                <div style={{ fontSize: '1.1rem', color: '#334155', fontWeight: 500, lineHeight: '1.9', whiteSpace: 'pre-wrap', paddingLeft: '24px', borderLeft: '4px solid #eff6ff' }}>
-                  <div dangerouslySetInnerHTML={{ __html: selected.konten }} />
+                <div style={{ fontSize: '1.1rem', color: '#334155', fontWeight: 500, lineHeight: '1.9', paddingLeft: '24px', borderLeft: '4px solid #eff6ff' }}>
+                  <RichTextRenderer content={selected.konten} />
                 </div>
 
                 <div style={{ marginTop: '48px', padding: '24px', background: '#f8fafc', borderRadius: '20px', border: '1px solid #e2e8f0', display: 'flex', gap: '16px', alignItems: 'flex-start' }}>

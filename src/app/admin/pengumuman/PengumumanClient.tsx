@@ -6,6 +6,7 @@ import styles from "@/styles/employee_home.module.css"
 import adminStyles from "@/styles/admin.module.css"
 import Link from "next/link"
 import { deleteAnnouncementAction } from "@/actions/admin"
+import RichTextRenderer from "@/components/RichTextRenderer"
 
 interface Announcement {
   id: string
@@ -156,7 +157,7 @@ export default function PengumumanClient({ announcements }: { announcements: Ann
                         {date.toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' })}
                       </span>
                       <h4 className={styles.announceTitle}>{a.judul}</h4>
-                      <p className={styles.announcePreview}>{a.konten}</p>
+                      <p className={styles.announcePreview}>{a.konten.replace(/<[^>]*>?/gm, '').replace(/&nbsp;/g, ' ')}</p>
                       <button className={styles.seeMoreBtn} onClick={e => { e.stopPropagation(); setSelectedAnnouncement(a) }}>
                         Lihat Selengkapnya
                       </button>
@@ -203,8 +204,8 @@ export default function PengumumanClient({ announcements }: { announcements: Ann
               <p className={styles.modalDate}>
                 {new Date(selectedAnnouncement.tanggal).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' })}
               </p>
-              <div className={styles.modalBody}>
-                <div dangerouslySetInnerHTML={{ __html: selectedAnnouncement.konten }} />
+              <div className={styles.modalBody} style={{ padding: '0 24px 24px' }}>
+                <RichTextRenderer content={selectedAnnouncement.konten} />
               </div>
 
               {/* Admin footer in modal */}

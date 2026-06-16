@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react'
 import { createPortal } from 'react-dom'
 import styles from '@/styles/employee_home.module.css'
+import RichTextRenderer from '@/components/RichTextRenderer'
 
 interface Announcement {
   id: string
@@ -37,7 +38,7 @@ export default function AnnouncementList({ announcements }: { announcements: Ann
                        {date.toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' })}
                    </span>
                    <h4 className={styles.announceTitle}>{p.judul}</h4>
-                   <p className={styles.announcePreview}>{p.konten}</p>
+                   <p className={styles.announcePreview}>{p.konten.replace(/<[^>]*>?/gm, '').replace(/&nbsp;/g, ' ')}</p>
                    <button 
                      className={styles.seeMoreBtn}
                      onClick={() => setSelectedAnnouncement(p)}
@@ -63,10 +64,8 @@ export default function AnnouncementList({ announcements }: { announcements: Ann
                    <p className={styles.modalDate}>
                      {new Date(selectedAnnouncement.tanggal).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' })}
                    </p>
-                   <div className={styles.modalBody}>
-                     {selectedAnnouncement.konten.split('\n').map((paragraph, i) => (
-                        <p key={i}>{paragraph}</p>
-                     ))}
+                   <div className={styles.modalBody} style={{ padding: '0 24px 24px' }}>
+                     <RichTextRenderer content={selectedAnnouncement.konten} />
                    </div>
                </div>
            </div>

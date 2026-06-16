@@ -2,6 +2,7 @@
 
 import prisma from "@/lib/prisma"
 import { revalidatePath } from "next/cache"
+import { getSession } from "@/actions/auth"
 import { broadcastWhatsApp, sendWhatsAppMessage } from "@/lib/whatsapp"
 import { redirect } from "next/navigation"
 import { z } from "zod"
@@ -544,4 +545,22 @@ export async function sendTestWhatsAppAction(noHp: string, message: string) {
   }
   
   return { success: true, detail: result.response }
+}
+
+export async function updateAvatarAdminAction(base64Image: string) {
+  const session = await getSession()
+  if (!session || session.role !== "ADMIN") return { error: "Unauthorized" }
+
+  try {
+    const fotoUrl = await uploadBase64Image(base64Image, 'absensi/profil');
+    await prisma.user.update({
+      where: { id: session.id },
+      data: { fotoProfil: fotoUrl }
+    })
+    revalidatePath("/admin/profil")
+    return { success: true }
+  } catch (error) {
+    console.error("Gagal update avatar admin:", error)
+    return { error: "Terjadi kesalahan saat mengunggah foto profil." }
+  }
 }
