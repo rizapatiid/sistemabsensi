@@ -101,7 +101,8 @@ export default function EditAnnouncementForm({ ann }: { ann: any }) {
                                             <span style={{ fontSize: '0.75rem', fontWeight: 600, color: '#64748b', marginTop: '6px' }}>Format: PNG, JPG, GIF (Maks. 2MB)</span>
                                             <input type="file" accept="image/*" onChange={handleFileChange} style={{ display: 'none' }} />
                                         </label>
-                                    ) : (
+                                    </div>
+                                ) : (
                                     <div style={{ position: "relative", width: "100%", borderRadius: "16px", border: '2px solid #e2e8f0', boxShadow: '0 10px 15px -3px rgba(0,0,0,0.1)', overflow: 'hidden', background: '#f8fafc', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                                         <img src={imagePreview} alt="Preview" style={{ width: "100%", maxHeight: "400px", height: "auto", objectFit: 'contain', display: "block" }} />
                                         <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to bottom, rgba(0,0,0,0.2) 0%, rgba(0,0,0,0) 30%)', pointerEvents: 'none' }}></div>
