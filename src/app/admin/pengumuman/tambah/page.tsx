@@ -121,9 +121,9 @@ export default function CreateAnnouncementPage() {
                                                         
                                                         btn.innerHTML = originalText;
                                                         btn.style.pointerEvents = 'auto';
-                                                    } catch (err) {
+                                                    } catch (err: any) {
                                                         console.error(err);
-                                                        alert("Gagal meng-generate gambar AI. Silakan coba lagi.");
+                                                        alert("Gagal meng-generate gambar AI: " + (err.message || err));
                                                         btn.innerHTML = originalText;
                                                         btn.style.pointerEvents = 'auto';
                                                     }
