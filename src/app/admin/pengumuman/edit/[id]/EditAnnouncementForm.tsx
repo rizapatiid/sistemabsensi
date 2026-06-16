@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { updateAnnouncementAction, generateAiImageAction } from "@/actions/admin"
+import { updateAnnouncementAction } from "@/actions/admin"
 import styles from "@/styles/admin.module.css"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
@@ -101,60 +101,7 @@ export default function EditAnnouncementForm({ ann }: { ann: any }) {
                                             <span style={{ fontSize: '0.75rem', fontWeight: 600, color: '#64748b', marginTop: '6px' }}>Format: PNG, JPG, GIF (Maks. 2MB)</span>
                                             <input type="file" accept="image/*" onChange={handleFileChange} style={{ display: 'none' }} />
                                         </label>
-                                        <button 
-                                            type="button" 
-                                            onClick={async (e) => {
-                                                const btn = e.currentTarget;
-                                                const originalText = btn.innerHTML;
-                                                const prompt = window.prompt("Masukkan deskripsi gambar yang ingin di-generate oleh AI (Contoh: Rapat direksi profesional di kantor modern)");
-                                                if(prompt) {
-                                                    try {
-                                                        btn.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style="animation: spin 1s linear infinite"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg> MEMPROSES AI...`;
-                                                        btn.style.pointerEvents = 'none';
-                                                        
-                                                        const res = await generateAiImageAction(prompt);
-                                                        
-                                                        if (res.error) {
-                                                            alert(res.error);
-                                                        } else if (res.base64) {
-                                                            setImagePreview(res.base64);
-                                                        }
-                                                        
-                                                        btn.innerHTML = originalText;
-                                                        btn.style.pointerEvents = 'auto';
-                                                    } catch (err: any) {
-                                                        console.error(err);
-                                                        alert("Gagal meng-generate gambar AI: " + (err.message || err));
-                                                        btn.innerHTML = originalText;
-                                                        btn.style.pointerEvents = 'auto';
-                                                    }
-                                                }
-                                            }}
-                                            style={{
-                                                width: '100%',
-                                                padding: '10px',
-                                                background: 'linear-gradient(135deg, #8b5cf6 0%, #6d28d9 100%)',
-                                                color: 'white',
-                                                border: 'none',
-                                                borderRadius: '12px',
-                                                fontWeight: 800,
-                                                fontSize: '0.8rem',
-                                                cursor: 'pointer',
-                                                display: 'flex',
-                                                alignItems: 'center',
-                                                justifyContent: 'center',
-                                                gap: '8px',
-                                                boxShadow: '0 4px 6px -1px rgba(139, 92, 246, 0.3)',
-                                                transition: 'all 0.2s'
-                                            }}
-                                            onMouseOver={(e) => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 6px 8px -1px rgba(139, 92, 246, 0.4)'; }}
-                                            onMouseOut={(e) => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = '0 4px 6px -1px rgba(139, 92, 246, 0.3)'; }}
-                                        >
-                                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
-                                            GENERATE GAMBAR AI ✨
-                                        </button>
-                                    </div>
-                                ) : (
+                                    ) : (
                                     <div style={{ position: "relative", width: "100%", borderRadius: "16px", border: '2px solid #e2e8f0', boxShadow: '0 10px 15px -3px rgba(0,0,0,0.1)', overflow: 'hidden', background: '#f8fafc', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                                         <img src={imagePreview} alt="Preview" style={{ width: "100%", maxHeight: "400px", height: "auto", objectFit: 'contain', display: "block" }} />
                                         <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to bottom, rgba(0,0,0,0.2) 0%, rgba(0,0,0,0) 30%)', pointerEvents: 'none' }}></div>
