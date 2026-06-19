@@ -273,36 +273,45 @@ export default function PayrollAdminClient({ payrolls: initialPayrolls, users }:
 
             {/* 3. PREMIUM PAYROLL MODAL */}
             {showModal && (
-                <div style={{ position: 'fixed', inset: 0, background: 'rgba(15, 23, 42, 0.25)', backdropFilter: 'blur(8px)', zIndex: 9999, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '16px' }}>
+                <div style={{ 
+                    position: 'fixed', inset: 0, 
+                    background: 'rgba(15, 23, 42, 0.4)', 
+                    backdropFilter: 'blur(4px)', 
+                    zIndex: 9999, 
+                    display: 'flex', alignItems: 'center', justifyContent: 'center', 
+                    padding: '16px',
+                    animation: 'fadeIn 0.2s ease-out'
+                }} onClick={() => setShowModal(false)}>
                     <div style={{ 
-                        background: 'white', 
-                        width: '100%', 
-                        maxWidth: '480px', 
-                        borderRadius: '28px', 
-                        overflow: 'hidden', 
-                        boxShadow: '0 20px 40px -10px rgba(0,0,0,0.15)',
+                        background: '#ffffff',
+                        width: '100%',
+                        maxWidth: '360px',
+                        borderRadius: '16px',
+                        boxShadow: '0 30px 60px -12px rgba(15, 23, 42, 0.25), 0 0 0 1px rgba(15, 23, 42, 0.05)',
                         maxHeight: '90vh',
                         display: 'flex',
-                        flexDirection: 'column'
+                        flexDirection: 'column',
+                        position: 'relative',
+                        overflow: 'hidden',
+                        animation: 'modalSlideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1)'
                     }} onClick={e => e.stopPropagation()}>
                         
-                        {/* MODAL HEADER */}
-                        <div style={{ padding: '18px 24px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid #f8fafc', flexShrink: 0 }}>
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                                <div style={{ background: '#eff6ff', color: '#3b82f6', padding: '10px', borderRadius: '12px', display: 'flex' }}><IconPlus /></div>
-                                <div>
-                                    <h3 style={{ margin: 0, fontWeight: 900, fontSize: '1.05rem', color: '#0f172a' }}>Input Data Gaji</h3>
-                                    <p style={{ margin: '2px 0 0 0', fontSize: '0.7rem', fontWeight: 600, color: '#64748b' }}>Generate slip gaji digital baru.</p>
-                                </div>
+                        {/* SLEEK TOP ACCENT LINE */}
+                        <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: '4px', background: 'linear-gradient(90deg, #3b82f6, #1e3a8a)' }} />
+
+                        {/* MINIMALIST HEADER */}
+                        <div style={{ padding: '20px 20px 12px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px dashed #e2e8f0', flexShrink: 0 }}>
+                            <div>
+                                <h3 style={{ margin: 0, fontSize: '1.05rem', fontWeight: 900, color: '#0f172a', letterSpacing: '-0.02em', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                                    <IconFileText /> Form Gaji
+                                </h3>
+                                <p style={{ margin: '2px 0 0', fontSize: '0.7rem', color: '#64748b', fontWeight: 500 }}>Penerbitan slip digital otomatis.</p>
                             </div>
-                            <button onClick={() => setShowModal(false)} style={{ background: '#f1f5f9', border: 'none', padding: '8px', borderRadius: '50%', cursor: 'pointer', color: '#64748b', display: 'flex' }}>
-                                <IconX />
-                            </button>
                         </div>
 
                         {/* MODAL BODY (SCROLLABLE) */}
-                        <div style={{ padding: '24px', overflowY: 'auto' }}>
-                            <PayrollForm users={users} />
+                        <div style={{ overflowY: 'auto', padding: '16px 20px' }}>
+                            <PayrollForm users={users} onCancel={() => setShowModal(false)} />
                         </div>
                     </div>
                 </div>
@@ -437,6 +446,14 @@ export default function PayrollAdminClient({ payrolls: initialPayrolls, users }:
                 @media (max-width: 768px) {
                     .dataTable th { font-size: 0.65rem; padding: 12px 16px; }
                     .dataTable td { padding: 16px; }
+                }
+                @keyframes fadeIn {
+                    from { opacity: 0; }
+                    to { opacity: 1; }
+                }
+                @keyframes modalSlideUp {
+                    from { opacity: 0; transform: translateY(30px) scale(0.95); }
+                    to { opacity: 1; transform: translateY(0) scale(1); }
                 }
             `}</style>
         </div>

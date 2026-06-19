@@ -61,6 +61,7 @@ export default function AbsensiAdminClient({ absensi, initialEmployees }: { abse
   const [isDeleting, setIsDeleting] = useState<string | null>(null)
   const [showManualModal, setShowManualModal] = useState(false)
   const [isSavingManual, setIsSavingManual] = useState(false)
+  const [manualTipe, setManualTipe] = useState("HADIR")
 
   // Filter States
   const [tempHari, setTempHari] = useState<string>("")
@@ -70,7 +71,7 @@ export default function AbsensiAdminClient({ absensi, initialEmployees }: { abse
   const [filterHari, setFilterHari] = useState<string>("")
   const [filterBulan, setFilterBulan] = useState<string>(new Date().getMonth().toString())
   const [filterTahun, setFilterTahun] = useState<string>(new Date().getFullYear().toString())
-  const openModal = (src: string) => setModalImage(src)
+  const openModal = (src: string) => setModalImage(src)
   const closeModal = () => setModalImage(null)
 
   const listHari = Array.from({ length: 31 }, (_, i) => (i + 1).toString())
@@ -279,7 +280,7 @@ export default function AbsensiAdminClient({ absensi, initialEmployees }: { abse
         )}
       </div>
 
-      {/* MODAL IMAGE PREVIEW */}      {/* MODAL IMAGE PREVIEW */}
+      {/* MODAL IMAGE PREVIEW */}
       {modalImage && (
         <div style={{ position: 'fixed', inset: 0, background: 'rgba(15, 23, 42, 0.4)', backdropFilter: 'blur(12px)', zIndex: 99999, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '20px' }} onClick={closeModal}>
           <div style={{ position: 'relative', maxWidth: '90%', maxHeight: '90%', background: 'white', padding: '10px', borderRadius: '16px' }} onClick={e => e.stopPropagation()}>
@@ -293,92 +294,195 @@ export default function AbsensiAdminClient({ absensi, initialEmployees }: { abse
       {showManualModal && (
           <div style={{ 
               position: 'fixed', 
-              inset: 0, 
-              background: 'rgba(15, 23, 42, 0.4)', 
-              backdropFilter: 'blur(12px)', 
-              zIndex: 99998, 
+              top: 0, 
+              left: 0, 
+              right: 0, 
+              bottom: 0, 
+              background: 'rgba(15, 23, 42, 0.6)', 
+              backdropFilter: 'blur(8px)',
+              zIndex: 9999, 
               display: 'flex', 
               alignItems: 'center', 
               justifyContent: 'center', 
               padding: '20px' 
           }}>
               <div style={{ 
-                  background: 'white', 
-                  padding: 'clamp(24px, 5vw, 40px)', 
-                  borderRadius: '32px', 
-                  width: 'min(500px, 95vw)', 
+                  background: '#ffffff',
+                  width: '100%',
+                  maxWidth: '360px',
+                  borderRadius: '16px',
+                  boxShadow: '0 30px 60px -12px rgba(15, 23, 42, 0.25), 0 0 0 1px rgba(15, 23, 42, 0.05)',
                   maxHeight: '90vh',
-                  overflowY: 'auto',
-                  boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.1)', 
-                  position: 'relative' 
+                  display: 'flex',
+                  flexDirection: 'column',
+                  overflow: 'hidden'
               }}>
-                  <button onClick={() => setShowManualModal(false)} style={{ position: 'absolute', top: '20px', right: '20px', background: '#f8fafc', border: 'none', color: '#64748b', cursor: 'pointer', fontWeight: 900, width: '32px', height: '32px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>×</button>
-                  
-                  <div style={{ marginBottom: '28px' }}>
-                    <h2 style={{ fontSize: 'clamp(1.2rem, 4vw, 1.5rem)', fontWeight: 950, color: '#0f172a', margin: '0 0 6px 0', letterSpacing: '-0.02em', lineHeight: '1.2' }}>Input Presensi Manual</h2>
-                    <p style={{ color: '#64748b', fontWeight: 600, fontSize: '0.85rem', margin: 0 }}>Input data kehadiran personil secara administratif.</p>
+                  <div style={{
+                      padding: '20px',
+                      background: 'linear-gradient(to right, #f8fafc, #ffffff)',
+                      borderBottom: '1px solid #e2e8f0',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'space-between',
+                      position: 'relative'
+                  }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                          <div style={{ background: '#eff6ff', color: '#3b82f6', width: '40px', height: '40px', borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                              <svg width="24" height="24" viewBox="-2 -2 28 28" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M12 11a2 2 0 1 0-2 2"/><path d="M12 15a6 6 0 1 0-6-6"/><path d="M12 19a10 10 0 1 0-10-10"/><path d="M22 10a10.08 10.08 0 0 0-2-6"/><path d="M2 14c.22 1.63.8 3.16 1.66 4.5"/><path d="M5.34 20.66a10.05 10.05 0 0 0 5.16 2.34"/><path d="M14 22.8c1.33.16 2.67.1 3.96-.16"/><path d="M19.45 20.17a10.15 10.15 0 0 0 2.22-3.1"/></svg>
+                          </div>
+                          <div>
+                              <h2 style={{ fontSize: '1.1rem', fontWeight: 900, color: '#0f172a', margin: 0, letterSpacing: '-0.02em' }}>Input Presensi</h2>
+                              <p style={{ fontSize: '0.75rem', fontWeight: 600, color: '#64748b', margin: '2px 0 0 0' }}>Data kehadiran manual</p>
+                          </div>
+                      </div>
                   </div>
-
-                  <form onSubmit={handleManualSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '18px' }}>
-                      <div>
-                          <label style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.7rem', fontWeight: 800, color: '#0f172a', marginBottom: '8px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-                              <IconUser /> PILIH KARYAWAN
-                          </label>
-                          <select name="idKaryawan" required style={{ width: '100%', padding: '14px 16px', borderRadius: '14px', border: '1px solid #e2e8f0', background: '#f8fafc', fontSize: '0.9rem', fontWeight: 700, outline: 'none', color: '#0f172a' }}>
-                             <option value="">-- Pilih Karyawan --</option>
-                             {initialEmployees.map(emp => (
-                                 <option key={emp.id} value={emp.id}>{emp.nama.toUpperCase()} ({emp.id})</option>
-                             ))}
-                          </select>
-                      </div>
-
-                      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+                  
+                  <div style={{ padding: '20px', overflowY: 'auto' }}>
+                      <style dangerouslySetInnerHTML={{ __html: `
+                        .pf-label { font-size: 0.75rem; font-weight: 800; color: #64748b; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 4px; display: block; }
+                        .pf-input-wrapper { position: relative; display: flex; align-items: center; }
+                        .pf-input-icon { position: absolute; left: 12px; color: #94a3b8; display: flex; pointer-events: none; transition: color 0.2s; transform: scale(0.9); }
+                        .pf-input { width: 100%; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 10px 12px; font-size: 0.85rem; font-weight: 600; color: #0f172a; outline: none; transition: all 0.2s ease; box-shadow: 0 1px 2px rgba(0,0,0,0.01) inset; }
+                        .pf-input:hover { border-color: #cbd5e1; background: #ffffff; }
+                        .pf-input:focus { background: #ffffff; border-color: #3b82f6; box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1), 0 1px 2px rgba(0,0,0,0.01) inset; }
+                        .pf-input-wrapper:focus-within .pf-input-icon { color: #3b82f6; }
+                        .pf-input.with-icon { padding-left: 38px !important; }
+                        .pf-select { appearance: none; cursor: pointer; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 10px center; padding-right: 32px; }
+                        .pf-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+                        .radio-card div { position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center; gap: 6px; }
+                        .radio-card input:checked + div { background: #0f172a; color: white; border-color: #0f172a; }
+                        .radio-card input:checked + div::before { content: ''; display: inline-block; width: 14px; height: 14px; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%234ade80' stroke-width='3.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='20 6 9 17 4 12'%3E%3C/polyline%3E%3C/svg%3E"); background-size: contain; background-repeat: no-repeat; background-position: center; animation: checkScale 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
+                        @keyframes checkScale { from { transform: scale(0) rotate(-15deg); opacity: 0; } to { transform: scale(1) rotate(0); opacity: 1; } }
+                        input[type="date"].pf-input, input[type="time"].pf-input { text-align: left; }
+                        input[type="date"]::-webkit-calendar-picker-indicator, input[type="time"]::-webkit-calendar-picker-indicator { background: transparent; bottom: 0; color: transparent; cursor: pointer; height: auto; left: 0; position: absolute; right: 0; top: 0; width: auto; }
+                      ` }} />
+                      
+                      <form onSubmit={handleManualSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
                           <div>
-                            <label style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.7rem', fontWeight: 800, color: '#0f172a', marginBottom: '8px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-                                <IconCalendarTable /> TANGGAL
-                            </label>
-                            <input type="date" name="tanggal" required defaultValue={new Date().toISOString().split('T')[0]} style={{ width: '100%', padding: '14px 16px', borderRadius: '14px', border: '1px solid #e2e8f0', background: '#f8fafc', fontSize: '0.9rem', fontWeight: 700, outline: 'none', color: '#0f172a', appearance: 'none' }} />
+                              <label className="pf-label">Pilih Karyawan</label>
+                              <div className="pf-input-wrapper">
+                                  <div className="pf-input-icon"><IconUser /></div>
+                                  <select className="pf-input pf-select with-icon" name="idKaryawan" required>
+                                     <option value="">-- Pilih Karyawan --</option>
+                                     {initialEmployees.map(emp => (
+                                         <option key={emp.id} value={emp.id}>{emp.nama} ({emp.id})</option>
+                                     ))}
+                                  </select>
+                              </div>
                           </div>
+
+                          <div className="pf-grid">
+                              <div>
+                                <label className="pf-label">Tanggal</label>
+                                <div className="pf-input-wrapper">
+                                    <div className="pf-input-icon"><IconCalendarTable /></div>
+                                    <input type="date" name="tanggal" required defaultValue={new Date().toISOString().split('T')[0]} className="pf-input with-icon" />
+                                </div>
+                              </div>
+                              <div>
+                                <label className="pf-label">Waktu Masuk</label>
+                                <div className="pf-input-wrapper">
+                                    <div className="pf-input-icon"><IconClock /></div>
+                                    <input type="time" name="waktu" required defaultValue="08:00" className="pf-input with-icon" />
+                                </div>
+                              </div>
+                          </div>
+
                           <div>
-                            <label style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.7rem', fontWeight: 800, color: '#0f172a', marginBottom: '8px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-                                <IconClock /> WAKTU
-                            </label>
-                            <input type="time" name="waktu" required defaultValue="08:00" style={{ width: '100%', padding: '14px 16px', borderRadius: '14px', border: '1px solid #e2e8f0', background: '#f8fafc', fontSize: '0.9rem', fontWeight: 700, outline: 'none', color: '#0f172a', appearance: 'none' }} />
+                              <label className="pf-label">Status Kehadiran</label>
+                              <div style={{ display: 'flex', gap: '8px' }}>
+                                  <label className="radio-card" style={{ flex: 1, cursor: 'pointer' }}>
+                                      <input type="radio" value="HADIR" checked={manualTipe === 'HADIR'} onChange={() => setManualTipe('HADIR')} style={{ display: 'none' }} />
+                                      <div style={{ padding: '10px', borderRadius: '8px', border: '1px solid #e2e8f0', background: '#f8fafc', fontSize: '0.8rem', fontWeight: 800, color: '#64748b', textAlign: 'center', transition: 'all 0.2s' }}>
+                                          HADIR
+                                      </div>
+                                  </label>
+                                  <label className="radio-card" style={{ flex: 1, cursor: 'pointer' }}>
+                                      <input type="radio" value="IZIN" checked={manualTipe === 'IZIN'} onChange={() => setManualTipe('IZIN')} style={{ display: 'none' }} />
+                                      <div style={{ padding: '10px', borderRadius: '8px', border: '1px solid #e2e8f0', background: '#f8fafc', fontSize: '0.8rem', fontWeight: 800, color: '#64748b', textAlign: 'center', transition: 'all 0.2s' }}>
+                                          IZIN / SAKIT
+                                      </div>
+                                  </label>
+                              </div>
+                              
+                              {manualTipe === 'HADIR' && (
+                                  <input type="hidden" name="status" value="HADIR" />
+                              )}
+                              
+                              {manualTipe === 'IZIN' && (
+                                  <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', marginTop: '12px', padding: '12px', background: '#f8fafc', borderRadius: '8px', border: '1px dashed #cbd5e1' }}>
+                                      <div>
+                                          <label className="pf-label">Kategori</label>
+                                          <div className="pf-input-wrapper">
+                                              <select className="pf-input pf-select" name="status" required style={{ paddingLeft: '12px' }}>
+                                                  <option value="IZIN">Izin</option>
+                                                  <option value="SAKIT">Sakit</option>
+                                                  <option value="LAINNYA">Lainnya</option>
+                                              </select>
+                                          </div>
+                                      </div>
+                                      <div>
+                                          <label className="pf-label">Keterangan / Notes</label>
+                                          <textarea name="alasan" className="pf-input" rows={2} placeholder="Alasan izin/sakit..." required style={{ paddingLeft: '12px', resize: 'none' }}></textarea>
+                                      </div>
+                                  </div>
+                              )}
                           </div>
-                      </div>
 
-                      <div>
-                          <label style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.7rem', fontWeight: 800, color: '#0f172a', marginBottom: '8px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-                              <IconCheckCircle /> STATUS KEHADIRAN
-                          </label>
-                          <div style={{ display: 'flex', gap: '10px' }}>
-                              <label style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px', padding: '12px', borderRadius: '14px', border: '1px solid #e2e8f0', background: '#f8fafc', cursor: 'pointer', fontSize: '0.8rem', fontWeight: 800, color: '#0f172a' }}>
-                                  <input type="radio" name="status" value="HADIR" defaultChecked style={{ accentColor: '#0f172a' }} /> HADIR
-                              </label>
-                              <label style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px', padding: '12px', borderRadius: '14px', border: '1px solid #e2e8f0', background: '#f8fafc', cursor: 'pointer', fontSize: '0.8rem', fontWeight: 800, color: '#0f172a' }}>
-                                  <input type="radio" name="status" value="IZIN" style={{ accentColor: '#0f172a' }} /> IZIN
-                              </label>
+                          <div style={{ 
+                              position: 'sticky', 
+                              bottom: '-20px', 
+                              margin: '12px -20px -20px -20px', 
+                              padding: '16px 20px', 
+                              background: 'rgba(255, 255, 255, 0.9)', 
+                              backdropFilter: 'blur(12px)',
+                              borderTop: '1px solid rgba(226, 232, 240, 0.8)',
+                              zIndex: 10,
+                              display: 'flex',
+                              gap: '8px'
+                          }}>
+                              <button
+                                  type="button"
+                                  onClick={() => setShowManualModal(false)}
+                                  disabled={isSavingManual}
+                                  style={{
+                                      flex: 1, background: '#f1f5f9', color: '#475569', border: 'none', padding: '14px', borderRadius: '8px',
+                                      fontWeight: 800, fontSize: '0.85rem', cursor: isSavingManual ? 'not-allowed' : 'pointer', transition: 'all 0.2s', opacity: isSavingManual ? 0.7 : 1
+                                  }}
+                                  onMouseOver={e => e.currentTarget.style.background = '#e2e8f0'}
+                                  onMouseOut={e => e.currentTarget.style.background = '#f1f5f9'}
+                              >
+                                  BATAL
+                              </button>
+                              <button 
+                                  type="submit" 
+                                  disabled={isSavingManual} 
+                                  style={{ 
+                                      flex: 2,
+                                      display: 'flex',
+                                      alignItems: 'center',
+                                      justifyContent: 'center', 
+                                      padding: '14px', 
+                                      fontSize: '0.85rem', 
+                                      borderRadius: '8px',
+                                      background: 'linear-gradient(135deg, #1e293b 0%, #0f172a 100%)',
+                                      color: 'white',
+                                      fontWeight: 800,
+                                      boxShadow: '0 8px 16px -4px rgba(15, 23, 42, 0.3)',
+                                      border: 'none',
+                                      cursor: isSavingManual ? 'not-allowed' : 'pointer',
+                                      opacity: isSavingManual ? 0.7 : 1,
+                                      transition: 'all 0.2s transform 0.1s'
+                                  }}
+                                  onMouseOver={e => { e.currentTarget.style.transform = 'translateY(-1px)'; e.currentTarget.style.boxShadow = '0 12px 20px -4px rgba(15, 23, 42, 0.4)'; }}
+                                  onMouseOut={e => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = '0 8px 16px -4px rgba(15, 23, 42, 0.3)'; }}
+                                  onMouseDown={e => e.currentTarget.style.transform = 'translateY(1px)'}
+                              >
+                                  {isSavingManual ? "MEMPROSES..." : "SIMPAN"}
+                              </button>
                           </div>
-                      </div>
-
-                      <button type="submit" disabled={isSavingManual} style={{ 
-                          marginTop: '10px',
-                          padding: '16px', 
-                          borderRadius: '16px', 
-                          border: 'none', 
-                          background: '#0f172a', 
-                          color: 'white', 
-                          fontWeight: 900, 
-                          fontSize: '0.9rem',
-                          cursor: isSavingManual ? 'wait' : 'pointer',
-                          textTransform: 'uppercase',
-                          letterSpacing: '0.05em',
-                          transition: 'all 0.2s ease',
-                          opacity: isSavingManual ? 0.7 : 1
-                      }}>
-                          {isSavingManual ? 'MEMPROSES...' : 'SIMPAN PRESENSI'}
-                      </button>
-                  </form>
+                      </form>
+                  </div>
               </div>
           </div>
       )}

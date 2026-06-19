@@ -490,6 +490,7 @@ export async function manualAttendanceAction(formData: FormData) {
   const tanggalStr = formData.get("tanggal") as string
   const waktuStr = formData.get("waktu") as string
   const status = formData.get("status") as string
+  const alasan = formData.get("alasan") as string | null
 
   if (!idKaryawan || !tanggalStr || !waktuStr || !status) {
     return { error: "Semua data harus diisi" }
@@ -518,7 +519,7 @@ export async function manualAttendanceAction(formData: FormData) {
         tanggal,
         waktuMasuk,
         status,
-        alasan: status === "IZIN" ? "Input Manual oleh Admin" : null
+        alasan,
       }
     })
 
