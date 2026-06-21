@@ -1,5 +1,5 @@
 // Service Worker for RMP Digitals PWA
-const CACHE_NAME = 'rmp-absensi-v1';
+const CACHE_NAME = 'rmp-absensi-v4';
 const ASSETS_TO_CACHE = [
   '/',
   '/faficon.jpg',

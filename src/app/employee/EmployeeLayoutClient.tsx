@@ -220,11 +220,11 @@ export default function EmployeeLayoutClient({ children, user }: EmployeeLayoutC
         <div className={styles.drawerHandle} />
         <div className={styles.drawerHeader}>
           <div className={styles.drawerProfile}>
-            <div className={styles.drawerAvatar} style={{ overflow: 'hidden' }}>
+            <div className={styles.drawerAvatar} style={{ overflow: 'hidden', width: '56px', height: '56px', minWidth: '56px', borderRadius: '50%' }}>
               {user.fotoProfil ? (
-                <img src={user.fotoProfil} alt={user.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                <img src={user.fotoProfil} alt={user.name} style={{ width: '56px', height: '56px', objectFit: 'cover', display: 'block' }} />
               ) : (
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#1a567e" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#1a567e" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ display: 'block', margin: 'auto' }}>
                   <circle cx="12" cy="7" r="4"></circle>
                   <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
                 </svg>

@@ -41,33 +41,34 @@ export default function Navbar({ user, onMobileMenuToggle, isSidebarCollapsed, o
   }, [isDropdownOpen]);
 
   return (
-    <header className={`navbar hidden-on-mobile ${isSidebarCollapsed ? 'sidebar-state-collapsed' : ''}`}>
-      <div className="navbar-left">
+    <header className={`navbar hidden-on-mobile ${isSidebarCollapsed ? 'sidebar-state-collapsed' : ''}`} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 24px', height: '70px', background: 'rgba(255, 255, 255, 0.7)', borderBottom: '1px solid rgba(255, 255, 255, 0.4)', boxSizing: 'border-box', width: '100%' }}>
+      <div className="navbar-left" style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
         {isSidebarCollapsed && (
           <img
             src="/logositus.png"
             alt="RMP Digitals"
             height="48"
             className="navbar-logo-desktop"
+            style={{ display: 'block', height: '48px', width: 'auto' }}
           />
         )}
       </div>
-      <div className="navbar-right">
-        <div className="user-profile" ref={profileRef} onClick={() => setIsDropdownOpen(!isDropdownOpen)}>
-          <div className="user-info-text">
-            <span className="user-name">{user?.name?.toUpperCase() || "USER"}</span>
-            <span className="user-role-badge">{user?.role}</span>
+      <div className="navbar-right" style={{ display: 'flex', alignItems: 'center' }}>
+        <div className="user-profile" ref={profileRef} onClick={() => setIsDropdownOpen(!isDropdownOpen)} style={{ display: 'flex', alignItems: 'center', gap: '16px', cursor: 'pointer' }}>
+          <div className="user-info-text" style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', justifyContent: 'center' }}>
+            <span className="user-name" style={{ fontSize: '0.85rem', fontWeight: 800 }}>{user?.name?.toUpperCase() || "USER"}</span>
+            <span className="user-role-badge" style={{ fontSize: '0.6rem', fontWeight: 800, color: '#0284c7' }}>{user?.role}</span>
           </div>
           <div className="user-avatar-container">
-            <div className="user-avatar">
+            <div className="user-avatar" style={{ width: '42px', height: '42px', minWidth: '42px', overflow: 'hidden', borderRadius: '50%' }}>
               {user?.fotoProfil ? (
                 <img 
                   src={user.fotoProfil} 
                   alt={user.name} 
-                  style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
+                  style={{ width: '42px', height: '42px', objectFit: 'cover', display: 'block' }} 
                 />
               ) : (
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1a567e" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1a567e" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ display: 'block', margin: 'auto' }}>
                   <circle cx="12" cy="7" r="4"></circle>
                   <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
                 </svg>
