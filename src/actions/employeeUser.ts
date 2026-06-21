@@ -6,6 +6,7 @@ import { getSession } from "@/actions/auth"
 import { getTodayJakarta, getJakartaDate } from "@/lib/date"
 import { sendNotificationToUser } from "@/actions/push"
 import { uploadBase64Image } from "@/lib/cloudinary"
+import bcrypt from "bcryptjs"
 
 export async function submitKehadiranAction(status: "HADIR" | "IZIN", foto?: string, buktiApp?: string, alasan?: string) {
   const session = await getSession()
@@ -78,6 +79,8 @@ export async function updateProfileKaryawanAction(formData: FormData) {
 
   if (!nama || !password) return { error: "Nama dan Password wajib diisi" }
 
+  const hashedPassword = await bcrypt.hash(password, 10)
+
   await prisma.user.update({
     where: { id: session.id },
     data: {
@@ -85,7 +88,7 @@ export async function updateProfileKaryawanAction(formData: FormData) {
       email: email || null,
       phone: phone || null,
       alamat: alamat || null,
-      password,
+      password: hashedPassword,
     }
   })
 

@@ -7,6 +7,7 @@ import { z } from "zod"
 import { getSession } from "@/actions/auth"
 import { sendWhatsAppMessage } from "@/lib/whatsapp"
 import { uploadBase64Image } from "@/lib/cloudinary"
+import bcrypt from "bcryptjs"
 
 const EmployeeSchema = z.object({
   id: z.string().min(1, "ID Karyawan Wajib diisi"),
@@ -71,6 +72,8 @@ export async function createEmployeeAction(formData: FormData) {
     }
   }
 
+  const hashedPassword = await bcrypt.hash(result.data.password, 10)
+  
   // Create existing fields using prisma client
   const newEmp = await prisma.user.create({
     data: {
@@ -80,7 +83,7 @@ export async function createEmployeeAction(formData: FormData) {
       phone: result.data.phone || null,
       email: result.data.email || null,
       alamat: result.data.alamat || null,
-      password: result.data.password,
+      password: hashedPassword,
       role: "KARYAWAN",
       status: "AKTIF"
     }
@@ -100,7 +103,7 @@ export async function createEmployeeAction(formData: FormData) {
     try {
       await sendWhatsAppMessage(
         newEmp.phone,
-        `Halo *${newEmp.nama}*,\n\nAkun Sistem Pegawai Profesional RMP Digitals Anda telah berhasil didaftarkan oleh Admin.\n\n*Informasi Login Anda:*\n👤 ID Karyawan: *${newEmp.id}*\n🔑 Password: *${newEmp.password}*\n\nSilakan login melalui tautan berikut: https://app.rmpid.com\n\nSimpan pesan ini jika Anda lupa password. _(Otomatis dari HRIS RMP Digitals)_`
+        `Halo *${newEmp.nama}*,\n\nAkun Sistem Pegawai Profesional RMP Digitals Anda telah berhasil didaftarkan oleh Admin.\n\n*Informasi Login Anda:*\n👤 ID Karyawan: *${newEmp.id}*\n🔑 Password: *${result.data.password}*\n\nSilakan login melalui tautan berikut: https://app.rmpid.com\n\nSimpan pesan ini jika Anda lupa password. _(Otomatis dari HRIS RMP Digitals)_`
       )
     } catch (e) {
       console.error("Gagal mengirim WA Info Login", e);
@@ -182,7 +185,8 @@ export async function updateEmployeeAction(formData: FormData) {
   
   const pw = formData.get("password") as string
   if (pw && pw.trim() !== "") {
-      updateData.password = pw
+      const hashedPassword = await bcrypt.hash(pw, 10)
+      updateData.password = hashedPassword
   }
 
   // Update existing fields using prisma client
@@ -228,8 +232,10 @@ export async function createAdminAction(formData: FormData) {
   const exists = await prisma.user.findUnique({ where: { id } })
   if (exists) return { error: "ID Admin sudah terdaftar!" }
 
+  const hashedPassword = await bcrypt.hash(password, 10)
+
   await prisma.user.create({
-    data: { id, nama, password, role: "ADMIN", status: "AKTIF" }
+    data: { id, nama, password: hashedPassword, role: "ADMIN", status: "AKTIF" }
   })
   revalidatePath("/admin/kelola-admin")
   return { success: true }
@@ -252,6 +258,8 @@ export async function updateProfileAdminAction(formData: FormData) {
 
   if (!nama || !password) return { error: "Nama dan Password wajib diisi" }
 
+  const hashedPassword = await bcrypt.hash(password, 10)
+
   await prisma.user.update({
     where: { id: session.id },
     data: { 
@@ -259,7 +267,7 @@ export async function updateProfileAdminAction(formData: FormData) {
       email: email || null, 
       phone: phone || null, 
       alamat: alamat || null, 
-      password 
+      password: hashedPassword 
     }
   })
 
@@ -275,9 +283,11 @@ export async function updateAdminAction(formData: FormData) {
 
   if (!idOriginal || !id || !nama || !password) return { error: "Semua data wajib diisi" }
 
+  const hashedPassword = await bcrypt.hash(password, 10)
+
   await prisma.user.update({
     where: { id: idOriginal },
-    data: { id, nama, password }
+    data: { id, nama, password: hashedPassword }
   })
   
   revalidatePath("/admin/kelola-admin")

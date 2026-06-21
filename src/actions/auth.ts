@@ -4,6 +4,7 @@ import prisma from "@/lib/prisma"
 import { cookies, headers } from "next/headers"
 import { redirect } from "next/navigation"
 import { sendLoginNotificationEmail, sendResetPasswordEmail } from "@/lib/email"
+import bcrypt from "bcryptjs"
 
 export async function loginAction(formData: FormData) {
   const idKaryawan = formData.get("idKaryawan") as string
@@ -37,12 +38,13 @@ export async function loginAction(formData: FormData) {
     if (!user && idKaryawan === "admin" && password === "admin") {
       const count = await prisma.user.count()
       if (count === 0) {
+        const hashedAdminPassword = await bcrypt.hash("admin", 10)
         user = await prisma.user.create({
           data: {
             id: "admin",
             nama: "Administrator",
             role: "ADMIN",
-            password: "admin",
+            password: hashedAdminPassword,
           }
         })
       }
@@ -52,8 +54,32 @@ export async function loginAction(formData: FormData) {
     return { error: `Koneksi database gagal. Silakan hubungi Administrator. (${dbError?.message?.slice(0, 80) || 'Unknown error'})` }
   }
 
-  if (!user || user.password !== password) {
+  let isMatch = false
+  let needsUpgrade = false
+
+  if (user) {
+    if (user.password.startsWith("$2a$") || user.password.startsWith("$2b$")) {
+      isMatch = await bcrypt.compare(password, user.password)
+    } else {
+      isMatch = user.password === password
+      if (isMatch) needsUpgrade = true
+    }
+  }
+
+  if (!user || !isMatch) {
     return { error: "ID Karyawan/Email atau Password salah." }
+  }
+
+  if (needsUpgrade) {
+    try {
+      const hashedPassword = await bcrypt.hash(password, 10)
+      await prisma.user.update({
+        where: { id: user.id },
+        data: { password: hashedPassword }
+      })
+    } catch (e) {
+      console.error("Gagal auto-upgrade password to hash:", e)
+    }
   }
 
   if (user.status === "BLOKIR") {
@@ -155,9 +181,10 @@ export async function resetPasswordAction(formData: FormData) {
 
   if (!reset) return { error: "Sesi reset tidak valid." }
 
+  const hashedPassword = await bcrypt.hash(newPassword, 10)
   await prisma.user.updateMany({
     where: { email },
-    data: { password: newPassword } // In production, hash this!
+    data: { password: hashedPassword }
   })
 
   // Hapus semua reset request untuk email ini
