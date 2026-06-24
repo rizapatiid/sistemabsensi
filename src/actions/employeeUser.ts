@@ -77,19 +77,22 @@ export async function updateProfileKaryawanAction(formData: FormData) {
   const alamat = formData.get("alamat") as string
   const password = formData.get("password") as string
 
-  if (!nama || !password) return { error: "Nama dan Password wajib diisi" }
+  if (!nama) return { error: "Nama wajib diisi" }
 
-  const hashedPassword = await bcrypt.hash(password, 10)
+  const dataToUpdate: any = {
+    nama,
+    email: email || null,
+    phone: phone || null,
+    alamat: alamat || null,
+  }
+
+  if (password) {
+    dataToUpdate.password = await bcrypt.hash(password, 10)
+  }
 
   await prisma.user.update({
     where: { id: session.id },
-    data: {
-      nama,
-      email: email || null,
-      phone: phone || null,
-      alamat: alamat || null,
-      password: hashedPassword,
-    }
+    data: dataToUpdate
   })
 
   revalidatePath("/employee/profil")

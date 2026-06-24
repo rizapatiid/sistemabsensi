@@ -124,7 +124,7 @@ export default function ProfileForm({ user }: { user: any }) {
                   <div style={{ color: '#1e3a8a', display: 'flex', transform: 'scale(0.85)', transformOrigin: 'left center' }}><IconKey /></div>
                   UBAH KATA SANDI (SECURITY)
                 </label>
-                <input type="text" name="password" defaultValue={user.password} required style={{ width: '100%', padding: '14px 16px', borderRadius: '8px', border: '1px dashed #cbd5e1', background: '#f1f5f9', fontSize: '0.95rem', fontWeight: '600', color: '#0f172a', outline: 'none' }} />
+                <input type="text" name="password" placeholder="Kosongkan jika tidak ingin mengubah sandi" style={{ width: '100%', padding: '14px 16px', borderRadius: '8px', border: '1px dashed #cbd5e1', background: '#f1f5f9', fontSize: '0.95rem', fontWeight: '600', color: '#0f172a', outline: 'none' }} />
               </div>
 
               <div style={{ display: "flex", gap: "12px", marginTop: "16px" }}>
